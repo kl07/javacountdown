@@ -27,7 +27,6 @@ import org.junit.runner.RunWith;
  * @author eiselem
  */
 @RunWith(Arquillian.class)
-@CreateSchema({"schema/insert-geonames.sql"})
 public class VersionResourceTest {
 
     private static final String RESOURCE_PREFIX = "rest";
