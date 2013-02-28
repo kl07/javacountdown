@@ -1,6 +1,5 @@
 /**
- * Copyright [2013] Markus Eisele
- *
+ * Copyright [2013] Adopt OpenJDK Programme
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +17,8 @@ package org.adoptopenjdk.javacountdown.boundry;
 
 import org.adoptopenjdk.javacountdown.entity.Visit;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -33,46 +34,39 @@ import javax.ws.rs.Produces;
 import org.adoptopenjdk.javacountdown.control.DataProvider;
 
 /**
- * REST Web Service for the javacountdown
- *
- * @author eiselem
+ * REST Web Service for the javacountdown website
  */
 @Path("version")
 @Stateless
 public class VersionResource {
 
-    private static final Logger l = Logger.getLogger(VersionResource.class.getName());
+    private static final Logger logger = Logger.getLogger(VersionResource.class.getName());
+
     @Context
     private UriInfo context;
+
     @Inject
-    private DataProvider dp;
+    private DataProvider dataProvider;
 
     /**
-     * Creates a new instance of VersionResource
-     */
-    public VersionResource() {
-    }
-
-    /**
-     * Retrieves visit information from webclient in JSON format
+     * Retrieves visitor information from web client in JSON format
      *
      * @param content
      */
     @POST
     @Consumes("application/json")
     public void log(String content) {
-        l.log(Level.INFO, content);
+        logger.log(Level.INFO, content);
 
         Visit visit = null;
+        Gson gson = new Gson();
         try {
-            Gson gson = new Gson();
             visit = gson.fromJson(content, Visit.class);
-        } catch (Exception e) {
-            l.log(Level.SEVERE, "Deserialization went wrong", e);
+        } catch (JsonSyntaxException e) {
+            logger.log(Level.SEVERE, "Deserialization went wrong", e);
         }
-        dp.persistVisit(visit);
-        l.log(Level.INFO, content);
-
+        dataProvider.persistVisit(visit);
+        logger.log(Level.INFO, content);
     }
 
     /**
@@ -84,8 +78,8 @@ public class VersionResource {
     @Produces("application/json")
     public String getData() {
 
-        String data = dp.getCountries();
-        l.log(Level.INFO, data);
+        String data = dataProvider.getCountries();
+        logger.log(Level.INFO, data);
         return data;
 
     }

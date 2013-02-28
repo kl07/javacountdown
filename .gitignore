@@ -5,3 +5,7 @@
 *.war
 *.ear
 /javacountdown-ee6/target/
+
+javacountdown-ee6/.classpath
+javacountdown-ee6/.project
+javacountdown-ee6/.settings/
