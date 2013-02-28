@@ -83,7 +83,7 @@
             </aside>
             <aside class="white">
                 <p>Powered by:</p>
-                <a href="http://cloud.oracle.com/" target="_blank"><img src="img/oracle_cloud_logo.png" width="200" height="213" alt="Powered by Oracle Cloud Java Service" /></a>
+                <a href="http://glassfish.org" target="_blank"><img src="img/glassfish_logo.gif" width="120" height="60"></a>
             </aside>
         </div> <!-- #main -->
     </div> <!-- #main-container -->
