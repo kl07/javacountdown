@@ -1,6 +1,5 @@
 /**
- * Copyright [2013] Markus Eisele
- *
+ * Copyright [2013] Adopt OpenJDK Programme
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,26 +26,29 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- *
- * @author eiselem
+ * Visitor class, represents an end user hitting a website with their Java applet
+ * enabled event.
  */
 @Entity
 public class Visit implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     private String version;
+
     private double lat;
+
     private double lng;
+
     private String country;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "entered")
     private Date time;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    public Visit() {
-    }
 
     public String getVersion() {
         return version;

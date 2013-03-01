@@ -1,6 +1,5 @@
 /**
- * Copyright [2013] Markus Eisele
- *
+ * Copyright [2013] Adopt OpenJDK Programme
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,8 +27,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- *
- * @author eiselem
+ * Entity that represents geographical locations
+ * TODO Alphas fields might need renaming
  */
 @Entity
 @Table(name = "GEONAMES")
@@ -49,31 +48,33 @@ public class Geonames implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "COUNTRY")
     private String country;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2)
     @Column(name = "ALPHA2")
+
     private String alpha2;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 3)
     @Column(name = "ALPHA3")
+
     private String alpha3;
     @Basic(optional = false)
     @NotNull
     @Column(name = "NUMCODE")
+
     private int numcode;
     @Basic(optional = false)
     @NotNull
     @Column(name = "LATITUDE")
+
     private double latitude;
     @Basic(optional = false)
     @NotNull
     @Column(name = "LONGITUDE")
     private double longitude;
-
-    public Geonames() {
-    }
 
     public Geonames(String country) {
         this.country = country;
