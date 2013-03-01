@@ -51,7 +51,7 @@ public class DataProvider {
         Query query = entityManager.createQuery(GET_COUNTRIES);
         List<Object[]> results = query.getResultList();
 
-        // TODO: Separate Java Versions. ATM this simply treats all the same.
+        // TODO: Separate Java Versions. ATM this simply treats all the same. - Issue #16
         HashMap<String, Integer> all = new HashMap<>();
 
         for (Object[] result : results) {
@@ -131,7 +131,7 @@ public class DataProvider {
     }
 
     /**
-     * TODO: Add validation and some error-checks.
+     * TODO: Add validation and some error-checks. - Issue #14
      *
      * @param Visit visit
      */
