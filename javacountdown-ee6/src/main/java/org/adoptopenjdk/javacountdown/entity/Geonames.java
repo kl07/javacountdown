@@ -76,6 +76,13 @@ public class Geonames implements Serializable {
     @Column(name = "LONGITUDE")
     private double longitude;
 
+    
+    /**
+     * Default public constructor needed for JPA
+     */
+    public Geonames() {
+    }
+
     public Geonames(String country) {
         this.country = country;
     }

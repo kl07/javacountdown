@@ -56,7 +56,7 @@ public class VersionResource {
     @POST
     @Consumes("application/json")
     public void log(String content) {
-        logger.log(Level.INFO, content);
+        logger.log(Level.INFO, "Client input: {0}", content);
 
         Visit visit = null;
         Gson gson = new Gson();

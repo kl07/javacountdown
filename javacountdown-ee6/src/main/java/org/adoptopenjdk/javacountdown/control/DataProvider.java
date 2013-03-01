@@ -34,12 +34,8 @@ import javax.persistence.Query;
 public class DataProvider {
 
     private final static String GET_COUNTRIES = "SELECT visit.country, COUNT(visit.country) FROM Visit AS visit GROUP BY visit.country ORDER BY 'count'";
-
     private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT G.alpha2 FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
-    
-    
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
-
     @PersistenceContext(unitName = "javacountdownPU")
     EntityManager entityManager;
 
@@ -55,7 +51,7 @@ public class DataProvider {
 
         Query query = entityManager.createQuery(GET_COUNTRIES);
         List<Object[]> results = query.getResultList();
-        
+
         // TODO: Separate Java Versions. ATM this simply treats all the same.
         HashMap<String, Integer> all = new HashMap<>();
 
@@ -85,6 +81,11 @@ public class DataProvider {
             int prettypercentage = (int) percentage;
             all.put(key, prettypercentage);
             logger.log(Level.INFO, "Key + Temp: {0} {1}", new Object[]{key, prettypercentage});
+        }
+
+        // if we don't have results we simply put an empty element to prevent 204 on the client
+        if (all.isEmpty()) {
+            all.put("", 0);
         }
 
         // Make json

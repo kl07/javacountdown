@@ -50,6 +50,14 @@ public class Visit implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    /**
+     * Default public constructor for JPA
+     */
+    public Visit() {
+    }
+
+    
+    
     public String getVersion() {
         return version;
     }

@@ -35,7 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TODO Explanation fo what use cases this covers.
+ * Testing the REST interface methods
  */
 @RunWith(Arquillian.class)
 public class VersionResourceTest {
@@ -47,6 +47,11 @@ public class VersionResourceTest {
     @ArquillianResource
     URL deploymentUrl;
 
+    /**
+     * Creating the ShrinkWrap deployment for Arquillian.
+     * This only contains the backend! 
+     * @return
+     */
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
@@ -58,6 +63,10 @@ public class VersionResourceTest {
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
+    /**
+     * Testing a log submission POST /version
+     * @throws Exception
+     */
     @Test
     public void testLog() throws Exception {
 
@@ -77,6 +86,10 @@ public class VersionResourceTest {
         logger.info("POST /version HTTP/1.1\n\n" + response.getEntity(String.class));
     }
 
+    /**
+     * Testing the returned map data GET /version
+     * @throws Exception
+     */
     @Test
     public void testGetData() throws Exception {
 
