@@ -36,9 +36,9 @@ public class Visit implements Serializable {
 
     private String version;
 
-    private double lat;
+    private double latitude;
 
-    private double lng;
+    private double longitude;
 
     private String country;
 
@@ -54,9 +54,8 @@ public class Visit implements Serializable {
      * Default public constructor for JPA
      */
     public Visit() {
+        // Do Nothing
     }
-
-    
     
     public String getVersion() {
         return version;
@@ -66,28 +65,35 @@ public class Visit implements Serializable {
         this.version = version;
     }
 
-    public double getLat() {
-        return lat;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public void setLatitude(double lat) {
+        this.latitude = lat;
     }
 
-    public double getLng() {
-        return lng;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLng(double lng) {
-        this.lng = lng;
+    public void setLongitude(double lng) {
+        this.longitude = lng;
     }
 
+    /**
+     * Return a clone of the time for immutability
+     * @return a clone of the time
+     */
     public Date getTime() {
-        return time;
+        return (Date)time.clone();
     }
 
+    /**
+     * Store a clone of the time for immutability
+     */
     public void setTime(Date time) {
-        this.time = time;
+        this.time = (Date)time.clone();
     }
 
     public Long getId() {

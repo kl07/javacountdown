@@ -102,7 +102,6 @@ public class VersionResourceTest {
         ClientResponse response = webResource.accept("application/json")
                 .get(ClientResponse.class);
 
-        // TODO Martijn's local dev environment gets a 204 - NO CONTENT
         Assert.assertEquals(200, response.getStatus());
         logger.info("GET /version HTTP/1.1\n\n" + response.getEntity(String.class));
     }
