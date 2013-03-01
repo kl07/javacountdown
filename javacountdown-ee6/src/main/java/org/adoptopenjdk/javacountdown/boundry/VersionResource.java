@@ -24,8 +24,6 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -41,9 +39,6 @@ import org.adoptopenjdk.javacountdown.control.DataProvider;
 public class VersionResource {
 
     private static final Logger logger = Logger.getLogger(VersionResource.class.getName());
-
-    @Context
-    private UriInfo context;
 
     @Inject
     private DataProvider dataProvider;
@@ -72,15 +67,13 @@ public class VersionResource {
     /**
      * Gets Data for the map
      *
-     * @return json object with data for the map.
+     * @return JSON object with data for the map.
      */
     @GET
     @Produces("application/json")
     public String getData() {
-
         String data = dataProvider.getCountries();
         logger.log(Level.INFO, data);
         return data;
-
     }
 }

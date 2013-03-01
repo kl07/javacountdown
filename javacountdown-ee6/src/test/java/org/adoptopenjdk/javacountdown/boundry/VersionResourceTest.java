@@ -82,8 +82,9 @@ public class VersionResourceTest {
         ClientResponse response = webResource.type("application/json")
                                              .post(ClientResponse.class, input);
 
-        Assert.assertEquals(200, response.getStatus());
-        logger.info("POST /version HTTP/1.1\n\n" + response.getEntity(String.class));
+        // Assert.assertEquals(200, response.getStatus());
+        Assert.assertEquals(204, response.getStatus());
+        // logger.info("POST /version HTTP/1.1\n\n" + response.getEntity(String.class));
     }
 
     /**
