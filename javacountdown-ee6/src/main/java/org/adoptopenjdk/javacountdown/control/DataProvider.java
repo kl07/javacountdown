@@ -40,9 +40,8 @@ public class DataProvider {
     EntityManager entityManager;
 
     /**
-     * Get a list of all countries with data to display on the map
-     *
-     * TODO Can we return this as a domain object as opposed to a String?
+     * Get a list of all countries with data to display on the map, this is returned 
+     * directly as a String as that's the expected format
      *
      * @return List of countries as a String
      */
