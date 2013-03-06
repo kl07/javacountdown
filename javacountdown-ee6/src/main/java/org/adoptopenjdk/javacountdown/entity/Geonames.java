@@ -28,7 +28,7 @@ import javax.validation.constraints.Size;
 
 /**
  * Entity that represents geographical locations
- * TODO Alphas fields might need renaming
+ * TODO Alphas fields might need renaming - Issue #11
  */
 @Entity
 @Table(name = "GEONAMES")
@@ -153,7 +153,6 @@ public class Geonames implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Geonames)) {
             return false;
         }

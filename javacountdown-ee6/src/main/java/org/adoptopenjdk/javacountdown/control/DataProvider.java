@@ -40,9 +40,8 @@ public class DataProvider {
     EntityManager entityManager;
 
     /**
-     * Get a list of all countries with data to display on the map
-     *
-     * TODO Can we return this as a domain object as opposed to a String?
+     * Get a list of all countries with data to display on the map, this is returned 
+     * directly as a String as that's the expected format
      *
      * @return List of countries as a String
      */
@@ -52,7 +51,7 @@ public class DataProvider {
         Query query = entityManager.createQuery(GET_COUNTRIES);
         List<Object[]> results = query.getResultList();
 
-        // TODO: Separate Java Versions. ATM this simply treats all the same.
+        // TODO: Separate Java Versions. ATM this simply treats all the same. - Issue #16
         HashMap<String, Integer> all = new HashMap<>();
 
         for (Object[] result : results) {
@@ -60,35 +59,35 @@ public class DataProvider {
             int count = ((Number) result[1]).intValue();
             // Remove unresolved locations
             if (!country.equalsIgnoreCase("unresolved")) {
-                all.put(country, count);
+                all.put(country, Integer.valueOf(count));
             }
         }
 
         int total = 0; // get 100% base
         for (Integer value : all.values()) {
-            total += value;
+            total += value.intValue();
         }
 
-        logger.log(Level.INFO, "Total: {0}", total);
+        logger.log(Level.INFO, "Total: {0}", Integer.valueOf(total));
 
         Set<String> keyset = all.keySet();
         Gson gson = new Gson();
 
         // Down to percentages
         for (String key : keyset) {
-            int temp2 = all.get(key) * 100;
-            float percentage = temp2 / total;
+            int temp = all.get(key).intValue() * 100;
+            float percentage = temp / (float)total;
             int prettypercentage = (int) percentage;
-            all.put(key, prettypercentage);
-            logger.log(Level.INFO, "Key + Temp: {0} {1}", new Object[]{key, prettypercentage});
+            all.put(key, Integer.valueOf(prettypercentage));
+            logger.log(Level.INFO, "Key + Temp: {0} {1}", new Object[]{key, Integer.valueOf(prettypercentage)});
         }
 
         // if we don't have results we simply put an empty element to prevent 204 on the client
         if (all.isEmpty()) {
-            all.put("", 0);
+            all.put("", Integer.valueOf(0));
         }
 
-        // Make json
+        // Make JSON
         String json = gson.toJson(all);
         builder.append(json);
 
@@ -113,12 +112,12 @@ public class DataProvider {
         String country = "unresolved";
 
         Query query = entityManager.createQuery(GET_COUNTRY_FROM_GEO_DATA);
-        query.setParameter("lat", latitude);
-        query.setParameter("lng", longitude);
+        query.setParameter("lat", new Double(latitude));
+        query.setParameter("lng", new Double(longitude));
         query.setMaxResults(3);
         List<Object[]> results = query.getResultList();
 
-        logger.log(Level.INFO, "Are we lucky? lat {0} long {1}", new Object[]{latitude, longitude});
+        logger.log(Level.INFO, "Are we lucky? lat {0} long {1}", new Object[]{ new Double(latitude), new Double(longitude)});
 
         if (results.size() > 0) {
             logger.log(Level.INFO, "we have a result");
@@ -132,7 +131,7 @@ public class DataProvider {
     }
 
     /**
-     * TODO: Add validation and some error-checks.
+     * TODO: Add validation and some error-checks. - Issue #14
      *
      * @param Visit visit
      */
@@ -140,7 +139,7 @@ public class DataProvider {
 
         logger.log(Level.INFO, "persist visit called: {0}", visit);
 
-        String country = getCountryFromLatLong(visit.getLat(), visit.getLng());
+        String country = getCountryFromLatLong(visit.getLatitude(), visit.getLongitude());
 
         visit.setCountry(country);
         entityManager.persist(visit);
