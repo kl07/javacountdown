@@ -4,8 +4,8 @@
     
     
     <jdbc-connection-pool name="jdbc/javacountdown-pool"
-                              res-type="javax.sql.DataSource" datasource-classname="org.apache.derby.jdbc.EmbeddedDataSource"
-                              ping="true">
+                          res-type="javax.sql.DataSource" datasource-classname="org.apache.derby.jdbc.EmbeddedDataSource"
+                          ping="true">
         <property name="ConnectionAttributes" value="create=true" />
         <property name="DatabaseName" value="./target/derbydb" />
         <property name="Password" value="" />

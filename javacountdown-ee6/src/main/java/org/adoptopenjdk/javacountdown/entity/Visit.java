@@ -22,32 +22,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Visitor class, represents an end user hitting a website with their Java applet
- * enabled event.
+ * Visitor class, represents an end user hitting a website with their Java
+ * applet enabled event.
  */
 @Entity
 public class Visit implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     private String version;
-
     private double lat;
-
     private double lng;
-
     private String country;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "entered")
     private Date time;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "Visit_SEQ", allocationSize = 5, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Visit_SEQ")
     private Long id;
 
     /**
@@ -56,8 +53,6 @@ public class Visit implements Serializable {
     public Visit() {
     }
 
-    
-    
     public String getVersion() {
         return version;
     }

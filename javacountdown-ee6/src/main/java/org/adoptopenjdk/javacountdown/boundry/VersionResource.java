@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -31,6 +32,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.adoptopenjdk.javacountdown.control.DataProvider;
 
 /**
@@ -41,10 +44,8 @@ import org.adoptopenjdk.javacountdown.control.DataProvider;
 public class VersionResource {
 
     private static final Logger logger = Logger.getLogger(VersionResource.class.getName());
-
     @Context
     private UriInfo context;
-
     @Inject
     private DataProvider dataProvider;
 
@@ -55,7 +56,7 @@ public class VersionResource {
      */
     @POST
     @Consumes("application/json")
-    public void log(String content) {
+    public Response log(String content) {
         logger.log(Level.INFO, "Client input: {0}", content);
 
         Visit visit = null;
@@ -67,6 +68,7 @@ public class VersionResource {
         }
         dataProvider.persistVisit(visit);
         logger.log(Level.INFO, content);
+        return Response.status(Response.Status.OK.getStatusCode()).build();
     }
 
     /**
@@ -76,11 +78,12 @@ public class VersionResource {
      */
     @GET
     @Produces("application/json")
-    public String getData() {
-
+    public Response getData(@Context final HttpServletResponse response) {
         String data = dataProvider.getCountries();
         logger.log(Level.INFO, data);
-        return data;
+        
+        logger.log(Level.INFO, "Status: {0}", Response.Status.OK.getStatusCode());
+        return Response.ok(data).build();
 
     }
 }

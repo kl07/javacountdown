@@ -15,9 +15,6 @@
         </configuration>
     </container>
     <extension qualifier="persistence">
-
-        <property name="defaultDataSource">jdbc/javacountdown</property>
-
+        <property name="dumpData">true</property>
     </extension>
-
 </arquillian>
