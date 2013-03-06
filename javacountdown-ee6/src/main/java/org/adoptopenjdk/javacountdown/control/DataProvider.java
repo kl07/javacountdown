@@ -40,8 +40,8 @@ public class DataProvider {
     EntityManager entityManager;
 
     /**
-     * Get a list of all countries with data to display on the map, this is returned 
-     * directly as a String as that's the expected format
+     * Get a list of all countries with data to display on the map, this is
+     * returned directly as a String as that's the expected format
      *
      * @return List of countries as a String
      */
@@ -76,7 +76,7 @@ public class DataProvider {
         // Down to percentages
         for (String key : keyset) {
             int temp = all.get(key).intValue() * 100;
-            float percentage = temp / (float)total;
+            float percentage = temp / (float) total;
             int prettypercentage = (int) percentage;
             all.put(key, Integer.valueOf(prettypercentage));
             logger.log(Level.INFO, "Key + Temp: {0} {1}", new Object[]{key, Integer.valueOf(prettypercentage)});
@@ -117,7 +117,7 @@ public class DataProvider {
         query.setMaxResults(3);
         List<Object[]> results = query.getResultList();
 
-        logger.log(Level.INFO, "Are we lucky? lat {0} long {1}", new Object[]{ new Double(latitude), new Double(longitude)});
+        logger.log(Level.INFO, "Are we lucky? lat {0} long {1}", new Object[]{new Double(latitude), new Double(longitude)});
 
         if (results.size() > 0) {
             logger.log(Level.INFO, "we have a result");
@@ -139,7 +139,7 @@ public class DataProvider {
 
         logger.log(Level.INFO, "persist visit called: {0}", visit);
 
-        String country = getCountryFromLatLong(visit.getLatitude(), visit.getLongitude());
+        String country = getCountryFromLatLong(visit.getLat(), visit.getLng());
 
         visit.setCountry(country);
         entityManager.persist(visit);
