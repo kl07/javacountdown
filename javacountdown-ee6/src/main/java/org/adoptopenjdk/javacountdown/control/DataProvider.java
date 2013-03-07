@@ -131,7 +131,9 @@ public class DataProvider {
     }
 
     /**
-     * TODO: Add validation and some error-checks. - Issue #14
+     * Persisting a Visit entity
+     * This only gets called when the visit could be parsed by gson.
+     * No further checks necessary here. 
      *
      * @param Visit visit
      */

@@ -44,7 +44,6 @@ public class Visit implements Serializable {
     private Date time;
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "Visit_SEQ", allocationSize = 5, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Visit_SEQ")
     private Long id;
