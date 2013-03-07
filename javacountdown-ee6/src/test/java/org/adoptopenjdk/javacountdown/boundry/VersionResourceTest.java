@@ -15,9 +15,7 @@
  */
 package org.adoptopenjdk.javacountdown.boundry;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import com.jayway.restassured.http.ContentType;
 import java.io.File;
 import java.net.URL;
 import org.adoptopenjdk.javacountdown.control.DataProvider;
@@ -35,16 +33,16 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Assert;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// Preparing for restassured
-//import static com.jayway.restassured.RestAssured.*;
-//import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
-//import static org.hamcrest.Matchers.*;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import javax.ws.rs.core.Response.Status;
+
 /**
  * Testing the REST interface methods
  */
@@ -55,6 +53,7 @@ public class VersionResourceTest {
 
     private static final Logger logger = LoggerFactory.getLogger(VersionResourceTest.class);
     private static final String RESOURCE_PREFIX = "rest";
+    private static final String REST_ENDPOINT = "version";
 
     /**
      * Creating the ShrinkWrap deployment for Arquillian. This only contains the
@@ -83,6 +82,7 @@ public class VersionResourceTest {
     @Test
     @InSequence(1)
     public void createSchema() throws Exception {
+        logger.info("createSchema");
     }
 
     /**
@@ -93,6 +93,7 @@ public class VersionResourceTest {
     @InSequence(4)
     @ApplyScriptBefore("derby/drop.sql")
     public void cleanSchema() {
+        logger.info("cleanSchema");
     }
 
     /**
@@ -106,21 +107,14 @@ public class VersionResourceTest {
     @InSequence(2)
     @RunAsClient
     public void testLog(@ArquillianResource @OperateOnDeployment("rest") URL deploymentUrl) throws Exception {
-        logger.info("InSequence (2) ");
-        Client client = Client.create();
-        String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/version";
-        WebResource webResource = client.resource(url);
+        logger.info("testLog");
+        String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
+        String input =
+                "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,\"lng\":11.6854924}";
 
-        logger.info("deploymentUrl: " + url);
+        // should return Response.noContent() which is a 204
+        given().body(input).contentType(ContentType.JSON).expect().statusCode(Status.NO_CONTENT.getStatusCode()).log().ifError().when().post(url);
 
-        String input = "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,\"lng\":11.6854924}";
-
-        webResource.type("application/json");
-        ClientResponse response = webResource.type("application/json")
-                .post(ClientResponse.class, input);
-
-        Assert.assertEquals(200, response.getStatus());
-        logger.info("POST /version HTTP/1.1\n\n" + response.getEntity(String.class));
     }
 
     /**
@@ -134,17 +128,8 @@ public class VersionResourceTest {
     @InSequence(3)
     @RunAsClient
     public void testGetData(@ArquillianResource @OperateOnDeployment("rest") URL deploymentUrl) throws Exception {
-        logger.info("InSequence (3) ");
-        Client client = Client.create();
-        String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/version";
-        WebResource webResource = client.resource(url);
-
-        logger.info("deploymentUrl: " + url);
-
-        ClientResponse response = webResource.accept("application/json")
-                .get(ClientResponse.class);
-
-        Assert.assertEquals(200, response.getStatus());
-        logger.info("GET /version HTTP/1.1\n\n" + response.getEntity(String.class));
+        logger.info("testGetData");
+        String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
+        given().contentType(ContentType.JSON).expect().body("BB", equalTo(100)).statusCode(Status.OK.getStatusCode()).log().ifError().when().get(url);
     }
 }

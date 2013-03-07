@@ -3,10 +3,13 @@ PluginDetect.getVersion(".");
 var version = PluginDetect.getVersion('Java');
 var url = document.location.href;
 var rootURL = url + "rest/version";
-        //"https://java-trialaj2n.java.us1.oraclecloudapps.com/javacountdown/rest/version";
 var gdpData;
 
-// initialized by onLoad
+$(function() {
+    initialize();
+});
+
+
 function initialize() {
     console.log("version" + version);
     if (navigator.geolocation)

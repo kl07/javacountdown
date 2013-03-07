@@ -65,7 +65,7 @@ public class VersionResource {
         }
         dataProvider.persistVisit(visit);
         logger.log(Level.INFO, content);
-        return Response.status(Response.Status.OK.getStatusCode()).build();
+        return Response.noContent().build();
     }
 
     /**
