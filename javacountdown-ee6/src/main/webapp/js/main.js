@@ -11,15 +11,21 @@ $(function() {
 
 
 function initialize() {
-    console.log("version" + version);
-    if (navigator.geolocation)
-    {
-        console.log("geolocation");
-        navigator.geolocation.getCurrentPosition(logPosition, showError);
-        $("#geoMessage").text("Thanks for contributing!");
-    } else {
-        console.log("no geolocation");
+    // test for our cookie
+    var javaCCookie = $.cookie('javacountdown');
+    if (typeof javaCCookie === 'undefined')
+    { // if undefined, we are trying to get the location of the client
+        if (navigator.geolocation)
+        { // if we have a location we do set the cookie and log it
+            navigator.geolocation.getCurrentPosition(logPosition, showError);
+            $.cookie('javacountdown', version, {expires: 25});
+            $("#geoMessage").text("Thanks for contributing!");
+        } // if not, we're not doing anything
+    } else if (version === javaCCookie) {
+        // if the java version did not change .. we are printing out a message.
+        $("#geoMessage").html("You already contributed!<br />You use version " + javaCCookie);
     }
+
 
 // callback for geolocation - logs java version incl lat long  
     function logPosition(position)
@@ -32,7 +38,7 @@ function initialize() {
     }
     ;
 
-    // Error callback - displays errors.
+// Error callback - displays errors.
     function showError(error)
     {
         switch (error.code)
@@ -54,7 +60,7 @@ function initialize() {
     ;
 //http://jvectormap.com/maps/world/world/
 
-    // fill the gdata object with series-values for the map.
+// fill the gdata object with series-values for the map.
     gdpData = getData();
 
 // get data from the rest backend
@@ -105,10 +111,8 @@ function initialize() {
     });
 
 
-    // write the log via POST to the rest backend
-
+// write the log via POST to the rest backend
     function addLog(log) {
-
         $.ajax({
             type: 'POST',
             contentType: 'application/json',
@@ -132,6 +136,4 @@ function initialize() {
         this.lat = lat;
         this.lng = lng;
     }
-
-
 }

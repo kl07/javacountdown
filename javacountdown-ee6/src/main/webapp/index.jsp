@@ -81,7 +81,7 @@
                 </aside>
                 <aside class="white">
                     <p>Powered by:</p>
-                    <a href="http://glassfish.org" target="_blank"><img src="img/glassfish_logo.gif" width="107" height="49"></a>
+                    <a href="http://glassfish.org" target="_blank"><img src="img/glassfish_logo.gif" width="107" height="86"></a>
                 </aside>
             </div> <!-- #main -->
         </div> <!-- #main-container -->
