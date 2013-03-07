@@ -61,8 +61,7 @@ public class VersionResource {
         try {
             visit = gson.fromJson(content, Visit.class);
         } catch (JsonSyntaxException e) {
-            //logger.log(Level.SEVERE, "Deserialization went wrong", e);
-            // return Response.status(Response.Status.BAD_REQUEST).build();
+            // Deserialization went wrong
             throw new WebApplicationException(e, Response.status(Response.Status.BAD_REQUEST).build());
         }
         dataProvider.persistVisit(visit);
