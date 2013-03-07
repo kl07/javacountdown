@@ -18,7 +18,6 @@ package org.adoptopenjdk.javacountdown.control;
 import org.adoptopenjdk.javacountdown.entity.Visit;
 import com.google.gson.Gson;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -26,7 +25,6 @@ import java.util.logging.Logger;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
