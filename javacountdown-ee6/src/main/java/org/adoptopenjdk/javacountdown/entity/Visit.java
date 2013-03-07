@@ -38,18 +38,18 @@ public class Visit implements Serializable {
     private double lat;
     private double lng;
     private String country;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "entered")
     private Date time;
+
     @Id
     //@GeneratedValue(strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "Visit_SEQ", allocationSize = 5, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Visit_SEQ")
     private Long id;
 
-    /**
-     * Default public constructor for JPA
-     */
+    /** Default public constructor for JPA */
     public Visit() {
     }
 
@@ -77,12 +77,19 @@ public class Visit implements Serializable {
         this.lng = lng;
     }
 
+    /**
+     * Return a clone of the time to follow thread-safe programming practices
+     * @return a clone of the time
+     */
     public Date getTime() {
-        return time;
+        return (Date)time.clone();
     }
 
+    /**
+     * Set a clone of the time to follow thread-safe programming practices
+     */
     public void setTime(Date time) {
-        this.time = time;
+        this.time = (Date)time.clone();
     }
 
     public Long getId() {

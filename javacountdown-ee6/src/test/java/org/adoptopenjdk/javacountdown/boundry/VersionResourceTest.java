@@ -74,7 +74,7 @@ public class VersionResourceTest {
     }
 
     /**
-     * Simple Test used as a workaround because Arquillian doesnt support
+     * Simple Test used as a workaround because Arquillian doesn't support
      * Before/AfterClass in core yet. It simply triggers
      *
      * @CreateSchema
@@ -101,6 +101,7 @@ public class VersionResourceTest {
      * @param deploymentUrl
      * @throws Exception
      */
+    @SuppressWarnings("static-method")
     @Test
     @InSequence(2)
     @RunAsClient
@@ -128,6 +129,7 @@ public class VersionResourceTest {
      * @param deploymentUrl
      * @throws Exception
      */
+    @SuppressWarnings("static-method")
     @Test
     @InSequence(3)
     @RunAsClient
