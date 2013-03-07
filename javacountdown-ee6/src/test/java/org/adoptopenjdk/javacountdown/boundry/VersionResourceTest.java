@@ -115,7 +115,7 @@ public class VersionResourceTest {
     }
 
     /**
-     * Testing a maleformed log submission POST /version
+     * Testing a malformed log submission POST /version
      *
      * @param deploymentUrl
      * @throws Exception
