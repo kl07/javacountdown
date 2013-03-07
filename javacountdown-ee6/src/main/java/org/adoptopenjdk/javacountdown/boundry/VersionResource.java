@@ -54,7 +54,7 @@ public class VersionResource {
     @POST
     @Consumes("application/json")
     public Response log(String content) {
-        logger.log(Level.INFO, "Client input: {0}", content);
+        logger.log(Level.FINER, "Client input: {0}", content);
 
         Visit visit = null;
         Gson gson = new Gson();
@@ -77,9 +77,6 @@ public class VersionResource {
     @GET
     @Produces("application/json")
     public Response getData(@Context final HttpServletResponse response) {
-        String data = dataProvider.getCountries();
-        logger.log(Level.INFO, data);
-        logger.log(Level.INFO, "Status: {0}", Integer.valueOf(Response.Status.OK.getStatusCode()));
-        return Response.ok(data).build();
+        return Response.ok(dataProvider.getCountries()).build();
     }
 }

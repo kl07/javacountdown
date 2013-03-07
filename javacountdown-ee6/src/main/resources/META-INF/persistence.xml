@@ -6,9 +6,9 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables"/>
-            <property name="eclipselink.logging.level" value="ALL"/>
-            <property name="eclipselink.logging.level.sql" value="FINEST"/>
-            <property name="eclipselink.logging.level.cache" value="FINEST"/>
+            <property name="eclipselink.logging.level" value="CONFIG"/>
+            <property name="eclipselink.logging.level.sql" value="CONFIG"/>
+            <property name="eclipselink.logging.level.cache" value="CONFIG"/>
         </properties>
     </persistence-unit>
 </persistence>

@@ -18,6 +18,7 @@ package org.adoptopenjdk.javacountdown.control;
 import org.adoptopenjdk.javacountdown.entity.Visit;
 import com.google.gson.Gson;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -26,6 +27,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  * The main Data provider for the JAX-RS services
@@ -33,8 +35,8 @@ import javax.persistence.Query;
 @Named
 public class DataProvider {
 
-    private final static String GET_COUNTRIES = "SELECT visit.country, COUNT(visit.country) FROM Visit AS visit GROUP BY visit.country ORDER BY 'count'";
-    private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT G.alpha2 FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
+    private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v GROUP BY v.country ORDER BY COUNT(v.country)";
+    private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(G.alpha2) FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
     @PersistenceContext(unitName = "javacountdownPU")
     EntityManager entityManager;
@@ -48,20 +50,21 @@ public class DataProvider {
     public String getCountries() {
         StringBuilder builder = new StringBuilder();
 
-        Query query = entityManager.createQuery(GET_COUNTRIES);
-        List<Object[]> results = query.getResultList();
+        TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRIES, CountryHolder.class);
+        List<CountryHolder> results = query.getResultList();
 
         // TODO: Separate Java Versions. ATM this simply treats all the same. - Issue #16
         HashMap<String, Integer> all = new HashMap<>();
 
-        for (Object[] result : results) {
-            String country = (String) result[0];
-            int count = ((Number) result[1]).intValue();
+        for (CountryHolder holder : results) {
+            String country = holder.getCountry();
+            int count = holder.getCnt();
             // Remove unresolved locations
             if (!country.equalsIgnoreCase("unresolved")) {
                 all.put(country, Integer.valueOf(count));
             }
         }
+
 
         int total = 0; // get 100% base
         for (Integer value : all.values()) {
@@ -111,18 +114,18 @@ public class DataProvider {
 
         String country = "unresolved";
 
-        Query query = entityManager.createQuery(GET_COUNTRY_FROM_GEO_DATA);
+        TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRY_FROM_GEO_DATA, CountryHolder.class);
         query.setParameter("lat", new Double(latitude));
         query.setParameter("lng", new Double(longitude));
         query.setMaxResults(3);
-        List<Object[]> results = query.getResultList();
+        List<CountryHolder> results = query.getResultList();
 
         logger.log(Level.INFO, "Are we lucky? lat {0} long {1}", new Object[]{new Double(latitude), new Double(longitude)});
 
         if (results.size() > 0) {
             logger.log(Level.INFO, "we have a result");
-            Object result = results.get(0);
-            country = (String) result;
+            CountryHolder result = results.get(0);
+            country = result.getCountry();
         }
 
         logger.log(Level.INFO, "Country: {0}", country);
@@ -131,9 +134,8 @@ public class DataProvider {
     }
 
     /**
-     * Persisting a Visit entity
-     * This only gets called when the visit could be parsed by gson.
-     * No further checks necessary here. 
+     * Persisting a Visit entity This only gets called when the visit could be
+     * parsed by gson. No further checks necessary here.
      *
      * @param Visit visit
      */
