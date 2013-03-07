@@ -74,9 +74,7 @@ public class VersionResourceTest {
 
     /**
      * Simple Test used as a workaround because Arquillian doesn't support
-     * Before/AfterClass in core yet. It simply triggers
-     *
-     * @CreateSchema
+     * Before/AfterClass in core yet. It simply triggers the CreateSchema class annotation.
      * @throws Exception
      */
     @Test
@@ -90,14 +88,14 @@ public class VersionResourceTest {
      * not provide 'drop if exists'
      */
     @Test
-    @InSequence(4)
+    @InSequence(5)
     @ApplyScriptBefore("derby/drop.sql")
     public void cleanSchema() {
         logger.info("cleanSchema");
     }
 
     /**
-     * Testing a log submission POST /version
+     * Testing a well formed log submission POST /version
      *
      * @param deploymentUrl
      * @throws Exception
@@ -111,9 +109,28 @@ public class VersionResourceTest {
         String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
         String input =
                 "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,\"lng\":11.6854924}";
-
         // should return Response.noContent() which is a 204
         given().body(input).contentType(ContentType.JSON).expect().statusCode(Status.NO_CONTENT.getStatusCode()).log().ifError().when().post(url);
+
+    }
+
+    /**
+     * Testing a maleformed log submission POST /version
+     *
+     * @param deploymentUrl
+     * @throws Exception
+     */
+    @SuppressWarnings("static-method")
+    @Test
+    @InSequence(3)
+    @RunAsClient
+    public void testWrongJson(@ArquillianResource @OperateOnDeployment("rest") URL deploymentUrl) throws Exception {
+        logger.info("testWrongJson");
+        String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
+        String maleFormedJson =
+                "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,";
+        // should return a 400 bad request
+        given().body(maleFormedJson).contentType(ContentType.JSON).expect().statusCode(Status.BAD_REQUEST.getStatusCode()).log().ifError().when().post(url);
 
     }
 
@@ -125,7 +142,7 @@ public class VersionResourceTest {
      */
     @SuppressWarnings("static-method")
     @Test
-    @InSequence(3)
+    @InSequence(4)
     @RunAsClient
     public void testGetData(@ArquillianResource @OperateOnDeployment("rest") URL deploymentUrl) throws Exception {
         logger.info("testGetData");

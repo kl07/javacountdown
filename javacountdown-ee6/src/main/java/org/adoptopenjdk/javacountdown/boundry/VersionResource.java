@@ -32,6 +32,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.WebApplicationException;
 import org.adoptopenjdk.javacountdown.control.DataProvider;
 
 /**
@@ -42,7 +43,6 @@ import org.adoptopenjdk.javacountdown.control.DataProvider;
 public class VersionResource {
 
     private static final Logger logger = Logger.getLogger(VersionResource.class.getName());
-
     @Inject
     private DataProvider dataProvider;
 
@@ -61,7 +61,9 @@ public class VersionResource {
         try {
             visit = gson.fromJson(content, Visit.class);
         } catch (JsonSyntaxException e) {
-            logger.log(Level.SEVERE, "Deserialization went wrong", e);
+            //logger.log(Level.SEVERE, "Deserialization went wrong", e);
+            // return Response.status(Response.Status.BAD_REQUEST).build();
+            throw new WebApplicationException(e, Response.status(Response.Status.BAD_REQUEST).build());
         }
         dataProvider.persistVisit(visit);
         logger.log(Level.INFO, content);
