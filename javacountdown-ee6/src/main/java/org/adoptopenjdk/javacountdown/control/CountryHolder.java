@@ -24,10 +24,7 @@ public class CountryHolder implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String country;
-    private Integer cnt;
-
-    public CountryHolder() {
-    }
+    private Integer count;
 
     /**
      * Constructor for use with DataProvider.getCountryFromLatLong
@@ -35,22 +32,21 @@ public class CountryHolder implements Serializable {
      */
     public CountryHolder(String country) {
         this.country = country;
-        this.cnt = 0;
+        this.count = Integer.valueOf(0);
     }
 
     /**
      * Constructor for use with DataProvider.getCountries
      * @param country
-     * @param cnt
+     * @param count
      */
-    public CountryHolder(String country, Long cnt) {
+    public CountryHolder(String country, Long count) {
         this.country = country;
 
-        if (cnt > (long) Integer.MAX_VALUE) {
-            // x is too big to convert
-            this.cnt = 0;
+        if (count.longValue() > Integer.MAX_VALUE) {
+            this.count = Integer.valueOf(0);
         } else {
-            this.cnt = cnt.intValue();
+            this.count = Integer.valueOf(count.intValue());
         }
     }
 
@@ -62,11 +58,11 @@ public class CountryHolder implements Serializable {
         this.country = country;
     }
 
-    public Integer getCnt() {
-        return cnt;
+    public Integer getCount() {
+        return count;
     }
 
-    public void setCnt(Integer cnt) {
-        this.cnt = cnt;
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

@@ -77,6 +77,7 @@ public class VersionResourceTest {
      * Before/AfterClass in core yet. It simply triggers the CreateSchema class annotation.
      * @throws Exception
      */
+    @SuppressWarnings("static-method")
     @Test
     @InSequence(1)
     public void createSchema() throws Exception {
@@ -87,6 +88,7 @@ public class VersionResourceTest {
      * We need to clean up afterwards to make the test repeatable. Derby does
      * not provide 'drop if exists'
      */
+    @SuppressWarnings("static-method")
     @Test
     @InSequence(5)
     @ApplyScriptBefore("derby/drop.sql")
@@ -147,6 +149,6 @@ public class VersionResourceTest {
     public void testGetData(@ArquillianResource @OperateOnDeployment("rest") URL deploymentUrl) throws Exception {
         logger.info("testGetData");
         String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
-        given().contentType(ContentType.JSON).expect().body("BB", equalTo(100)).statusCode(Status.OK.getStatusCode()).log().ifError().when().get(url);
+        given().contentType(ContentType.JSON).expect().body("BB", equalTo(Integer.valueOf(100))).statusCode(Status.OK.getStatusCode()).log().ifError().when().get(url);
     }
 }

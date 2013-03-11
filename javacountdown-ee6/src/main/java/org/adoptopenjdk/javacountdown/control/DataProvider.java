@@ -56,7 +56,7 @@ public class DataProvider {
 
         for (CountryHolder holder : results) {
             String country = holder.getCountry();
-            int count = holder.getCnt();
+            int count = holder.getCount().intValue();
             // Remove unresolved locations
             if (!country.equalsIgnoreCase("unresolved")) {
                 all.put(country, Integer.valueOf(count));

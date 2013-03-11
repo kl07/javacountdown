@@ -87,8 +87,6 @@
                 </footer>
             </div>
 
-
-
             <!-- 
                 might be changed to some orcl tracking ?
                 <script>
