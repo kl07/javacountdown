@@ -42,6 +42,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Geonames.findByLongitude", query = "SELECT g FROM Geonames g WHERE g.longitude = :longitude")})
 public class Geonames implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @Id
     @Basic(optional = false)
     @NotNull
@@ -53,30 +54,29 @@ public class Geonames implements Serializable {
     @NotNull
     @Size(min = 1, max = 2)
     @Column(name = "ALPHA2")
-
     private String alpha2;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 3)
     @Column(name = "ALPHA3")
-
     private String alpha3;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "NUMCODE")
-
     private int numcode;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "LATITUDE")
-
     private double latitude;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "LONGITUDE")
     private double longitude;
 
-    
     /**
      * Default public constructor needed for JPA
      */

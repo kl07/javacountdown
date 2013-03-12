@@ -72,6 +72,8 @@ public class VersionResource {
     /**
      * Gets Data for the map
      *
+     * TODO repsonse variable isn't actually used...
+     *
      * @return json object with data for the map.
      */
     @GET
