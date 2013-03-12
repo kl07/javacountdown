@@ -22,9 +22,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.TypedQuery;
 
 /**
@@ -36,8 +39,8 @@ public class DataProvider {
     private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v GROUP BY v.country ORDER BY COUNT(v.country)";
     private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(G.alpha2) FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
-    @PersistenceContext(unitName = "javacountdownPU")
-    EntityManager entityManager;
+    @PersistenceUnit(unitName = "javacountdownPU")
+    EntityManagerFactory emf;
 
     /**
      * Get a list of all countries with data to display on the map, this is
@@ -46,6 +49,7 @@ public class DataProvider {
      * @return List of countries as a String
      */
     public String getCountries() {
+        EntityManager entityManager = emf.createEntityManager();
         StringBuilder builder = new StringBuilder();
 
         TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRIES, CountryHolder.class);
@@ -109,7 +113,7 @@ public class DataProvider {
      * @return ISO 3166 alpha 2 code
      */
     private String getCountryFromLatLong(double latitude, double longitude) {
-
+        EntityManager entityManager = emf.createEntityManager();
         String country = "unresolved";
 
         TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRY_FROM_GEO_DATA, CountryHolder.class);
@@ -138,7 +142,7 @@ public class DataProvider {
      * @param Visit visit
      */
     public void persistVisit(Visit visit) {
-
+        EntityManager entityManager = emf.createEntityManager();
         logger.log(Level.INFO, "persist visit called: {0}", visit);
 
         String country = getCountryFromLatLong(visit.getLat(), visit.getLng());
