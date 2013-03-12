@@ -34,8 +34,8 @@ import javax.persistence.TypedQuery;
  */
 @Named
 public class DataProvider {
-    
-    private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v WHERE v.country <> 'unresolved' GROUP BY v.country ORDER BY COUNT(v.country)";
+
+    private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v WHERE v.country <> 'unresolved' AND v.vminor = :version GROUP BY v.country ORDER BY COUNT(v.country)";
     private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(G.alpha2) FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
     @PersistenceUnit(unitName = "javacountdownPU")
@@ -50,27 +50,27 @@ public class DataProvider {
     public String getCountries() {
         EntityManager entityManager = emf.createEntityManager();
         StringBuilder builder = new StringBuilder();
-        
+
         TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRIES, CountryHolder.class);
+        query.setParameter("version", 7);
         List<CountryHolder> results = query.getResultList();
 
-        // TODO: Separate Java Versions. ATM this simply treats all the same. - Issue #16
         HashMap<String, Integer> all = new HashMap<>();
-        
+
         for (CountryHolder holder : results) {
             String country = holder.getCountry();
             int count = holder.getCount().intValue();
             all.put(country, Integer.valueOf(count));
         }
-        
-        
+
+
         int total = 0; // get 100% base
         for (Integer value : all.values()) {
             total += value.intValue();
         }
-        
+
         logger.log(Level.INFO, "Total: {0}", Integer.valueOf(total));
-        
+
         Set<String> keyset = all.keySet();
         Gson gson = new Gson();
 
@@ -91,9 +91,9 @@ public class DataProvider {
         // Make JSON
         String json = gson.toJson(all);
         builder.append(json);
-        
+
         logger.log(Level.INFO, "<< BUILDER {0}", builder.toString());
-        
+
         return builder.toString();
     }
 
@@ -111,23 +111,23 @@ public class DataProvider {
     private String getCountryFromLatLong(double latitude, double longitude) {
         EntityManager entityManager = emf.createEntityManager();
         String country = "unresolved";
-        
+
         TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRY_FROM_GEO_DATA, CountryHolder.class);
         query.setParameter("lat", new Double(latitude));
         query.setParameter("lng", new Double(longitude));
         query.setMaxResults(3);
         List<CountryHolder> results = query.getResultList();
-        
+
         logger.log(Level.INFO, "Are we lucky? lat {0} long {1}", new Object[]{new Double(latitude), new Double(longitude)});
-        
+
         if (results.size() > 0) {
             logger.log(Level.INFO, "we have a result");
             CountryHolder result = results.get(0);
             country = result.getCountry();
         }
-        
+
         logger.log(Level.INFO, "Country: {0}", country);
-        
+
         return country;
     }
 
@@ -140,13 +140,13 @@ public class DataProvider {
     public void persistVisit(Visit visit) {
         EntityManager entityManager = emf.createEntityManager();
         logger.log(Level.INFO, "persist visit called: {0}", visit);
-        
+
         String country = getCountryFromLatLong(visit.getLat(), visit.getLng());
         visit = setVersion(visit);
         visit.setCountry(country);
         visit.setTime(new Date(System.currentTimeMillis()));
         entityManager.persist(visit);
-        
+
         logger.log(Level.INFO, "persisted {0}", visit);
     }
 
