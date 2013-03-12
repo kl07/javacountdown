@@ -34,7 +34,7 @@ import javax.persistence.TypedQuery;
 @Named
 public class DataProvider {
 
-    private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v GROUP BY v.country ORDER BY COUNT(v.country)";
+    private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v WHERE v.country <> 'unresolved' GROUP BY v.country ORDER BY COUNT(v.country)";
     private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(G.alpha2) FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
     @PersistenceUnit(unitName = "javacountdownPU")
@@ -59,10 +59,7 @@ public class DataProvider {
         for (CountryHolder holder : results) {
             String country = holder.getCountry();
             int count = holder.getCount().intValue();
-            // Remove unresolved locations
-            if (!country.equalsIgnoreCase("unresolved")) {
-                all.put(country, Integer.valueOf(count));
-            }
+            all.put(country, Integer.valueOf(count));
         }
 
 
