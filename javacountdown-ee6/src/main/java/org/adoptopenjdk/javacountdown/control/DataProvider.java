@@ -134,17 +134,37 @@ public class DataProvider {
      * Persisting a Visit entity This only gets called when the visit could be
      * parsed by gson. No further checks necessary here.
      *
-     * @param Visit visit
+     * @param visit
      */
     public void persistVisit(Visit visit) {
         EntityManager entityManager = emf.createEntityManager();
         logger.log(Level.INFO, "persist visit called: {0}", visit);
 
         String country = getCountryFromLatLong(visit.getLat(), visit.getLng());
-
+        visit = setVersion(visit);
         visit.setCountry(country);
         entityManager.persist(visit);
 
         logger.log(Level.INFO, "persisted {0}", visit);
+    }
+
+    /**
+     * Parsing the version string to it's numbers. If this fails we still have
+     * the String version field in the database ...
+     *
+     * @param visit
+     */
+    private Visit setVersion(Visit visit) {
+        try {
+            String delims = "[.]+";
+            String[] tokens = visit.getVersion().split(delims);
+            visit.setvMajor(Integer.parseInt(tokens[0]));
+            visit.setvMinor(Integer.parseInt(tokens[1]));
+            visit.setvPatch(Integer.parseInt(tokens[2]));
+            visit.setvBuild(Integer.parseInt(tokens[3]));
+        } catch (Exception e) {
+            // nothing to do.... we still have the "String" version
+        }
+        return visit;
     }
 }

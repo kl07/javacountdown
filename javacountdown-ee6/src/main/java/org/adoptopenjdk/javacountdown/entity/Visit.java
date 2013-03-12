@@ -35,29 +35,29 @@ public class Visit implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String version;
+    private int vMajor;
+    private int vMinor;
+    private int vPatch;
+    private int vBuild;
     private double lat;
     private double lng;
     private String country;
-
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "entered")
     private Date time;
-
     @Id
     @SequenceGenerator(name = "Visit_SEQ", allocationSize = 5, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Visit_SEQ")
     private Long id;
 
-    /** Default public constructor for JPA */
+    /**
+     * Default public constructor for JPA
+     */
     public Visit() {
     }
 
     public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
+        return this.version;
     }
 
     public double getLat() {
@@ -78,17 +78,18 @@ public class Visit implements Serializable {
 
     /**
      * Return a clone of the time to follow thread-safe programming practices
+     *
      * @return a clone of the time
      */
     public Date getTime() {
-        return (Date)time.clone();
+        return (Date) time.clone();
     }
 
     /**
      * Set a clone of the time to follow thread-safe programming practices
      */
     public void setTime(Date time) {
-        this.time = (Date)time.clone();
+        this.time = (Date) time.clone();
     }
 
     public Long getId() {
@@ -105,6 +106,38 @@ public class Visit implements Serializable {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public int getvMajor() {
+        return vMajor;
+    }
+
+    public void setvMajor(int vMajor) {
+        this.vMajor = vMajor;
+    }
+
+    public int getvMinor() {
+        return vMinor;
+    }
+
+    public void setvMinor(int vMinor) {
+        this.vMinor = vMinor;
+    }
+
+    public int getvPatch() {
+        return vPatch;
+    }
+
+    public void setvPatch(int vPatch) {
+        this.vPatch = vPatch;
+    }
+
+    public int getvBuild() {
+        return vBuild;
+    }
+
+    public void setvBuild(int vBuild) {
+        this.vBuild = vBuild;
     }
 
     @Override
