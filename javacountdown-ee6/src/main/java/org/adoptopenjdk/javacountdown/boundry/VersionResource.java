@@ -72,13 +72,12 @@ public class VersionResource {
     /**
      * Gets Data for the map
      *
-     * TODO repsonse variable isn't actually used...
      *
      * @return json object with data for the map.
      */
     @GET
     @Produces("application/json")
-    public Response getData(@Context final HttpServletResponse response) {
+    public Response getData() {
         return Response.ok(dataProvider.getCountries()).build();
     }
 }

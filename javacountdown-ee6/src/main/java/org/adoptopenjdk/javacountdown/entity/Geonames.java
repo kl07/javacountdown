@@ -28,7 +28,6 @@ import javax.validation.constraints.Size;
 
 /**
  * Entity that represents geographical locations
- * TODO Alphas fields might need renaming - Issue #11
  */
 @Entity
 @Table(name = "GEONAMES")
