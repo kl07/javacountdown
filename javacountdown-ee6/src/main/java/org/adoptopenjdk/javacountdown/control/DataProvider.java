@@ -57,19 +57,15 @@ public class DataProvider {
 
         HashMap<String, Integer> all = new HashMap<>();
 
+        int total = 0; // total count for 100% base
         for (CountryHolder holder : results) {
             String country = holder.getCountry();
             int count = holder.getCount().intValue();
+            total += count; // sum count
             all.put(country, Integer.valueOf(count));
         }
 
-
-        int total = 0; // get 100% base
-        for (Integer value : all.values()) {
-            total += value.intValue();
-        }
-
-        logger.log(Level.INFO, "Total: {0}", Integer.valueOf(total));
+        logger.log(Level.FINE, "Total: {0}", Integer.valueOf(total));
 
         Set<String> keyset = all.keySet();
         Gson gson = new Gson();
@@ -80,7 +76,7 @@ public class DataProvider {
             float percentage = temp / (float) total;
             int prettypercentage = (int) percentage;
             all.put(key, Integer.valueOf(prettypercentage));
-            logger.log(Level.INFO, "Key + Temp: {0} {1}", new Object[]{key, Integer.valueOf(prettypercentage)});
+            logger.log(Level.FINE, "Key + Temp: {0} {1}", new Object[]{key, Integer.valueOf(prettypercentage)});
         }
 
         // if we don't have results we simply put an empty element to prevent 204 on the client
@@ -92,7 +88,7 @@ public class DataProvider {
         String json = gson.toJson(all);
         builder.append(json);
 
-        logger.log(Level.INFO, "<< BUILDER {0}", builder.toString());
+        logger.log(Level.FINE, "<< BUILDER {0}", builder.toString());
 
         return builder.toString();
     }
@@ -118,16 +114,14 @@ public class DataProvider {
         query.setMaxResults(3);
         List<CountryHolder> results = query.getResultList();
 
-        logger.log(Level.INFO, "Are we lucky? lat {0} long {1}", new Object[]{new Double(latitude), new Double(longitude)});
+        logger.log(Level.FINE, "Are we lucky? lat {0} long {1}", new Object[]{new Double(latitude), new Double(longitude)});
 
         if (results.size() > 0) {
-            logger.log(Level.INFO, "we have a result");
+            logger.log(Level.FINE, "we have a result");
             CountryHolder result = results.get(0);
             country = result.getCountry();
         }
-
-        logger.log(Level.INFO, "Country: {0}", country);
-
+        logger.log(Level.FINE, "Country: {0}", country);
         return country;
     }
 
@@ -139,15 +133,12 @@ public class DataProvider {
      */
     public void persistVisit(Visit visit) {
         EntityManager entityManager = emf.createEntityManager();
-        logger.log(Level.INFO, "persist visit called: {0}", visit);
-
         String country = getCountryFromLatLong(visit.getLat(), visit.getLng());
         visit = setVersion(visit);
         visit.setCountry(country);
         visit.setTime(new Date(System.currentTimeMillis()));
         entityManager.persist(visit);
-
-        logger.log(Level.INFO, "persisted {0}", visit);
+        logger.log(Level.FINE, "persisted {0}", visit);
     }
 
     /**
