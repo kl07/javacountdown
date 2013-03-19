@@ -50,9 +50,9 @@ import javax.ws.rs.core.Response.Status;
 @RunWith(Arquillian.class)
 @CreateSchema({"derby/create-ddl.sql"})
 @Cleanup(phase = TestExecutionPhase.NONE)
-public class VersionResourceTest {
+public class VersionResourceIT {
 
-    private static final Logger logger = LoggerFactory.getLogger(VersionResourceTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(VersionResourceIT.class);
     private static final String RESOURCE_PREFIX = "rest";
     private static final String REST_ENDPOINT = "version";
 
