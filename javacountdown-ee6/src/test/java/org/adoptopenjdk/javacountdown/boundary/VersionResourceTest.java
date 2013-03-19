@@ -13,8 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.adoptopenjdk.javacountdown.boundry;
+package org.adoptopenjdk.javacountdown.boundary;
 
+import org.adoptopenjdk.javacountdown.boundary.VersionResource;
 import com.jayway.restassured.http.ContentType;
 import java.io.File;
 import java.net.URL;
