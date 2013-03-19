@@ -25,21 +25,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
  * The main Data provider for the JAX-RS services
  */
-@Named
 public class DataProvider {
 
     private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country ORDER BY COUNT(v.country)";
     private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(G.alpha2) FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
-    @PersistenceUnit(unitName = "javacountdownPU")
-    EntityManagerFactory emf;
+    @PersistenceContext
+    EntityManager em;
 
     /**
      * Get a list of all countries with data to display on the map, this is
@@ -48,10 +46,9 @@ public class DataProvider {
      * @return List of countries as a String
      */
     public String getCountries() {
-        EntityManager entityManager = emf.createEntityManager();
         StringBuilder builder = new StringBuilder();
 
-        TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRIES, CountryHolder.class);
+        TypedQuery<CountryHolder> query = em.createQuery(GET_COUNTRIES, CountryHolder.class);
         query.setParameter("version", 7);
         List<CountryHolder> results = query.getResultList();
 
@@ -109,10 +106,9 @@ public class DataProvider {
      * @return ISO 3166 alpha 2 code
      */
     private String getCountryFromLatLong(double latitude, double longitude) {
-        EntityManager entityManager = emf.createEntityManager();
         String country = "unresolved";
 
-        TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRY_FROM_GEO_DATA, CountryHolder.class);
+        TypedQuery<CountryHolder> query = em.createQuery(GET_COUNTRY_FROM_GEO_DATA, CountryHolder.class);
         query.setParameter("lat", new Double(latitude));
         query.setParameter("lng", new Double(longitude));
         query.setMaxResults(3);
@@ -138,14 +134,13 @@ public class DataProvider {
      * @param visit
      */
     public void persistVisit(Visit visit) {
-        EntityManager entityManager = emf.createEntityManager();
         logger.log(Level.INFO, "persist visit called: {0}", visit);
 
         String country = getCountryFromLatLong(visit.getLat(), visit.getLng());
         visit = setVersion(visit);
         visit.setCountry(country);
         visit.setTime(new Date(System.currentTimeMillis()));
-        entityManager.persist(visit);
+        em.persist(visit);
 
         logger.log(Level.INFO, "persisted {0}", visit);
     }
