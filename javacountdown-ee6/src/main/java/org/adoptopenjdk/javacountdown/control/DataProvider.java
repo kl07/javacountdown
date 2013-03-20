@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Asynchronous;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -30,6 +32,7 @@ import javax.persistence.TypedQuery;
 /**
  * The main Data provider for the JAX-RS services
  */
+@Stateless
 public class DataProvider {
 
     private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country ORDER BY COUNT(v.country)";
@@ -126,6 +129,7 @@ public class DataProvider {
      *
      * @param visit
      */
+    @Asynchronous
     public void persistVisit(Visit visit) {
         em.persist(visit);
         String country = getCountryFromLatLong(visit.getLat(), visit.getLng());
