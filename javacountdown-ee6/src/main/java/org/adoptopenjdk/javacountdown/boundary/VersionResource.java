@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.adoptopenjdk.javacountdown.boundry;
+package org.adoptopenjdk.javacountdown.boundary;
 
 import org.adoptopenjdk.javacountdown.entity.Visit;
 import com.google.gson.Gson;

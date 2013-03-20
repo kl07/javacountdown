@@ -26,20 +26,11 @@ public class CountryHolder implements Serializable {
     private String country;
     private Integer count;
 
-    /**
-     * Constructor for use with DataProvider.getCountryFromLatLong
-     * @param country
-     */
     public CountryHolder(String country) {
         this.country = country;
         this.count = Integer.valueOf(0);
     }
 
-    /**
-     * Constructor for use with DataProvider.getCountries
-     * @param country
-     * @param count
-     */
     public CountryHolder(String country, Long count) {
         this.country = country;
 
