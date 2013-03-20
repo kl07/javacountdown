@@ -354,6 +354,7 @@
                                 <addClasspath>true</addClasspath>
                             </manifest>
                         </archive>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
                 </plugin>
                 <plugin>

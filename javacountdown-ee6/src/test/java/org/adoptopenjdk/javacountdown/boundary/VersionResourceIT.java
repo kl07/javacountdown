@@ -44,6 +44,7 @@ import static com.jayway.restassured.RestAssured.given;
 import derby.DerbyDropTable;
 import static org.hamcrest.Matchers.equalTo;
 import javax.ws.rs.core.Response.Status;
+import org.adoptopenjdk.javacountdown.RESTConfig;
 
 /**
  * Testing the REST interface methods
@@ -70,8 +71,8 @@ public class VersionResourceIT {
                 .addPackage(DataProvider.class.getPackage())
                 .addPackage(Visit.class.getPackage())
                 .addClass(DerbyDropTable.class)
+                .addClass(RESTConfig.class)
                 .addAsWebInfResource("test-persistence.xml", "classes/META-INF/persistence.xml")
-                .addAsWebInfResource(new File("src/main/webapp", "WEB-INF/web.xml"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
