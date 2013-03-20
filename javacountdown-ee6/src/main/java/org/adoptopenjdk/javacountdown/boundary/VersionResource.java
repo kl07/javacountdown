@@ -69,8 +69,7 @@ public class VersionResource {
     /**
      * Gets Data for the map
      *
-     *
-     * @return json object with data for the map.
+     * @return JSON object with data for the map.
      */
     @GET
     @Produces("application/json")

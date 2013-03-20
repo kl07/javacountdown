@@ -17,7 +17,6 @@ package org.adoptopenjdk.javacountdown.boundary;
 
 import org.adoptopenjdk.javacountdown.boundary.VersionResource;
 import com.jayway.restassured.http.ContentType;
-import java.io.File;
 import java.net.URL;
 import org.adoptopenjdk.javacountdown.control.DataProvider;
 import org.adoptopenjdk.javacountdown.entity.Visit;
@@ -26,7 +25,6 @@ import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
-import org.jboss.arquillian.persistence.ApplyScriptBefore;
 import org.jboss.arquillian.persistence.Cleanup;
 import org.jboss.arquillian.persistence.CreateSchema;
 import org.jboss.arquillian.persistence.TestExecutionPhase;
@@ -50,7 +48,7 @@ import org.adoptopenjdk.javacountdown.RESTConfig;
  * Testing the REST interface methods
  */
 @RunWith(Arquillian.class)
-@CreateSchema({"derby/create-ddl.sql", "derby/drop.sql", "derby/insert-geonames.sql"})
+@CreateSchema({"derby/drop.sql", "derby/create-ddl.sql", "derby/insert-geonames.sql"})
 @Cleanup(phase = TestExecutionPhase.NONE)
 public class VersionResourceIT {
 
@@ -62,7 +60,7 @@ public class VersionResourceIT {
      * Creating the ShrinkWrap deployment for Arquillian. This only contains the
      * backend!
      *
-     * @return
+     * @return The Web Archive (WAR) to test against
      */
     @Deployment(name = "rest")
     public static WebArchive createDeployment() {
@@ -105,7 +103,7 @@ public class VersionResourceIT {
         String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
         String input =
                 "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,\"lng\":11.6854924}";
-        // should return Response.noContent() which is a 204
+        // Should return Response.noContent() which is a 204
         given().body(input).contentType(ContentType.JSON).expect().statusCode(Status.NO_CONTENT.getStatusCode()).log().ifError().when().post(url);
 
     }
@@ -125,7 +123,7 @@ public class VersionResourceIT {
         String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
         String maleFormedJson =
                 "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,";
-        // should return a 400 bad request
+        // Should return a 400 bad request
         given().body(maleFormedJson).contentType(ContentType.JSON).expect().statusCode(Status.BAD_REQUEST.getStatusCode()).log().ifError().when().post(url);
 
     }
