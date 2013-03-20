@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.jayway.restassured.RestAssured.given;
+import derby.DerbyDropTable;
 import static org.hamcrest.Matchers.equalTo;
 import javax.ws.rs.core.Response.Status;
 
@@ -48,7 +49,7 @@ import javax.ws.rs.core.Response.Status;
  * Testing the REST interface methods
  */
 @RunWith(Arquillian.class)
-@CreateSchema({"derby/create-ddl.sql"})
+@CreateSchema({"derby/create-ddl.sql", "derby/drop.sql", "derby/insert-geonames.sql"})
 @Cleanup(phase = TestExecutionPhase.NONE)
 public class VersionResourceIT {
 
@@ -68,6 +69,7 @@ public class VersionResourceIT {
                 .addPackage(VersionResource.class.getPackage())
                 .addPackage(DataProvider.class.getPackage())
                 .addPackage(Visit.class.getPackage())
+                .addClass(DerbyDropTable.class)
                 .addAsWebInfResource("test-persistence.xml", "classes/META-INF/persistence.xml")
                 .addAsWebInfResource(new File("src/main/webapp", "WEB-INF/web.xml"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -75,7 +77,9 @@ public class VersionResourceIT {
 
     /**
      * Simple Test used as a workaround because Arquillian doesn't support
-     * Before/AfterClass in core yet. It simply triggers the CreateSchema class annotation.
+     * Before/AfterClass in core yet. It simply triggers the CreateSchema class
+     * annotation.
+     *
      * @throws Exception
      */
     @SuppressWarnings("static-method")
@@ -83,18 +87,6 @@ public class VersionResourceIT {
     @InSequence(1)
     public void createSchema() throws Exception {
         logger.info("createSchema");
-    }
-
-    /**
-     * We need to clean up afterwards to make the test repeatable. Derby does
-     * not provide 'drop if exists'
-     */
-    @SuppressWarnings("static-method")
-    @Test
-    @InSequence(5)
-    @ApplyScriptBefore("derby/drop.sql")
-    public void cleanSchema() {
-        logger.info("cleanSchema");
     }
 
     /**

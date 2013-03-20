@@ -92,16 +92,15 @@
                 <version>1.0.0.CR3</version>
             </dependency>
 
-            <!-- WARNING - do not upgrade these to Alpha6, tests fail -->
             <dependency>
                 <groupId>org.jboss.arquillian.extension</groupId>
                 <artifactId>arquillian-persistence-api</artifactId>
-                <version>1.0.0.Alpha5</version>
+                <version>1.0.0.Alpha6</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.arquillian.extension</groupId>
                 <artifactId>arquillian-persistence-impl</artifactId>
-                <version>1.0.0.Alpha5</version>
+                <version>1.0.0.Alpha6</version>
             </dependency>
 
             <dependency>

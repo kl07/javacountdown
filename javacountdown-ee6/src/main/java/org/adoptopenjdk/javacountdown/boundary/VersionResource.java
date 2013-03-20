@@ -23,9 +23,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
-
-import javax.ws.rs.core.Context;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -54,7 +51,7 @@ public class VersionResource {
     @POST
     @Consumes("application/json")
     public Response log(String content) {
-        logger.log(Level.FINER, "Client input: {0}", content);
+        logger.log(Level.FINE, "Client input: {0}", content);
 
         Visit visit = null;
         Gson gson = new Gson();
@@ -65,7 +62,7 @@ public class VersionResource {
             throw new WebApplicationException(e, Response.status(Response.Status.BAD_REQUEST).build());
         }
         dataProvider.persistVisit(visit);
-        logger.log(Level.INFO, content);
+        logger.log(Level.FINE, content);
         return Response.noContent().build();
     }
 
