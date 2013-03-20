@@ -266,6 +266,7 @@
         </testResources>
         <pluginManagement>
             <plugins>
+                
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
@@ -353,6 +354,7 @@
                                 <addClasspath>true</addClasspath>
                             </manifest>
                         </archive>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
                 </plugin>
                 <plugin>
