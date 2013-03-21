@@ -1,14 +1,39 @@
-*.class
+bin/
 
-# Package Files #
-*.jar
-*.war
-*.ear
-/javacountdown-ee6/target/
+# Netbeans
+nb-configuration.xml
 
-javacountdown-ee6/.classpath
-javacountdown-ee6/.project
-javacountdown-ee6/.settings/
-javacountdown-ee6/bin/
-javacountdown-ee6/derby.log
-/javacountdown-ee6/nb-configuration.xml
+# Eclipse
+.project
+.classpath
+.settings/
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea
+
+# Gradle
+.gradle/
+.ivy/
+
+# Maven
+target/
+
+# TestNG
+test-output/
+
+# JBoss AS
+transaction.log
+
+# Infinitest configuration
+infinitest.filters
+
+# Logs
+*.log
+*.log~
+
+# Libreoffice leftovers (XLS)
+.~lock*
+
