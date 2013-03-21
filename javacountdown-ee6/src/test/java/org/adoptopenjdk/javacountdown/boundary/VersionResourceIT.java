@@ -17,7 +17,14 @@ package org.adoptopenjdk.javacountdown.boundary;
 
 import org.adoptopenjdk.javacountdown.boundary.VersionResource;
 import com.jayway.restassured.http.ContentType;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
 import java.net.URL;
+
+import javax.ws.rs.core.Response.Status;
+
+import org.adoptopenjdk.javacountdown.RESTConfig;
 import org.adoptopenjdk.javacountdown.control.DataProvider;
 import org.adoptopenjdk.javacountdown.entity.Visit;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -32,17 +39,14 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.jayway.restassured.RestAssured.given;
-import derby.DerbyDropTable;
-import static org.hamcrest.Matchers.equalTo;
-import javax.ws.rs.core.Response.Status;
-import org.adoptopenjdk.javacountdown.RESTConfig;
+import com.jayway.restassured.http.ContentType;
+
+import derby.DerbyDropIfExists;
 
 /**
  * Testing the REST interface methods
@@ -68,7 +72,7 @@ public class VersionResourceIT {
                 .addPackage(VersionResource.class.getPackage())
                 .addPackage(DataProvider.class.getPackage())
                 .addPackage(Visit.class.getPackage())
-                .addClass(DerbyDropTable.class)
+                .addClass(DerbyDropIfExists.class)
                 .addClass(RESTConfig.class)
                 .addAsWebInfResource("test-persistence.xml", "classes/META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
