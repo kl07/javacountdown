@@ -44,14 +44,11 @@ public class DerbyDropIfExists
 
    private static void executeStatementIgnoreOnException(String statement)
    {
-      Connection conn = null;
-      PreparedStatement preparedStatement = null;
-      try
+      try(Connection connection = DriverManager.getConnection("jdbc:derby:target/derbydb");
+          PreparedStatement preparedStatement = connection.prepareStatement(statement))
       {
-         conn = DriverManager.getConnection("jdbc:derby:target/derbydb");
-         preparedStatement = conn.prepareStatement(statement);
          preparedStatement.executeUpdate();
-         conn.commit();
+         connection.commit();
       }
       catch (SQLException e)
       {
