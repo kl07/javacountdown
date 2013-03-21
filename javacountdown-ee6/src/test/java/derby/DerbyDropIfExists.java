@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
+ * Copyright 2013 Red Hat Inc. and/or its affiliates and other contributors
  * as indicated by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -30,17 +30,27 @@ import java.sql.SQLException;
  * The main rationale is to have repeatable tests where you can create drop/create tables safely.
  *
  */
-public class DerbyDropTable
+public class DerbyDropIfExists
 {
 
    public static void dropTable(String schema, String table)
+   {
+      executeStatementIgnoreOnException("drop table " + schema + "." + table);
+   }
+
+   public static void dropSequence(String schema, String sequence)
+   {
+      executeStatementIgnoreOnException("drop sequence " + schema + "." + sequence + " restrict");
+   }
+
+   private static void executeStatementIgnoreOnException(String statement)
    {
       Connection conn = null;
       PreparedStatement preparedStatement = null;
       try
       {
-         conn = DriverManager.getConnection("jdbc:derby:target/db/derby");
-         preparedStatement = conn.prepareStatement("drop table " + schema + "." + table);
+         conn = DriverManager.getConnection("jdbc:derby:target/derbydb");
+         preparedStatement = conn.prepareStatement(statement);
          preparedStatement.executeUpdate();
          conn.commit();
       }
