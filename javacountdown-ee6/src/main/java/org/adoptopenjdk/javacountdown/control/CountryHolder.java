@@ -22,7 +22,7 @@ import java.io.Serializable;
  */
 public class CountryHolder implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -3259682699225919112L;
     private String country;
     private Integer count;
 

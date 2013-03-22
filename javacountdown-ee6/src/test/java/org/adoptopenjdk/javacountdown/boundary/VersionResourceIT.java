@@ -15,6 +15,8 @@
  */
 package org.adoptopenjdk.javacountdown.boundary;
 
+import org.adoptopenjdk.javacountdown.boundary.VersionResource;
+import com.jayway.restassured.http.ContentType;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -42,8 +44,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jayway.restassured.http.ContentType;
-
 import derby.DerbyDropIfExists;
 
 /**
@@ -62,7 +62,7 @@ public class VersionResourceIT {
      * Creating the ShrinkWrap deployment for Arquillian. This only contains the
      * backend!
      *
-     * @return
+     * @return The Web Archive (WAR) to test against
      */
     @Deployment(name = "rest")
     public static WebArchive createDeployment() {
@@ -105,7 +105,7 @@ public class VersionResourceIT {
         String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
         String input =
                 "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,\"lng\":11.6854924}";
-        // should return Response.noContent() which is a 204
+        // Should return Response.noContent() which is a 204
         given().body(input).contentType(ContentType.JSON).expect().statusCode(Status.NO_CONTENT.getStatusCode()).log().ifError().when().post(url);
 
     }
@@ -125,7 +125,7 @@ public class VersionResourceIT {
         String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
         String maleFormedJson =
                 "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,";
-        // should return a 400 bad request
+        // Should return a 400 bad request
         given().body(maleFormedJson).contentType(ContentType.JSON).expect().statusCode(Status.BAD_REQUEST.getStatusCode()).log().ifError().when().post(url);
 
     }

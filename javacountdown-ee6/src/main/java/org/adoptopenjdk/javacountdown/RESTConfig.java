@@ -18,10 +18,7 @@ package org.adoptopenjdk.javacountdown;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-/**
- *
- * @author adam-bien.com
- */
 @ApplicationPath("rest")
 public class RESTConfig extends Application {
+    // TODO implementation or comment explaining why there is none
 }

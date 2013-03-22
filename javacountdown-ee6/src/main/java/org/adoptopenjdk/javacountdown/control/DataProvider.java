@@ -38,8 +38,9 @@ public class DataProvider {
     private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country ORDER BY COUNT(v.country)";
     private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(G.alpha2) FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
+
     @PersistenceContext
-    EntityManager em;
+    EntityManager entityManager;
 
     /**
      * Get a list of all countries with data to display on the map, this is
@@ -50,8 +51,8 @@ public class DataProvider {
     public String getCountries() {
         StringBuilder builder = new StringBuilder();
 
-        TypedQuery<CountryHolder> query = em.createQuery(GET_COUNTRIES, CountryHolder.class);
-        query.setParameter("version", 7);
+        TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRIES, CountryHolder.class);
+        query.setParameter("version", Integer.valueOf(7));
         List<CountryHolder> results = query.getResultList();
 
         HashMap<String, Integer> all = new HashMap<>();
@@ -78,7 +79,7 @@ public class DataProvider {
             logger.log(Level.FINE, "Key + Temp: {0} {1}", new Object[]{key, Integer.valueOf(prettypercentage)});
         }
 
-        // if we don't have results we simply put an empty element to prevent 204 on the client
+        // If we don't have results we simply put an empty element to prevent 204 on the client
         if (all.isEmpty()) {
             all.put("", Integer.valueOf(0));
         }
@@ -95,7 +96,7 @@ public class DataProvider {
     /**
      * This is where parts of the magic already happens. This does a select on
      * the geonames table and does some searching for the nearest country entry
-     * with the lat/lng. It should return a ISO 3166 alpha-2 code. Refer to
+     * with the latitude/longitude. It should return a ISO 3166 alpha-2 code. Refer to
      * blog.stavi.sh/country-list-iso-3166-codes-latitude-longitude for the data
      * behind it.
      *
@@ -106,7 +107,7 @@ public class DataProvider {
     private String getCountryFromLatLong(double latitude, double longitude) {
         String country = "unresolved";
 
-        TypedQuery<CountryHolder> query = em.createQuery(GET_COUNTRY_FROM_GEO_DATA, CountryHolder.class);
+        TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRY_FROM_GEO_DATA, CountryHolder.class);
         query.setParameter("lat", new Double(latitude));
         query.setParameter("lng", new Double(longitude));
         query.setMaxResults(3);
@@ -125,18 +126,18 @@ public class DataProvider {
 
     /**
      * Persisting a Visit entity This only gets called when the visit could be
-     * parsed by gson. No further checks necessary here.
+     * parsed by GSON. No further checks necessary here.
      *
      * @param visit
      */
     @Asynchronous
     public void persistVisit(Visit visit) {
-        em.persist(visit);
+        entityManager.persist(visit);
         String country = getCountryFromLatLong(visit.getLat(), visit.getLng());
-        visit = setVersion(visit);
+        setVersion(visit);
         visit.setCountry(country);
         visit.setTime(new Date(System.currentTimeMillis()));
-        em.persist(visit);
+        entityManager.persist(visit);
 
         logger.log(Level.INFO, "persisted {0}", visit);
     }
@@ -146,8 +147,9 @@ public class DataProvider {
      * the String version field in the database ...
      *
      * @param visit
+     * @return The Visit, probably instrumented with version data
      */
-    private Visit setVersion(Visit visit) {
+    private static Visit setVersion(Visit visit) {
         try {
             String delims = "[.]+";
             String[] tokens = visit.getVersion().split(delims);
@@ -156,7 +158,8 @@ public class DataProvider {
             visit.setvPatch(Integer.parseInt(tokens[2]));
             visit.setvBuild(Integer.parseInt(tokens[3]));
         } catch (Exception e) {
-            // nothing to do.... we still have the "String" version
+            logger.fine("Failed to parse version, but that's OK, " +
+                        "we still have the string variant stored in the data store.");
         }
         return visit;
     }
