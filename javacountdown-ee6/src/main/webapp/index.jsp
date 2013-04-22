@@ -33,7 +33,7 @@
 
             <div class="header-container">
                 <header class="wrapper clearfix">
-                    <img src="img/java_logo.png">
+                    <img src="img/java_logo.png" alt="Java Logo" />
                     <nav>
                         <ul>
                             <li><a href="http://java.com" target="_blank"><fmt:message key="javacom"/></a></li>
@@ -76,7 +76,7 @@
                     </aside>
                     <aside class="white">
                         <p>Powered by:</p>
-                        <a href="http://glassfish.org" target="_blank"><img src="img/glassfish_logo.gif" width="107" height="86"></a>
+                        <a href="http://glassfish.org" target="_blank"><img src="img/glassfish_logo.gif" width="107" height="86" alt="Glassfish Logo" /></a>
                     </aside>
                 </div> <!-- #main -->
             </div> <!-- #main-container -->
