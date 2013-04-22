@@ -51,17 +51,23 @@
                         <header>
                             <h1><fmt:message key="headline"/></h1>
                             <p><fmt:message key="intro"/></p>
+                            <div id="geoMessage"></div>
                         </header>
                         <section>
-                            <h2><fmt:message key="headline"/></h2>
-                            <p><fmt:message key="dedicated"/></p>
+                            <h2><fmt:message key="security.headline"/></h2>
+                            <p><fmt:message key="security.text"/></p>
                         </section>
                         <section>
+                            <h2><fmt:message key="map.headline"/></h2>
                             <div id="map_canvas" style="width: 100%; height: 400px;"></div>
                         </section>
                         <section>
                             <h2><fmt:message key="notready.headline"/></h2>
                             <p><fmt:message key="notready.text"/></p>
+                        </section>
+                        <section>
+                            <h2><fmt:message key="upgrade.headline"/></h2>
+                            <p><fmt:message key="upgrade.text"/></p>
                         </section>
                         <footer>
                             <h3><fmt:message key="latest.headline"/></h3>
@@ -72,7 +78,6 @@
                     <aside>
                         <h3><fmt:message key="about.headline"/></h3>
                         <p><fmt:message key="about.text"/></p>
-                        <div id="geoMessage"></div>
                     </aside>
                     <aside class="white">
                         <p>Powered by:</p>

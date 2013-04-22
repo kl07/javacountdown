@@ -133,7 +133,7 @@ public class DataProvider {
     @Asynchronous
     public void persistVisit(Visit visit) {
         entityManager.persist(visit);
-        String country = getCountryFromLatLong(visit.getLat(), visit.getLng());
+        String country = getCountryFromLatLong(visit.getLatitude(), visit.getLongitude());
         setVersion(visit);
         visit.setCountry(country);
         visit.setTime(new Date(System.currentTimeMillis()));
