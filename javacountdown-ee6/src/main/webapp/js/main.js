@@ -9,25 +9,31 @@ $(function() {
     initialize();
 });
 
-
+/*
+ * 1. Test for our cookie
+ * 1.b If it's there and the java version did not change .. we print out a message.
+ * 2. If no cookie exists, then get the geolocation and set that in the cookie
+ * 2.a Else inform the user we couldn't help 
+ */
 function initialize() {
-    // test for our cookie
     var javaCCookie = $.cookie('javacountdown');
     if (typeof javaCCookie === 'undefined')
-    { // if undefined, we are trying to get the location of the client
+    {
         if (navigator.geolocation)
-        { // if we have a location we do set the cookie and log it
+        {
             navigator.geolocation.getCurrentPosition(logPosition, showError);
             $.cookie('javacountdown', version, {expires: 25});
             $("#geoMessage").text("Thanks for contributing!");
-        } // if not, we're not doing anything
+        } else {
+            $("#geoMessage").text("We weren't able to detect where you are from.");
+        }
     } else if (version === javaCCookie) {
-        // if the java version did not change .. we are printing out a message.
+        
         $("#geoMessage").html("You already contributed!<br />You use version " + javaCCookie);
     }
 
 
-// callback for geolocation - logs java version incl lat long  
+    // Callback for geolocation - logs java version incl lat long  
     function logPosition(position)
     {
         console.log("position.coords.latitude" + position.coords.latitude);
@@ -35,10 +41,9 @@ function initialize() {
         console.log("coords" + coord);
         log = new log(version, position.coords.latitude, position.coords.longitude);
         addLog(JSON.stringify(log));
-    }
-    ;
+    };
 
-// Error callback - displays errors.
+    // Error callback - displays errors.
     function showError(error)
     {
         switch (error.code)
@@ -56,14 +61,13 @@ function initialize() {
                 $("#geoMessage").text("An unknown error occurred.");
                 break;
         }
-    }
-    ;
-//http://jvectormap.com/maps/world/world/
+    };
 
-// fill the gdata object with series-values for the map.
+    // http://jvectormap.com/maps/world/world/
+    // fill the gdata object with series-values for the map.
     gdpData = getData();
 
-// get data from the rest backend
+    // Get data from the rest backend
     function getData() {
         var result;
         $.ajax({
@@ -81,8 +85,7 @@ function initialize() {
         return result;
     }
 
-
-// render the map
+    // Render the map
     $('#map_canvas').vectorMap({
         map: 'world_mill_en',
         backgroundColor: "#FFFFFF",
@@ -110,8 +113,7 @@ function initialize() {
         }
     });
 
-
-// write the log via POST to the rest backend
+    // Write the log via POST to the rest backend
     function addLog(log) {
         $.ajax({
             type: 'POST',
@@ -128,12 +130,11 @@ function initialize() {
         });
     }
 
-
-// the log object
-    function log(version, lat, lng)
+    // The log object
+    function log(version, latitude, longitude)
     {
         this.version = version;
-        this.lat = lat;
-        this.lng = lng;
+        this.lat = latitude;
+        this.lng = longitude;
     }
 }

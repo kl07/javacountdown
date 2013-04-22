@@ -6,16 +6,15 @@
         Purpose of the stylesheet follows.
 */
 
-a { 
+a {
     color: #FFFFFF;
 }
 
-#geoMessage{
+#geoMessage {
     font-weight: bold;
-
 }
 
-aside.white  {
+aside.white {
     background: #FFFFFF;
     color: #000;
 }
