@@ -37,3 +37,6 @@ infinitest.filters
 # Libreoffice leftovers (XLS)
 .~lock*
 
+# MacOS X
+*.DS_Store
+*/.DS_Store
