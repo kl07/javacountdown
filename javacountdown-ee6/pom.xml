@@ -200,11 +200,10 @@
                 <artifactId>junit</artifactId>
                 <version>4.11</version>
             </dependency>
-            <!-- TODO move to greater than 10.9.1.0 once they sort out their security class loading bug -->
             <dependency>
                 <groupId>org.apache.derby</groupId>
                 <artifactId>derby</artifactId>
-                <version>10.8.3.0</version>
+                <version>10.10.1.1</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
