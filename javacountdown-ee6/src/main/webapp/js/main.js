@@ -1,4 +1,4 @@
-var map;
+//var map;
 PluginDetect.getVersion(".");
 var version = PluginDetect.getVersion('Java');
 var url = document.location.href;
@@ -28,7 +28,7 @@ function initialize() {
             $("#geoMessage").text("We weren't able to detect where you are from.");
         }
     } else if (version === javaCCookie) {
-        
+
         $("#geoMessage").html("You already contributed!<br />You use version " + javaCCookie);
     }
 
@@ -41,7 +41,8 @@ function initialize() {
         console.log("coords" + coord);
         log = new log(version, position.coords.latitude, position.coords.longitude);
         addLog(JSON.stringify(log));
-    };
+    }
+    ;
 
     // Error callback - displays errors.
     function showError(error)
@@ -61,7 +62,8 @@ function initialize() {
                 $("#geoMessage").text("An unknown error occurred.");
                 break;
         }
-    };
+    }
+    ;
 
     // http://jvectormap.com/maps/world/world/
     // fill the gdata object with series-values for the map.
@@ -87,28 +89,15 @@ function initialize() {
 
     // Render the map
     $('#map_canvas').vectorMap({
-        map: 'world_mill_en',
+        map: 'world_en',
         backgroundColor: "#FFFFFF",
-        regionStyle: {
-            initial: {
-                fill: '#d80000',
-                "fill-opacity": 1,
-                stroke: 'none',
-                "stroke-width": 0,
-                "stroke-opacity": 1
-            },
-            hover: {
-                "fill-opacity": 0.7
-            }
-        },
-        series: {
-            regions: [{
-                    values: gdpData,
-                    scale: ['#C8EEFF', '#0071A4'],
-                    normalizeFunction: 'polynomial'
-                }]
-        },
-        onRegionLabelShow: function(e, el, code) {
+       color: '#d80000',
+       hoverColor: '#C8EEFF', 
+        values: gdpData,
+        scaleColors: ['#C8EEFF', '#0071A4'],
+        normalizeFunction: 'polynomial',
+       
+        onLabelShow: function(e, el, code) {
             el.html(el.html() + ' Java 7 Adoption - (' + gdpData[code] + ' %)');
         }
     });
@@ -134,7 +123,7 @@ function initialize() {
     function log(version, latitude, longitude)
     {
         this.version = version;
-        this.lat = latitude;
-        this.lng = longitude;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

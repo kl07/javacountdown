@@ -20,7 +20,6 @@ import com.google.gson.Gson;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Asynchronous;
@@ -35,7 +34,9 @@ import javax.persistence.TypedQuery;
 @Stateless
 public class DataProvider {
 
-    private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country ORDER BY COUNT(v.country)";
+    //private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country ORDER BY COUNT(v.country)";
+    private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country,((COUNT(v) / ( SELECT COUNT(v) FROM Visit v)) * 100 )) AS percentage FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country";
+
     private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(G.alpha2) FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
 
@@ -49,7 +50,6 @@ public class DataProvider {
      * @return List of countries as a String
      */
     public String getCountries() {
-        StringBuilder builder = new StringBuilder();
 
         TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRIES, CountryHolder.class);
         query.setParameter("version", Integer.valueOf(7));
@@ -57,27 +57,14 @@ public class DataProvider {
 
         HashMap<String, Integer> all = new HashMap<>();
 
-        int total = 0; // total count for 100% base
+        logger.log(Level.FINE, "Total: {0}", results.size());
+
         for (CountryHolder holder : results) {
-            String country = holder.getCountry();
-            int count = holder.getCount().intValue();
-            total += count; // sum count
-            all.put(country, Integer.valueOf(count));
+            all.put(holder.getCountry(), holder.getCount());
+            logger.log(Level.FINE, "country + percentage: {0} {1}", new Object[]{holder.getCountry(), holder.getCount()});
         }
 
-        logger.log(Level.FINE, "Total: {0}", Integer.valueOf(total));
-
-        Set<String> keyset = all.keySet();
         Gson gson = new Gson();
-
-        // Down to percentages
-        for (String key : keyset) {
-            int temp = all.get(key).intValue() * 100;
-            float percentage = temp / (float) total;
-            int prettypercentage = (int) percentage;
-            all.put(key, Integer.valueOf(prettypercentage));
-            logger.log(Level.FINE, "Key + Temp: {0} {1}", new Object[]{key, Integer.valueOf(prettypercentage)});
-        }
 
         // If we don't have results we simply put an empty element to prevent 204 on the client
         if (all.isEmpty()) {
@@ -86,19 +73,22 @@ public class DataProvider {
 
         // Make JSON
         String json = gson.toJson(all);
-        builder.append(json);
 
-        logger.log(Level.FINE, "<< BUILDER {0}", builder.toString());
+        if (logger.isLoggable(Level.FINE)) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(json);
+            logger.log(Level.FINE, "<< BUILDER {0}", builder.toString());
+        }
 
-        return builder.toString();
+        return json;
     }
 
     /**
      * This is where parts of the magic already happens. This does a select on
      * the geonames table and does some searching for the nearest country entry
-     * with the latitude/longitude. It should return a ISO 3166 alpha-2 code. Refer to
-     * blog.stavi.sh/country-list-iso-3166-codes-latitude-longitude for the data
-     * behind it.
+     * with the latitude/longitude. It should return a ISO 3166 alpha-2 code.
+     * Refer to blog.stavi.sh/country-list-iso-3166-codes-latitude-longitude for
+     * the data behind it.
      *
      * @param String latitude
      * @param String longitude
@@ -113,7 +103,7 @@ public class DataProvider {
         query.setMaxResults(3);
         List<CountryHolder> results = query.getResultList();
 
-        logger.log(Level.FINE, "Are we lucky? lat {0} long {1}", new Object[]{new Double(latitude), new Double(longitude)});
+        logger.log(Level.FINE, "Are we lucky? lat {0} long {1}", new Object[]{latitude, longitude});
 
         if (results.size() > 0) {
             logger.log(Level.FINE, "we have a result");
@@ -132,7 +122,6 @@ public class DataProvider {
      */
     @Asynchronous
     public void persistVisit(Visit visit) {
-        entityManager.persist(visit);
         String country = getCountryFromLatLong(visit.getLatitude(), visit.getLongitude());
         setVersion(visit);
         visit.setCountry(country);
@@ -157,9 +146,9 @@ public class DataProvider {
             visit.setvMinor(Integer.parseInt(tokens[1]));
             visit.setvPatch(Integer.parseInt(tokens[2]));
             visit.setvBuild(Integer.parseInt(tokens[3]));
-        } catch (Exception e) {
-            logger.fine("Failed to parse version, but that's OK, " +
-                        "we still have the string variant stored in the data store.");
+        } catch (NumberFormatException e) {
+            logger.fine("Failed to parse version, but that's OK, "
+                    + "we still have the string variant stored in the data store.");
         }
         return visit;
     }

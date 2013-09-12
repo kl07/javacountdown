@@ -16,15 +16,14 @@
             <link rel="stylesheet" href="css/normalize.css">
             <link rel="stylesheet" href="css/main.css">
             <link rel="stylesheet" href="css/javaadoption.css">
-            <link rel="stylesheet" href="css/vendor/jqvmap.css">
 
             <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
             <script src="js/vendor/jquery-1.9.1.min.js"></script>
-            <script src="js/vendor/jquery.vmap.js"></script>
-            <script src="js/vendor/jquery.vmap.world.js"></script>
-            <script src="js/vendor/plugindetect_java.js"></script>
+
+
+
             <script src="js/vendor/jquery.cookie.js"></script>
-            <script src="js/main.js"></script>
+
         </head>
         <body>
             <!--[if lt IE 7]>
@@ -49,30 +48,29 @@
 
                     <article>
                         <header>
-                            <h1><fmt:message key="headline"/></h1>
-                            <p><fmt:message key="intro"/></p>
-                            <div id="geoMessage"></div>
+                            <h1><fmt:message key="layershift.headline"/></h1>
+                            <p><fmt:message key="layershift.text"/></p>
                         </header>
                         <section>
-                            <h2><fmt:message key="security.headline"/></h2>
-                            <p><fmt:message key="security.text"/></p>
+                            <h2><fmt:message key="layershift.j_headline"/></h2>
+                            <p><fmt:message key="layershift.j_text"/></p>
                         </section>
-                        <section>
-                            <h2><fmt:message key="map.headline"/></h2>
-                            <div id="map_canvas" style="width: 100%; height: 400px;"></div>
-                        </section>
-                        <section>
-                            <h2><fmt:message key="notready.headline"/></h2>
-                            <p><fmt:message key="notready.text"/></p>
-                        </section>
-                        <section>
-                            <h2><fmt:message key="upgrade.headline"/></h2>
-                            <p><fmt:message key="upgrade.text"/></p>
-                        </section>
-                        <footer>
-                            <h3><fmt:message key="latest.headline"/></h3>
-                            <p><fmt:message key="latest.text"/></p>
-                        </footer>
+                          <section>
+                              <h2><fmt:message key="layershift.j2_headline"/></h2>
+                             <p><fmt:message key="layershift.j2_text"/></p>
+                          </section>
+                        <!--  <section>
+                              <h2><fmt:message key="notready.headline"/></h2>
+                              <p><fmt:message key="notready.text"/></p>
+                          </section>
+                          <section>
+                              <h2><fmt:message key="upgrade.headline"/></h2>
+                              <p><fmt:message key="upgrade.text"/></p>
+                          </section>
+                          <footer>
+                              <h3><fmt:message key="latest.headline"/></h3>
+                              <p><fmt:message key="latest.text"/></p>
+                          </footer> -->
                     </article>
 
                     <aside>
@@ -81,7 +79,7 @@
                     </aside>
                     <aside class="white">
                         <p>Powered by:</p>
-                        <a href="layershift.jsp" target="_top"><img src="img/powered_by_layershift.png" width="200" height="68" alt="Layershift" /></a>
+                        <a href="http://www.layershift.com/" target="_blank"><img src="img/powered_by_layershift.png" width="200" height="68" alt="Layershift" /></a>
                     </aside>
                 </div> <!-- #main -->
             </div> <!-- #main-container -->
