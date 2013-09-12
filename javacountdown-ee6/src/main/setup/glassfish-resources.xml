@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<resources>
+    <jdbc-resource pool-name="MysqlJavaCountdownPool" jndi-name="jdbc/javacountdown"></jdbc-resource>
+    <jdbc-connection-pool datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" res-type="javax.sql.DataSource" name="MysqlJavaCountdownPool">
+        <property name="portNumber" value="3306"></property>
+        <property name="databaseName" value="javacountdown"></property>
+        <property name="serverName" value="localhost"></property>
+        <property name="user" value="root"></property>
+        <property name="password" value="myfear"></property>
+    </jdbc-connection-pool>
+</resources>

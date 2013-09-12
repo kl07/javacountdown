@@ -122,7 +122,7 @@ public class DataProvider {
         visit.setTime(new Date(System.currentTimeMillis()));
         entityManager.persist(visit);
 
-        logger.log(Level.INFO, "persisted {0}", visit);
+        logger.log(Level.FINE, "persisted {0}", visit);
     }
 
     /**
@@ -140,7 +140,7 @@ public class DataProvider {
             visit.setvMinor(Integer.parseInt(tokens[1]));
             visit.setvPatch(Integer.parseInt(tokens[2]));
             visit.setvBuild(Integer.parseInt(tokens[3]));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | NullPointerException e) {
             logger.fine("Failed to parse version, but that's OK, "
                     + "we still have the string variant stored in the data store.");
         }
