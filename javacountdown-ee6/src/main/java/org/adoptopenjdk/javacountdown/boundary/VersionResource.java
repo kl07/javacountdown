@@ -21,6 +21,7 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -31,6 +32,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.WebApplicationException;
 import org.adoptopenjdk.javacountdown.control.DataProvider;
+import org.adoptopenjdk.javacountdown.control.ResultCache;
 
 /**
  * REST Web Service for the javacountdown website
@@ -42,6 +44,9 @@ public class VersionResource {
     private static final Logger logger = Logger.getLogger(VersionResource.class.getName());
     @Inject
     private DataProvider dataProvider;
+
+    @EJB
+    ResultCache cache;
 
     /**
      * Retrieves visitor information from web client in JSON format
@@ -75,6 +80,6 @@ public class VersionResource {
     @GET
     @Produces("application/json")
     public Response getData() {
-        return Response.ok(dataProvider.getCountries()).build();
+        return Response.ok(cache.getCountryData()).build();
     }
 }

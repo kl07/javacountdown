@@ -1,9 +1,7 @@
-//var map;
+var rootURL = url + "/rest/version";
+var gdpData;
 PluginDetect.getVersion(".");
 var version = PluginDetect.getVersion('Java');
-var url = document.location.href;
-var rootURL = url + "rest/version";
-var gdpData;
 
 $(function() {
     initialize();

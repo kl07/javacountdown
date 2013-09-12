@@ -17,7 +17,7 @@
             <link rel="stylesheet" href="css/main.css">
             <link rel="stylesheet" href="css/javaadoption.css">
             <link rel="stylesheet" href="css/vendor/jqvmap.css">
-
+            <script>var url = "${pageContext.request.contextPath}"</script>
             <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
             <script src="js/vendor/jquery-1.9.1.min.js"></script>
             <script src="js/vendor/jquery.vmap.packed.js"></script>
