@@ -87,8 +87,6 @@ public class Visit implements Serializable {
 
     /**
      * Set a clone of the time to follow thread-safe programming practices
-     *
-     * @param time
      */
     public void setTime(Date time) {
         this.time = (Date) time.clone();
@@ -158,12 +156,9 @@ public class Visit implements Serializable {
             return false;
         }
         final Visit other = (Visit) obj;
-        return this.id == other.id || (this.id != null && this.id.equals(other.id));
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
     }
-
-    @Override
-    public String toString() {
-        return "Visit{" + "version=" + version + ", vMajor=" + vMajor + ", vMinor=" + vMinor + ", vPatch=" + vPatch + ", vBuild=" + vBuild + ", latitude=" + latitude + ", longitude=" + longitude + ", country=" + country + ", time=" + time + ", id=" + id + '}';
-    }
-
 }

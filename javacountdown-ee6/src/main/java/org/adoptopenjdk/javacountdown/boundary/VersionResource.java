@@ -47,7 +47,6 @@ public class VersionResource {
      * Retrieves visitor information from web client in JSON format
      *
      * @param content
-     * @return 
      */
     @POST
     @Consumes("application/json")
