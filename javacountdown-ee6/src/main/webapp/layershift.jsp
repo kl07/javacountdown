@@ -87,6 +87,7 @@
             <div class="footer-container">
                 <footer class="wrapper">
                     <p><fmt:message key="footer.selectlang"/> | <fmt:message key="footer.aboutjava"/> | <fmt:message key="footer.developerprivacy"/> | <fmt:message key="footer.termsofuse"/> | <fmt:message key="footer.trademarks"/> | <fmt:message key="footer.disclaimer"/></p>
+                    <p><fmt:message key="footer.jelastic"/></p>
                 </footer>
             </div>
 
