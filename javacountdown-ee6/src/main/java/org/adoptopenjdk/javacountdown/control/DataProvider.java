@@ -27,6 +27,9 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 
 /**
  * The main Data provider for the JAX-RS services
@@ -34,7 +37,9 @@ import javax.persistence.TypedQuery;
 @Stateless
 public class DataProvider {
 
-    private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country,((COUNT(v) / ( SELECT COUNT(v) FROM Visit v)) * 100 )) AS percentage FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country";
+    // Only EclipseLink > 2.5
+    //private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country,((COUNT(v) / ( SELECT COUNT(v) FROM Visit v)) * 100 )) AS percentage FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country";
+    private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country ORDER BY COUNT(v.country)";
     private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(G.alpha2) FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
 
@@ -48,6 +53,15 @@ public class DataProvider {
      * @return List of countries as a String
      */
     public String getCountries() {
+
+        // Criteria Query approach
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        
+        Expression<Long> ex = cb.diff(cb.count(cq.from(Visit.class)),cb.prod(cb.count(cq.from(Visit.class)), cb.parameter(Long.class)));
+
+//CriteriaQuery query = criteriaBuilder.createQuery();
         TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRIES, CountryHolder.class);
         query.setParameter("version", Integer.valueOf(7));
         List<CountryHolder> results = query.getResultList();

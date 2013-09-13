@@ -32,11 +32,11 @@
 
             <div class="header-container">
                 <header class="wrapper clearfix">
-                    <a href="index.jsp"><img src="img/java_logo.png" alt="Java Logo" /></a>
+                    <a href="index.jsp"><img src="img/jcountdown.png" width="250" height="70" alt="jCountdown" /></a>
                     <nav>
                         <ul>
                             <li><a href="http://java.com" target="_blank"><fmt:message key="javacom"/></a></li>
-                            <li><a href="http://oracle.com" target="_blank"><fmt:message key="oraclecom"/></a></li>
+                            <li><a href="http://otn.oracle.com" target="_blank"><fmt:message key="oraclecom"/></a></li>
                             <li><a href="http://java.net" target="_blank"><fmt:message key="javanet"/></a></li>
                         </ul>
                     </nav>

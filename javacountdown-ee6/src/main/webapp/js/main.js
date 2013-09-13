@@ -89,7 +89,7 @@ function initialize() {
     $('#map_canvas').vectorMap({
         map: 'world_en',
         backgroundColor: "#FFFFFF",
-       color: '#d80000',
+       color: '#004066',
        hoverColor: '#C8EEFF', 
         values: gdpData,
         scaleColors: ['#C8EEFF', '#0071A4'],

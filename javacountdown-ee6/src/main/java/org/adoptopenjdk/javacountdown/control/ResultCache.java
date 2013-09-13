@@ -17,7 +17,6 @@ package org.adoptopenjdk.javacountdown.control;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 /**
