@@ -77,6 +77,10 @@ body {
     border-bottom: 20px solid #FF0000;
 }
 
+.footer-contrainer {
+   text-align: center;
+}
+
 .footer-container,
 .main aside {
     border-top: 20px solid #FF0000;
