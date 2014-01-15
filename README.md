@@ -1,5 +1,5 @@
-javacountdown.net
-=================
+jcountdown.com
+==============
 
 This GitHub repo serves as the source code for jcountdown.com site built by the community that 
 mimics the spirit of ie6countdown.net. That is, to encourage users to move to the latest and greatest Java! 
