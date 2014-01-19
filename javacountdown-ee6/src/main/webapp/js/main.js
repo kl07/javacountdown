@@ -34,8 +34,6 @@ function initialize() {
     // Callback for geolocation - logs java version incl lat long  
     function logPosition(position){
         var coord = position.coords.latitude + "," + position.coords.longitude;
-        console.log("coords" + coord);
-        log = new log(version, position.coords.latitude, position.coords.longitude);
         addLog(JSON.stringify(log));
     };
 
@@ -91,8 +89,8 @@ function initialize() {
         scaleColors: ['#C8EEFF', '#0071A4'],
         normalizeFunction: 'polynomial',     
         onLabelShow: function(e, el, code) {
-			total = gdpData[code.toUpperCase()] ? gdpData[code.toUpperCase()] : "0";	
-            el.html(el.html() + ' Java 7 Adoption - (' + total + '%)');
+        	total = gdpData[code.toUpperCase()] ? gdpData[code.toUpperCase()] : "0";
+        	el.html(el.html() + ' Java 7 Adoption - (' + total + '%)');
         }
     });
 
