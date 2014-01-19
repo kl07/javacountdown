@@ -33,8 +33,8 @@ function initialize() {
 
     // Callback for geolocation - logs java version incl lat long  
     function logPosition(position){
-        var coord = position.coords.latitude + "," + position.coords.longitude;
-        addLog(JSON.stringify(log));
+    	log = new log(version, position.coords.latitude, position.coords.longitude);
+    	addLog(JSON.stringify(log));
     };
 
     // Error callback - displays errors.
