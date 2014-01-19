@@ -4,7 +4,6 @@ PluginDetect.getVersion(".");
 var version = PluginDetect.getVersion('Java');
 
 $(function() {
-	console.log("function");
     initialize();
 });
 
@@ -16,7 +15,7 @@ $(function() {
  */
 function initialize() {
     var javaCCookie = $.cookie('javacountdown');
-    if (typeof javaCCookie === 'javaCCookie')
+    if (typeof javaCCookie === 'undefined')
     {
         if (navigator.geolocation)
         {
@@ -35,6 +34,7 @@ function initialize() {
     // Callback for geolocation - logs java version incl lat long  
     function logPosition(position){
         var coord = position.coords.latitude + "," + position.coords.longitude;
+        console.log("coords" + coord);
         log = new log(version, position.coords.latitude, position.coords.longitude);
         addLog(JSON.stringify(log));
     };
@@ -68,7 +68,7 @@ function initialize() {
         var result="";
         $.ajax({
             url: rootURL,
-            type: 'get',
+            type: 'GET',
             async: false,
             dataType: 'json',
             success: function(dataWeGotViaJsonp) {
