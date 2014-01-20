@@ -32,19 +32,13 @@ function initialize() {
 
 
     // Callback for geolocation - logs java version incl lat long  
-    function logPosition(position)
-    {
-        console.log("position.coords.latitude" + position.coords.latitude);
-        var coord = position.coords.latitude + "," + position.coords.longitude;
-        console.log("coords" + coord);
-        log = new log(version, position.coords.latitude, position.coords.longitude);
-        addLog(JSON.stringify(log));
-    }
-    ;
+    function logPosition(position){
+    	log = new log(version, position.coords.latitude, position.coords.longitude);
+    	addLog(JSON.stringify(log));
+    };
 
     // Error callback - displays errors.
-    function showError(error)
-    {
+    function showError(error){
         switch (error.code)
         {
             case error.PERMISSION_DENIED:
@@ -69,10 +63,10 @@ function initialize() {
 
     // Get data from the rest backend
     function getData() {
-        var result;
+        var result="";
         $.ajax({
             url: rootURL,
-            type: 'get',
+            type: 'GET',
             async: false,
             dataType: 'json',
             success: function(dataWeGotViaJsonp) {
@@ -89,14 +83,14 @@ function initialize() {
     $('#map_canvas').vectorMap({
         map: 'world_en',
         backgroundColor: "#FFFFFF",
-       color: '#004066',
-       hoverColor: '#C8EEFF', 
+        color: '#004066',
+        hoverColor: '#C8EEFF', 
         values: gdpData,
         scaleColors: ['#C8EEFF', '#0071A4'],
-        normalizeFunction: 'polynomial',
-       
+        normalizeFunction: 'polynomial',     
         onLabelShow: function(e, el, code) {
-            el.html(el.html() + ' Java 7 Adoption - (' + gdpData[code] + ' %)');
+        	total = gdpData[code.toUpperCase()] ? gdpData[code.toUpperCase()] : "0";
+        	el.html(el.html() + ' Java 7 Adoption - (' + total + '%)');
         }
     });
 
