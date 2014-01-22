@@ -414,6 +414,11 @@
                                 <version>2.0-beta-2</version>
                             </plugin>
                             <plugin>
+                                <groupId>org.jacoco</groupId>
+                                <artifactId>jacoco-maven-plugin</artifactId>
+                                <version>0.6.4.201312101107</version>
+                            </plugin>
+                            <plugin>
                                 <groupId>org.codehaus.mojo</groupId>
                                 <artifactId>versions-maven-plugin</artifactId>
                                 <version>2.0</version>
@@ -495,6 +500,45 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>exec-maven-plugin</artifactId>
+              <version>1.2.1</version>
+              <executions>
+                  <execution>
+                    <phase>compile</phase>
+                    <goals>
+                        <goal>exec</goal>
+                    </goals>
+                  </execution>
+              </executions>
+              <configuration>
+                  <executable>touch</executable>
+                  <arguments>
+                      <argument>${project.build.directory}/jacoco.exec</argument>
+                  </arguments>
+              </configuration>
+            </plugin>            
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.6.4.201312101107</version>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>                            
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>          
         </plugins>
     </build>
 
