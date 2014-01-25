@@ -32,9 +32,9 @@ public class ResultCache {
     private DataProvider dataProvider;
 
     public String getCountryData() {
-        if (json.isEmpty()) {
+        //if (json.isEmpty()) {
             json = dataProvider.getCountries();
-        }
+       // }
         return json;
 
     }

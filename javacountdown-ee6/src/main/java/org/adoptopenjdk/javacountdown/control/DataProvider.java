@@ -95,14 +95,21 @@ public class DataProvider {
      * This is where parts of the magic already happens. This does a select on
      * the geonames table and does some searching for the nearest country entry
      * with the latitude/longitude. It should return a ISO 3166 alpha-2 code.
-     * Refer to blog.stavi.sh/country-list-iso-3166-codes-latitude-longitude for
-     * the data behind it.
+     * Refer to https://opendata.socrata.com/dataset/Country-List-ISO-3166-Codes-Latitude-Longitude/mnkm-8ram 
+     * for the data behind it.
      *
      * @param String latitude
      * @param String longitude
      * @return ISO 3166 alpha 2 code
      */
     private String getCountryFromLatLong(double latitude, double longitude) {
+    	
+    	longitude = 51.511214;
+    	latitude  = -0.119824;
+    	
+//    	latitude =  -3.7177154999999997;
+//    	longitude = 40.4701242;
+   	
         String country = "unresolved";
 
         TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRY_FROM_GEO_DATA, CountryHolder.class);
