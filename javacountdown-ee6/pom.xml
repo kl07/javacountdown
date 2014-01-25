@@ -368,7 +368,7 @@
                         </webResources>
                         <archive>
                             <manifest>
-                                <addClasspath>true</addClasspath>
+                                <addClasspath>false</addClasspath>
                             </manifest>
                         </archive>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
