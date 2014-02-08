@@ -28,19 +28,19 @@ public class ResultCache {
 
     String json = "";
 
-    @Inject
-    private DataProvider dataProvider;
+//    @Inject
+//    private DataProvider dataProvider;
 
     public String getCountryData() {
-        if (json.isEmpty()) {
-            json = dataProvider.getCountries();
-        }
+        //if (json.isEmpty()) {
+//            json = dataProvider.getCountries();
+       // }
         return json;
 
     }
 
     @Schedule(second = "1", minute = "1", hour = "1", persistent = false)
     public void rebuildCache() {
-        json = dataProvider.getCountries();
+//        json = dataProvider.getCountries();
     }
 }
