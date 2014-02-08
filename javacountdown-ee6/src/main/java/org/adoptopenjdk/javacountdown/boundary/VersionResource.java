@@ -15,7 +15,7 @@
  */
 package org.adoptopenjdk.javacountdown.boundary;
 
-import org.adoptopenjdk.javacountdown.entity.Visit;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 

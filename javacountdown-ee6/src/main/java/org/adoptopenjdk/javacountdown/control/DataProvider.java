@@ -17,34 +17,19 @@ package org.adoptopenjdk.javacountdown.control;
 
 import org.adoptopenjdk.javacountdown.entity.Visit;
 
-import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Key;
-import com.google.code.morphia.Morphia;
 import com.google.code.morphia.dao.BasicDAO;
-import com.google.gson.Gson;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
-
 import org.adoptopenjdk.javacountdown.entity.VersionInfo;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 
-import java.net.UnknownHostException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
-import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.inject.Inject;
 
 /**
@@ -158,6 +143,8 @@ public class DataProvider {
         return geoPosition;
     }
     
+    
+    
     /**
      * Persisting a Visit entity This only gets called when the visit could be
      * parsed by GSON. No further checks necessary here.
@@ -189,6 +176,8 @@ public class DataProvider {
         
     }
 
+    
+    
     /**
      * Parsing the version string to it's numbers. If this fails we still have
      * the String version field in the database ...
