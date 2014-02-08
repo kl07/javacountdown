@@ -19,8 +19,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-
 import org.bson.types.ObjectId;
 
 import com.google.code.morphia.annotations.Entity;
@@ -28,77 +26,72 @@ import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Reference;
 
 /**
- * Visitor class, represents an end user hitting a website with their Java
- * applet enabled event.
+ * Visit class, represents an end user hitting a website with their Java applet
+ * enabled event.
+ * 
+ * @author Alex Theedom
  */
 @RequestScoped
-@Entity(value="visitor_test", noClassnameStored=true)
+@Entity(value = "visitor_test", noClassnameStored = true)
 public class Visit implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-      
-    @Id
-    private ObjectId id;       
-    private int version;
-    private VersionInfo versionInfo;
-    private String country;  
-    @Reference
-    private GeoPosition geoPosition;
-    private String browser;
-    private String os;   
-    private Date time;
-    
-    
+	private static final long serialVersionUID = 1L;
 
+	@Id
+	private ObjectId id;
+	private int version;
+	private VersionInfo versionInfo;
+	private String country;
+	@Reference
+	private GeoPosition geoPosition;
+	private String browser;
+	private String os;
+	private Date time;
 
-    /**
-     * Default public constructor for JPA
-     */
-    public Visit() {
-    }
-    
-   public GeoPosition getGeoPosition(){
-	   return geoPosition;
-   }
-    
-   public void setGeoPosition(GeoPosition geoPosition){
-	   this.geoPosition = geoPosition;
-   }  
+	public Visit() {
+	}
 
-    public int getVersion() {
-        return this.version;
-    }
+	public GeoPosition getGeoPosition() {
+		return geoPosition;
+	}
 
-    public void setVersion(int version) {
-        this.version = version;
-    }
-    /**
-     * Return a clone of the time to follow thread-safe programming practices
-     *
-     * @return a clone of the time
-     */
-    public Date getTime() {
-        return (Date) time.clone();
-    }
+	public void setGeoPosition(GeoPosition geoPosition) {
+		this.geoPosition = geoPosition;
+	}
 
-    /**
-     * Set a clone of the time to follow thread-safe programming practices
-     *
-     * @param time
-     */
-    public void setTime(Date time) {
-        this.time = (Date) time.clone();
-    }
+	public int getVersion() {
+		return this.version;
+	}
 
+	public void setVersion(int version) {
+		this.version = version;
+	}
 
-    public String getCountry() {
-        return country;
-    }
+	/**
+	 * Return a clone of the time to follow thread-safe programming practices
+	 * 
+	 * @return a clone of the time
+	 */
+	public Date getTime() {
+		return (Date) time.clone();
+	}
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
+	/**
+	 * Set a clone of the time to follow thread-safe programming practices
+	 * 
+	 * @param time
+	 */
+	public void setTime(Date time) {
+		this.time = (Date) time.clone();
+	}
 
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
 
 	public VersionInfo getVersionInfo() {
 		return versionInfo;
@@ -124,27 +117,34 @@ public class Visit implements Serializable {
 		this.os = os;
 	}
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 79 * hash + (this.id != null ? this.id.hashCode() : 0);
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 79 * hash + (this.id != null ? this.id.hashCode() : 0);
+		return hash;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Visit other = (Visit) obj;
-        return this.id == other.id || (this.id != null && this.id.equals(other.id));
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Visit other = (Visit) obj;
+		return this.id == other.id
+				|| (this.id != null && this.id.equals(other.id));
+	}
 
-    @Override
-    public String toString() {
-        return "Visit{" + "version=" + version + ", vMajor=" + versionInfo.getvMajor() + ", vMinor=" + versionInfo.getvMinor() + ", vPatch=" + versionInfo.getvPatch() + ", vBuild=" + versionInfo.getvBuild() + ", locationRef=" + geoPosition + ", Browser=" + browser + ", os =" + os +", country=" + country + ", time=" + time + ", id=" + id + '}';
-    }
+	@Override
+	public String toString() {
+		return "Visit{" + "version=" + version + ", vMajor="
+				+ versionInfo.getvMajor() + ", vMinor="
+				+ versionInfo.getvMinor() + ", vPatch="
+				+ versionInfo.getvPatch() + ", vBuild="
+				+ versionInfo.getvBuild() + ", locationRef=" + geoPosition
+				+ ", Browser=" + browser + ", os =" + os + ", country="
+				+ country + ", time=" + time + ", id=" + id + '}';
+	}
 }
