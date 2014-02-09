@@ -19,10 +19,16 @@ import org.adoptopenjdk.javacountdown.entity.Visit;
 
 import com.google.code.morphia.Key;
 import com.google.code.morphia.dao.BasicDAO;
+import com.google.gson.Gson;
+
+import org.adoptopenjdk.javacountdown.entity.JdkAdoptionCountry;
 import org.adoptopenjdk.javacountdown.entity.VersionInfo;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +36,7 @@ import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.inject.Inject;
 
 /**
@@ -39,77 +46,19 @@ import javax.inject.Inject;
 public class DataProvider {
 
     private static final String EMPTY_STRING = "";
-	// Only EclipseLink > 2.5
-    //private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country,((COUNT(v) / ( SELECT COUNT(v) FROM Visit v)) * 100 )) AS percentage FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country";
-    private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country ORDER BY COUNT(v.country)";
-//    private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(G.alpha2) FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
-   
-    
-    @PersistenceContext
-    EntityManager entityManager;     
-
+         
 	@Inject @VisitQ
 	BasicDAO<Visit, Key<Visit>> visitDAO;
-    
-    
+     
     @Inject @GeoPositionQ
     BasicDAO<GeoPosition, Key<GeoPosition>> geoPositionDAO;
-    
 
-    /**
-     * Get a list of all countries with data to display on the map, this is
-     * returned directly as a String as that's the expected format
-     *
-     * @return List of countries as a String
-     */
-    public String getCountries() {
+    @Inject @JdkAdoptionQ
+    BasicDAO<JdkAdoptionCountry, Key<JdkAdoptionCountry>> jdkAdoptionDAO;
 
- /*       TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRIES, CountryHolder.class);
-        query.setParameter("version", Integer.valueOf(7));
-        List<CountryHolder> results = query.getResultList();
-
-        HashMap<String, Integer> all = new HashMap<>();
-
-        logger.log(Level.FINE, "Total: {0}", results.size());
-
-        for (CountryHolder holder : results) {
-            logger.log(Level.FINE, "country + percentage: {0} {1}", new Object[]{holder.getCountry(), holder.getCount()});
-            all.put(holder.getCountry(), holder.getCount());
-        }
-
-        // If we don't have results we simply put an empty element to prevent 204 on the client
-        if (all.isEmpty()) {
-            all.put(EMPTY_STRING, Integer.valueOf(0));
-        }
-
-        Gson gson = new Gson();
-        String json = gson.toJson(all);
-
-        if (logger.isLoggable(Level.FINE)) {
-
-            logger.log(Level.FINE, "<< BUILDER {0}", json);
-        }
-*/
-    	
-    	String json = ((VisitDAO)visitDAO).getCountries();
-    	
-        return json;
-
-    }
-    
-    
-    public String getCountryCount(){
-    	String count = "";
-    	
-    	
-    	
-    	return count;
-    }
-    
-    
-    
-
+       
+ 
     /**
      * This retrieves the country code based on the given latitude/longitude. 
      * It should return a ISO 3166 alpha-2 code.
@@ -121,14 +70,14 @@ public class DataProvider {
      */  
     private GeoPosition getGeoPositionFromLatLong(double latitude, double longitude) {
     	
- //   	longitude = 51.511214;
- //   	latitude  = -0.119824;
-    	
+//    	longitude = 51.511214;
+//    	latitude  = -0.119824;
+//    	
 //    	latitude =  -3.7177154999999997;
 //    	longitude = 40.4701242;
-    	
-    	latitude  = 51.513878;
-    	longitude =-0.161945;
+//    	
+//    	latitude  = 51.513878;
+//    	longitude =-0.161945;
    	
     	GeoPosition geoPosition = ((GeoPositionDAO)geoPositionDAO).getGeoPosition(latitude, longitude);
 
@@ -165,8 +114,7 @@ public class DataProvider {
  
         visit.setBrowser(visitTransfer.getBrowser());
         visit.setOs(visitTransfer.getOs());
-        
-               
+                       
         visit.setTime(new Date(System.currentTimeMillis()));
         
         Key<Visit> dbRef = visitDAO.save(visit);
@@ -174,10 +122,37 @@ public class DataProvider {
         logger.log(Level.FINE, "persisted {0}", visit);
         logger.log(Level.FINE, "persisted dbRef {0}", dbRef);
         
+        
+        // Update the JDK adoption world map data     
+        
+        JdkAdoptionCountry jdkAdoptionCountryTotals = ((JdkAdoptionDAO) jdkAdoptionDAO).getCountryTotals(geoPosition.getCountry());
+        if(jdkAdoptionCountryTotals == null){
+        	jdkAdoptionCountryTotals = new JdkAdoptionCountry(visit);
+        }
+    	jdkAdoptionCountryTotals.updateTotals(visit);
+        jdkAdoptionDAO.save(jdkAdoptionCountryTotals);              
     }
 
     
     
+    /**
+     * Get a list of all countries with data to display on the map, this is
+     * returned directly as a String as that's the expected format
+     *
+     * @return List of countries and percentage adoption as a String
+     */
+	public String getJdkAdoption() {
+		
+		Map<String, Integer> jdkAdoptionCountry = ((JdkAdoptionDAO) jdkAdoptionDAO).getJdkAdoption();
+		  
+        Gson gson = new Gson();
+        String json = gson.toJson(jdkAdoptionCountry);
+		System.out.println(json);
+		return json;
+	}  
+    
+	
+	
     /**
      * Parsing the version string to it's numbers. If this fails we still have
      * the String version field in the database ...
@@ -203,4 +178,7 @@ public class DataProvider {
     	}
         return versionInfo;
     }
+
+
+
 }

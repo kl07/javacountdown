@@ -24,6 +24,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
+import org.adoptopenjdk.javacountdown.entity.JdkAdoptionCountry;
 import org.adoptopenjdk.javacountdown.entity.Visit;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 
@@ -45,13 +46,16 @@ public class MorphiaDOAFactory {
 	
 	@Produces @VisitQ
 	public BasicDAO<Visit, Key<Visit>> createVisitDAO(){	
-		return new VisitDAO(Visit.class, datastore);
-			
+		return new VisitDAO(Visit.class, datastore);			
 	}
 	
 	@Produces @GeoPositionQ
 	public BasicDAO<GeoPosition, Key<GeoPosition>> createGeoPositionDOA(){		
 		return new GeoPositionDAO(GeoPosition.class, this.datastore);	
 	}
-
+	
+	@Produces @JdkAdoptionQ
+	public BasicDAO<JdkAdoptionCountry, Key<JdkAdoptionCountry>> createJdkAdoptionDOA(){		
+		return new JdkAdoptionDAO(JdkAdoptionCountry.class, this.datastore);	
+	}
 }

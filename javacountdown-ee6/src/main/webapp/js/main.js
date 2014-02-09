@@ -1,5 +1,5 @@
 var rootURL = url + "/rest/version";
-var gdpData;
+var jdkAdoptionData;
 PluginDetect.getVersion(".");
 var version = PluginDetect.getVersion('Java');
 
@@ -14,6 +14,7 @@ $(function() {
  * 2.a Else inform the user we couldn't help 
  */
 function initialize() {
+	
     var javaCCookie = $.cookie('javacountdown');
     if (typeof javaCCookie === 'undefined')
     {
@@ -59,8 +60,8 @@ function initialize() {
 
     // http://jvectormap.com/maps/world/world/
     // fill the gdata object with series-values for the map.
-    gdpData = getData();
-
+    jdkAdoptionData = getData();
+console.log("jdkAdoptionData: " + jdkAdoptionData);
     // Get data from the rest backend
     function getData() {
         var result="";
@@ -85,11 +86,11 @@ function initialize() {
         backgroundColor: "#FFFFFF",
         color: '#004066',
         hoverColor: '#C8EEFF', 
-        values: gdpData,
+        values: jdkAdoptionData,
         scaleColors: ['#C8EEFF', '#0071A4'],
         normalizeFunction: 'polynomial',     
         onLabelShow: function(e, el, code) {
-        	total = gdpData[code.toUpperCase()] ? gdpData[code.toUpperCase()] : "0";
+        	total = jdkAdoptionData[code.toLowerCase()] ? jdkAdoptionData[code.toLowerCase()] : "0";
         	el.html(el.html() + ' Java 7 Adoption - (' + total + '%)');
         }
     });

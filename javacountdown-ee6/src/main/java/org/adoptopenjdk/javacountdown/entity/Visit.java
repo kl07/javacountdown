@@ -50,6 +50,13 @@ public class Visit implements Serializable {
 
 	public Visit() {
 	}
+	
+	/*
+	 * Test the version of Java.
+	 */
+	public boolean isVersion(int version){
+		return this.version == version;
+	}
 
 	public GeoPosition getGeoPosition() {
 		return geoPosition;
