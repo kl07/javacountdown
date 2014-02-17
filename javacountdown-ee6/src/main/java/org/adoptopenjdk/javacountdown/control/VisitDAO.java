@@ -16,15 +16,16 @@
 package org.adoptopenjdk.javacountdown.control;
 
 
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.dao.BasicDAO;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
-import com.mongodb.CommandResult;
 import com.mongodb.DBObject;
+
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 import org.adoptopenjdk.javacountdown.entity.Visit;
 
@@ -36,10 +37,9 @@ import org.adoptopenjdk.javacountdown.entity.Visit;
  * @author Alex Theedom
  *
  */ 
-public class VisitDAO extends BasicDAO<Visit, Key<Visit>> {
+public class VisitDAO extends BasicDAO<Visit, Key<Visit>> {	
 
-	private DatastoreImpl datastore;
-	
+	private static final Logger logger = Logger.getLogger(VisitDAO.class.getName());
 	
 	public VisitDAO(Class<Visit> entityClass, DatastoreImpl datastore) {
 		super(entityClass, datastore);
@@ -47,62 +47,32 @@ public class VisitDAO extends BasicDAO<Visit, Key<Visit>> {
 	
 	
 	public String getCountries(){
-		/*
-			db.visitor_test.aggregate(
-				{$project: 	{country: 1, version: 1}},
-				{$group:	{_id: "$country", total : { $sum: 1 }}}	
-			)
-		 */
+		
+		logger.log(Level.FINE, "Enter VisitDAO getCountries");		
 		
 		DBObject fields = new BasicDBObject("country", 1);		
 		fields.put("version", 1);
 		DBObject project = new BasicDBObject("$project", fields );
-		
 		DBObject groupFields = new BasicDBObject( "_id", "$country");	
-		groupFields.put("total", new BasicDBObject( "$sum", 1));
-				
-		DBObject group = new BasicDBObject("$group", groupFields);
-				
+		groupFields.put("total", new BasicDBObject( "$sum", 1));			
+		DBObject group = new BasicDBObject("$group", groupFields);				
 		AggregationOutput output = getCollection().aggregate( project, group );
-		
-		
-		CommandResult cr = output.getCommandResult();
-		Map map = cr.toMap();
-		
-		Iterable<DBObject> i = output.results();
-		
+			
 		String results = output.toString();
-		
-		
-		
-		datastore.createQuery(entityClazz).countAll();
-		
+				
+		logger.log(Level.FINE, "Exit VisitDAO getCountries. Countries {0}", results);
 		
 		return results;
 	}
 	
-	
-	
 
 
-/**
- * Gets the GeoPosition of the visitor 
- */
-
+	/**
+	 * Gets the GeoPosition of the visitor 
+	 */
 	public GeoPosition getGeoPosition(double latitude, double longitude) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-
-
-
-
-
-	
-
-
-
-	
 	
 }

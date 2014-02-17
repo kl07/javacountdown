@@ -15,24 +15,18 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.adoptopenjdk.javacountdown.entity.GeoPosition;
-import org.adoptopenjdk.javacountdown.entity.JdkAdoptionCountry;
-import org.bson.types.ObjectId;
+import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
 
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.dao.BasicDAO;
 import com.google.code.morphia.query.Query;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 
 /**
  * 
@@ -41,12 +35,12 @@ import com.mongodb.DBObject;
  * @author Alex Theedom
  *
  */
-public class JdkAdoptionDAO extends BasicDAO<JdkAdoptionCountry, Key<JdkAdoptionCountry>> {
+public class AdoptionReportDAO extends BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> {
 	
-	private static final Logger logger = Logger.getLogger(JdkAdoptionDAO.class.getName());
+	private static final Logger logger = Logger.getLogger(AdoptionReportDAO.class.getName());
 		
 	
-	public JdkAdoptionDAO(Class<JdkAdoptionCountry> entityClass, DatastoreImpl datastore) {
+	public AdoptionReportDAO(Class<AdoptionReportCountry> entityClass, DatastoreImpl datastore) {
 		super(entityClass, datastore);
 	}
 
@@ -58,8 +52,8 @@ public class JdkAdoptionDAO extends BasicDAO<JdkAdoptionCountry, Key<JdkAdoption
 	 * @param country
 	 * @return
 	 */
-	public JdkAdoptionCountry getCountryTotals(String country){		
-		Query<JdkAdoptionCountry> query = ds.createQuery(JdkAdoptionCountry.class).field("country").equal(country);			
+	public AdoptionReportCountry getCountryTotals(String country){		
+		Query<AdoptionReportCountry> query = ds.createQuery(AdoptionReportCountry.class).field("country").equal(country);	
 		return query.get();
 	}
 	
@@ -70,13 +64,15 @@ public class JdkAdoptionDAO extends BasicDAO<JdkAdoptionCountry, Key<JdkAdoption
 	 * @return
 	 */
 	public Map<String, Integer> getJdkAdoption(){		
-		List<JdkAdoptionCountry> adoptionByCountry = ds.createQuery(JdkAdoptionCountry.class).retrievedFields(true, "country", "percentage").asList();	
+   	 	logger.log(Level.FINE, "Enter AdoptionReportDAO getJdkAdoption");
+		List<AdoptionReportCountry> adoptionByCountry = ds.createQuery(AdoptionReportCountry.class).retrievedFields(true, "country", "percentage").asList();	
 		
 		Map<String, Integer> countryPercentageAdoption = new HashMap<>();
-		for(JdkAdoptionCountry country : adoptionByCountry){
+		for(AdoptionReportCountry country : adoptionByCountry){
 			countryPercentageAdoption.put(country.getCountry(), country.getPercentage());
 		}
-						
+
+   	 	logger.log(Level.FINE, "Exit AdoptionReportDAO getJdkAdoption: {0}", countryPercentageAdoption);
 		return countryPercentageAdoption;
 	}
 	

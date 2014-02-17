@@ -14,7 +14,7 @@ $(function() {
  * 2.a Else inform the user we couldn't help 
  */
 function initialize() {
-	
+
     var javaCCookie = $.cookie('javacountdown');
     if (typeof javaCCookie === 'undefined')
     {

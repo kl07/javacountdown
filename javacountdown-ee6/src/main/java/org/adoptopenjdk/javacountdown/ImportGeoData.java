@@ -25,7 +25,7 @@ public class ImportGeoData {
 	private static final String DATABASE_NAME 	= "jcountdown";
 
 	private static final String CSV_FILE_LOCATION 		= "geoposition.csv";
-	private static final String CSV_TEST_FILE_LOCATION 	= "geoposition_snapshot.csv";
+	//private static final String CSV_TEST_FILE_LOCATION 	= "geoposition_snapshot.csv";
 
 	
 	public static void main(String... args) {

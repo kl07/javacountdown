@@ -21,22 +21,22 @@ import com.google.code.morphia.Key;
 import com.google.code.morphia.dao.BasicDAO;
 import com.google.gson.Gson;
 
-import org.adoptopenjdk.javacountdown.entity.JdkAdoptionCountry;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
+import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
 import org.adoptopenjdk.javacountdown.entity.VersionInfo;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
+import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 /**
@@ -48,43 +48,36 @@ public class DataProvider {
     private static final String EMPTY_STRING = "";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
          
-	@Inject @VisitQ
+	@Inject @DataAccessObject(Type.VISIT)
 	BasicDAO<Visit, Key<Visit>> visitDAO;
      
-    @Inject @GeoPositionQ
+    @Inject @DataAccessObject(Type.GEOPOSITION)
     BasicDAO<GeoPosition, Key<GeoPosition>> geoPositionDAO;
 
-    @Inject @JdkAdoptionQ
-    BasicDAO<JdkAdoptionCountry, Key<JdkAdoptionCountry>> jdkAdoptionDAO;
+    @Inject @DataAccessObject(Type.REPORT)
+    BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> adoptionReportDAO;
 
-       
+	@Inject 
+    Event<Visit> visitEvent;
+	
  
     /**
      * This retrieves the country code based on the given latitude/longitude. 
      * It should return a ISO 3166 alpha-2 code.
      * Refer to http://www.maxmind.com/en/worldcities for the data behind it.
      *
-     * @param String latitude
-     * @param String longitude
-     * @return ISO 3166 alpha 2 code
+     * @param double latitude
+     * @param double longitude
+     * @return GeoPosition
      */  
     private GeoPosition getGeoPositionFromLatLong(double latitude, double longitude) {
     	
-//    	longitude = 51.511214;
-//    	latitude  = -0.119824;
-//    	
-//    	latitude =  -3.7177154999999997;
-//    	longitude = 40.4701242;
-//    	
-//    	latitude  = 51.513878;
-//    	longitude =-0.161945;
-   	
+    	 logger.log(Level.FINE, "Enter DataProvider getGeoPositionFromLatLong: lat: {0}, lon: {1}", new Object[]{latitude, longitude});
+    	
     	GeoPosition geoPosition = ((GeoPositionDAO)geoPositionDAO).getGeoPosition(latitude, longitude);
 
-        logger.log(Level.FINE, "Are we lucky? lat {0} long {1}", new Object[]{latitude, longitude});
-
         if (!EMPTY_STRING.equals(geoPosition.getCountry())) {
-            logger.log(Level.FINE, "Country: {0}", geoPosition.getCountry());
+            logger.log(Level.FINE, "Country code found: {0}", geoPosition.getCountry());
         } else {
             logger.log(Level.FINE, "No country code found.");
         }
@@ -95,90 +88,88 @@ public class DataProvider {
     
     
     /**
-     * Persisting a Visit entity This only gets called when the visit could be
+     * Persists a Visit entity. This only gets called when the visit could be
      * parsed by GSON. No further checks necessary here.
      *
      * @param visit
      */
     @Asynchronous
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persistVisit(VisitTransfer visitTransfer) {
-    	Visit visit = new Visit();
+    	
+        logger.log(Level.FINE, "Enter DataProvider persistVisit");
+           	
     	GeoPosition geoPosition = getGeoPositionFromLatLong(visitTransfer.getLatitude(), visitTransfer.getLongitude());
     	VersionInfo versionInfo = constructVersioninfo(visitTransfer);
     	
-    	visit.setVersion(versionInfo.getvMajor());
-    	visit.setVersionInfo(versionInfo); 
-         	
+    	Visit visit = new Visit();
+    	visit.setVersion(versionInfo.getvMinor());
+    	visit.setVersionInfo(versionInfo);          	
         visit.setCountry(geoPosition.getCountry());       
         visit.setGeoPosition(geoPosition); 
- 
         visit.setBrowser(visitTransfer.getBrowser());
-        visit.setOs(visitTransfer.getOs());
-                       
+        visit.setOs(visitTransfer.getOs());                       
         visit.setTime(new Date(System.currentTimeMillis()));
         
-        Key<Visit> dbRef = visitDAO.save(visit);
-        
-        logger.log(Level.FINE, "persisted {0}", visit);
-        logger.log(Level.FINE, "persisted dbRef {0}", dbRef);
-        
-        
-        // Update the JDK adoption world map data     
-        
-        JdkAdoptionCountry jdkAdoptionCountryTotals = ((JdkAdoptionDAO) jdkAdoptionDAO).getCountryTotals(geoPosition.getCountry());
-        if(jdkAdoptionCountryTotals == null){
-        	jdkAdoptionCountryTotals = new JdkAdoptionCountry(visit);
-        }
-    	jdkAdoptionCountryTotals.updateTotals(visit);
-        jdkAdoptionDAO.save(jdkAdoptionCountryTotals);              
+		Key<Visit> key = null;
+		try {	
+			key = visitDAO.save(visit);
+			visitEvent.fire(visit);
+	        logger.log(Level.FINE, "Visit persisted with key {0}", key);
+		} catch (Exception e){
+			logger.log(Level.FINE, "Exception thrown while persisting Visit: {0}", visit);
+			visitEvent.fire(visit);
+		}
+			         
+        logger.log(Level.FINE, "Exit DataProvider persistVisit");              
     }
 
     
     
     /**
-     * Get a list of all countries with data to display on the map, this is
+     * Gets a list of all countries with data to display on the map, this is
      * returned directly as a String as that's the expected format
      *
      * @return List of countries and percentage adoption as a String
      */
-	public String getJdkAdoption() {
+	public String getJdkAdoptionReport() {
 		
-		Map<String, Integer> jdkAdoptionCountry = ((JdkAdoptionDAO) jdkAdoptionDAO).getJdkAdoption();
-		  
+		logger.log(Level.FINE, "Enter DataProvider getJdkAdoptionReport");
+		
+		Map<String, Integer> jdkAdoptionCountry = ((AdoptionReportDAO) adoptionReportDAO).getJdkAdoption();		  
         Gson gson = new Gson();
         String json = gson.toJson(jdkAdoptionCountry);
-		System.out.println(json);
+		
+		logger.log(Level.FINE, "Exit DataProvider getJdkAdoptionReport JSON: {0} ", json);
+		
 		return json;
 	}  
     
 	
 	
     /**
-     * Parsing the version string to it's numbers. If this fails we still have
-     * the String version field in the database ...
+     * Parsing the version string to it's numbers. 
      *
-     * @param visit
-     * @return The Visit, probably instrumented with version data
+     * @param VisitTransfer 
+     * @return VersionInfo
      */
-    private static VersionInfo constructVersioninfo(VisitTransfer visit) {
+    private static VersionInfo constructVersioninfo(VisitTransfer visitTransfer) {
     	VersionInfo versionInfo = new VersionInfo();
-    	if (visit.getVersion() != null){
+    	if (visitTransfer.getVersion() != null){
 	        try {
 	        	
 	            String delims = "[.]+";
-	            String[] tokens = visit.getVersion().split(delims);
+	            String[] tokens = visitTransfer.getVersion().split(delims);
 	            versionInfo.setvMajor(Integer.parseInt(tokens[0]));
 	            versionInfo.setvMinor(Integer.parseInt(tokens[1]));
 	            versionInfo.setvPatch(Integer.parseInt(tokens[2]));
 	            versionInfo.setvBuild(Integer.parseInt(tokens[3]));
 	        } catch (NumberFormatException | NullPointerException e) {
-	            logger.fine("Failed to parse version, but that's OK, "
-	                    + "we still have the string variant stored in the data store.");
+	            logger.log(Level.FINE, "Failed to parse version, {0} ", visitTransfer);
 	        }
     	}
         return versionInfo;
     }
-
 
 
 }

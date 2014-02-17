@@ -41,28 +41,27 @@ public class GeoPositionDAO extends BasicDAO<GeoPosition, Key<GeoPosition>> {
 	
 	private static final Logger logger = Logger.getLogger(GeoPositionDAO.class.getName());
 		
-	
 	public GeoPositionDAO(Class<GeoPosition> entityClass, DatastoreImpl datastore) {
 		super(entityClass, datastore);
 	}
-
 	
 	
 	/**
      * This method retrieves the country code based on the given latitude/longitude. 
-     * It should return an ISO 3166 alpha-2 code.
+     * It will return a GeoPosition object containing the ISO 3166 alpha-2 code.
      * Refer to http://www.maxmind.com/en/worldcities for the data behind it.
 	 * 
-	 * @param latitude
-	 * @param longitude
+	 * @param double latitude
+	 * @param double longitude
 	 * @return A GeoPosition entity
 	 */
 	public GeoPosition getGeoPosition(double latitude, double longitude){
 		
-		logger.log(Level.FINE, "Lets find country code");
+		logger.log(Level.FINE, "Enter GeoPositionDAO getGeoPosition.");
 		
 		GeoPosition geoPosition = new GeoPosition();	
 		
+		// Construct the query necessary to find the country code based on the given coords
 		List<Double> coordinates = new ArrayList<>();
 		coordinates.add(longitude);
 		coordinates.add(latitude);
@@ -74,14 +73,17 @@ public class GeoPositionDAO extends BasicDAO<GeoPosition, Key<GeoPosition>> {
 		
 		DBCursor cursor =  getCollection().find(query).limit(1);
 
-		if (cursor.hasNext()) {
-			
-			DBObject dbObject = cursor.next();			
-			String countryCode 	= (String) dbObject.get("country");
-			ObjectId id 		= (ObjectId) dbObject.get("_id");
-			geoPosition.setCountry(countryCode);
-			geoPosition.setId(id);
-		} 
+		// Check that there is at least one result and populate the GeoPosition object
+		if (cursor.hasNext()) {			
+			DBObject dbObject 	= cursor.next();			
+			geoPosition.setId((ObjectId) dbObject.get("_id"));
+			geoPosition.setCountry((String) dbObject.get("country"));
+			geoPosition.setCity((String) dbObject.get("city"));
+		} else {
+			logger.log(Level.FINE, "No data was return by the query.");		
+		}
+
+		logger.log(Level.FINE, "Exit GeoPositionDAO getGeoPosition.");
 		
 		return geoPosition;		
 	}

@@ -32,7 +32,7 @@ import com.google.code.morphia.annotations.Reference;
  * @author Alex Theedom
  */
 @RequestScoped
-@Entity(value = "visitor_test", noClassnameStored = true)
+@Entity(value = "visit", noClassnameStored = true)
 public class Visit implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -51,9 +51,6 @@ public class Visit implements Serializable {
 	public Visit() {
 	}
 	
-	/*
-	 * Test the version of Java.
-	 */
 	public boolean isVersion(int version){
 		return this.version == version;
 	}

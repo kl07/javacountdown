@@ -15,7 +15,7 @@ import com.google.code.morphia.annotations.Entity;
  */
 @RequestScoped
 @Entity(value = "jdkadoption", noClassnameStored = true)
-public class JdkAdoptionCountry implements Serializable {
+public class AdoptionReportCountry implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private static final int VERSION_SEVEN = 7;
@@ -28,14 +28,14 @@ public class JdkAdoptionCountry implements Serializable {
 	private int percentage;
 
 	
-	public JdkAdoptionCountry(){}	
+	public AdoptionReportCountry(){}	
 	
 	/**
 	 * Constructor that creates a new JdkAdoptionCountry 
 	 * from a Visit object.
 	 * @param visit
 	 */
-	public JdkAdoptionCountry(Visit visit) {
+	public AdoptionReportCountry(Visit visit) {
 		this.setCountry(visit.getCountry());	
 	}
 	
@@ -118,7 +118,7 @@ public class JdkAdoptionCountry implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		JdkAdoptionCountry other = (JdkAdoptionCountry) obj;
+		AdoptionReportCountry other = (AdoptionReportCountry) obj;
 		if (country == null) {
 			if (other.country != null)
 				return false;

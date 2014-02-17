@@ -24,38 +24,37 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.adoptopenjdk.javacountdown.entity.JdkAdoptionCountry;
+import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
+import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
 import org.adoptopenjdk.javacountdown.entity.Visit;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 
 
 /**
  * 
- * Factory that porduces the DAOs.
+ * Factory that produces the Data Access Objects.
  * 
  * @author Alex Theedom
  *
  */
 @ApplicationScoped
-public class MorphiaDOAFactory {
-	
+public class MorphiaDAOFactory {	
 	
 	@Inject
 	private DatastoreImpl datastore;
-	
-	
-	@Produces @VisitQ
+		
+	@Produces @DataAccessObject(Type.VISIT)
 	public BasicDAO<Visit, Key<Visit>> createVisitDAO(){	
 		return new VisitDAO(Visit.class, datastore);			
 	}
 	
-	@Produces @GeoPositionQ
+	@Produces @DataAccessObject(Type.GEOPOSITION)
 	public BasicDAO<GeoPosition, Key<GeoPosition>> createGeoPositionDOA(){		
 		return new GeoPositionDAO(GeoPosition.class, this.datastore);	
 	}
 	
-	@Produces @JdkAdoptionQ
-	public BasicDAO<JdkAdoptionCountry, Key<JdkAdoptionCountry>> createJdkAdoptionDOA(){		
-		return new JdkAdoptionDAO(JdkAdoptionCountry.class, this.datastore);	
+	@Produces  @DataAccessObject(Type.REPORT)
+	public BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> createReportDOA(){		
+		return new AdoptionReportDAO(AdoptionReportCountry.class, this.datastore);	
 	}
 }
