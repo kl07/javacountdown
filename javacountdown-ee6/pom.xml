@@ -93,9 +93,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-
-
-
 			<dependency>
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
@@ -113,7 +110,6 @@
 				<artifactId>arquillian-glassfish-embedded-3.1</artifactId>
 				<version>${arquillian-glassfish-embedded-3.1.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>org.jboss.arquillian.extension</groupId>
 				<artifactId>arquillian-persistence-api</artifactId>
@@ -124,7 +120,6 @@
 				<artifactId>arquillian-persistence-impl</artifactId>
 				<version>${arquillian-persistence-api.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>org.jboss.arquillian.junit</groupId>
 				<artifactId>arquillian-junit-container</artifactId>
@@ -202,7 +197,6 @@
 				<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
 				<version>${shrinkwrap-resolver-maven.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>com.jayway.restassured</groupId>
 				<artifactId>rest-assured</artifactId>
@@ -326,7 +320,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.0</version>
+					<version>3.1</version>
 					<configuration>
 						<source>${jdk.version}</source>
 						<target>${jdk.version}</target>

@@ -16,20 +16,36 @@
 package org.adoptopenjdk.javacountdown.control;
 
 import org.adoptopenjdk.javacountdown.entity.Visit;
+
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Key;
+import com.google.code.morphia.Morphia;
+import com.google.code.morphia.dao.BasicDAO;
 import com.google.gson.Gson;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
+
+import org.adoptopenjdk.javacountdown.entity.VersionInfo;
+import org.adoptopenjdk.javacountdown.entity.GeoPosition;
+
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
+import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.inject.Inject;
 
 /**
  * The main Data provider for the JAX-RS services
@@ -37,14 +53,24 @@ import javax.persistence.criteria.Expression;
 @Stateless
 public class DataProvider {
 
-    // Only EclipseLink > 2.5
+    private static final String EMPTY_STRING = "";
+	// Only EclipseLink > 2.5
     //private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country,((COUNT(v) / ( SELECT COUNT(v) FROM Visit v)) * 100 )) AS percentage FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country";
     private final static String GET_COUNTRIES = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(v.country, COUNT(v.country)) cnt FROM Visit v WHERE v.country <> 'unresolved' AND v.vMinor = :version GROUP BY v.country ORDER BY COUNT(v.country)";
-    private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(G.alpha2) FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
+//    private final static String GET_COUNTRY_FROM_GEO_DATA = "SELECT new org.adoptopenjdk.javacountdown.control.CountryHolder(G.alpha2) FROM Geonames AS G ORDER BY ABS((ABS(G.latitude-:lat))+(ABS(G.longitude-:lng))) ASC";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
-
+   
+    
     @PersistenceContext
-    EntityManager entityManager;
+    EntityManager entityManager;     
+
+	@Inject @VisitQ
+	BasicDAO<Visit, Key<Visit>> visitDAO;
+    
+    
+    @Inject @GeoPositionQ
+    BasicDAO<GeoPosition, Key<GeoPosition>> geoPositionDAO;
+    
 
     /**
      * Get a list of all countries with data to display on the map, this is
@@ -54,15 +80,7 @@ public class DataProvider {
      */
     public String getCountries() {
 
-        // Criteria Query approach
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-
-        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        
-        Expression<Long> ex = cb.diff(cb.count(cq.from(Visit.class)),cb.prod(cb.count(cq.from(Visit.class)), cb.parameter(Long.class)));
-
-//CriteriaQuery query = criteriaBuilder.createQuery();
-        TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRIES, CountryHolder.class);
+ /*       TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRIES, CountryHolder.class);
         query.setParameter("version", Integer.valueOf(7));
         List<CountryHolder> results = query.getResultList();
 
@@ -77,7 +95,7 @@ public class DataProvider {
 
         // If we don't have results we simply put an empty element to prevent 204 on the client
         if (all.isEmpty()) {
-            all.put("", Integer.valueOf(0));
+            all.put(EMPTY_STRING, Integer.valueOf(0));
         }
 
         Gson gson = new Gson();
@@ -87,48 +105,59 @@ public class DataProvider {
 
             logger.log(Level.FINE, "<< BUILDER {0}", json);
         }
-
+*/
+    	
+    	String json = ((VisitDAO)visitDAO).getCountries();
+    	
         return json;
+
     }
+    
+    
+    public String getCountryCount(){
+    	String count = "";
+    	
+    	
+    	
+    	return count;
+    }
+    
+    
+    
 
     /**
-     * This is where parts of the magic already happens. This does a select on
-     * the geonames table and does some searching for the nearest country entry
-     * with the latitude/longitude. It should return a ISO 3166 alpha-2 code.
-     * Refer to https://opendata.socrata.com/dataset/Country-List-ISO-3166-Codes-Latitude-Longitude/mnkm-8ram 
-     * for the data behind it.
+     * This retrieves the country code based on the given latitude/longitude. 
+     * It should return a ISO 3166 alpha-2 code.
+     * Refer to http://www.maxmind.com/en/worldcities for the data behind it.
      *
      * @param String latitude
      * @param String longitude
      * @return ISO 3166 alpha 2 code
-     */
-    private String getCountryFromLatLong(double latitude, double longitude) {
+     */  
+    private GeoPosition getGeoPositionFromLatLong(double latitude, double longitude) {
     	
-    	longitude = 51.511214;
-    	latitude  = -0.119824;
+ //   	longitude = 51.511214;
+ //   	latitude  = -0.119824;
     	
 //    	latitude =  -3.7177154999999997;
 //    	longitude = 40.4701242;
+    	
+    	latitude  = 51.513878;
+    	longitude =-0.161945;
    	
-        String country = "unresolved";
-
-        TypedQuery<CountryHolder> query = entityManager.createQuery(GET_COUNTRY_FROM_GEO_DATA, CountryHolder.class);
-        query.setParameter("lat", new Double(latitude));
-        query.setParameter("lng", new Double(longitude));
-        query.setMaxResults(3);
-        List<CountryHolder> results = query.getResultList();
+    	GeoPosition geoPosition = ((GeoPositionDAO)geoPositionDAO).getGeoPosition(latitude, longitude);
 
         logger.log(Level.FINE, "Are we lucky? lat {0} long {1}", new Object[]{latitude, longitude});
 
-        if (results.size() > 0) {
-            logger.log(Level.FINE, "we have a result");
-            CountryHolder result = results.get(0);
-            country = result.getCountry();
+        if (!EMPTY_STRING.equals(geoPosition.getCountry())) {
+            logger.log(Level.FINE, "Country: {0}", geoPosition.getCountry());
+        } else {
+            logger.log(Level.FINE, "No country code found.");
         }
-        logger.log(Level.FINE, "Country: {0}", country);
-        return country;
-    }
 
+        return geoPosition;
+    }
+    
     /**
      * Persisting a Visit entity This only gets called when the visit could be
      * parsed by GSON. No further checks necessary here.
@@ -136,14 +165,28 @@ public class DataProvider {
      * @param visit
      */
     @Asynchronous
-    public void persistVisit(Visit visit) {
-        String country = getCountryFromLatLong(visit.getLatitude(), visit.getLongitude());
-        setVersion(visit);
-        visit.setCountry(country);
+    public void persistVisit(VisitTransfer visitTransfer) {
+    	Visit visit = new Visit();
+    	GeoPosition geoPosition = getGeoPositionFromLatLong(visitTransfer.getLatitude(), visitTransfer.getLongitude());
+    	VersionInfo versionInfo = constructVersioninfo(visitTransfer);
+    	
+    	visit.setVersion(versionInfo.getvMajor());
+    	visit.setVersionInfo(versionInfo); 
+         	
+        visit.setCountry(geoPosition.getCountry());       
+        visit.setGeoPosition(geoPosition); 
+ 
+        visit.setBrowser(visitTransfer.getBrowser());
+        visit.setOs(visitTransfer.getOs());
+        
+               
         visit.setTime(new Date(System.currentTimeMillis()));
-        entityManager.persist(visit);
-
+        
+        Key<Visit> dbRef = visitDAO.save(visit);
+        
         logger.log(Level.FINE, "persisted {0}", visit);
+        logger.log(Level.FINE, "persisted dbRef {0}", dbRef);
+        
     }
 
     /**
@@ -153,18 +196,22 @@ public class DataProvider {
      * @param visit
      * @return The Visit, probably instrumented with version data
      */
-    private static Visit setVersion(Visit visit) {
-        try {
-            String delims = "[.]+";
-            String[] tokens = visit.getVersion().split(delims);
-            visit.setvMajor(Integer.parseInt(tokens[0]));
-            visit.setvMinor(Integer.parseInt(tokens[1]));
-            visit.setvPatch(Integer.parseInt(tokens[2]));
-            visit.setvBuild(Integer.parseInt(tokens[3]));
-        } catch (NumberFormatException | NullPointerException e) {
-            logger.fine("Failed to parse version, but that's OK, "
-                    + "we still have the string variant stored in the data store.");
-        }
-        return visit;
+    private static VersionInfo constructVersioninfo(VisitTransfer visit) {
+    	VersionInfo versionInfo = new VersionInfo();
+    	if (visit.getVersion() != null){
+	        try {
+	        	
+	            String delims = "[.]+";
+	            String[] tokens = visit.getVersion().split(delims);
+	            versionInfo.setvMajor(Integer.parseInt(tokens[0]));
+	            versionInfo.setvMinor(Integer.parseInt(tokens[1]));
+	            versionInfo.setvPatch(Integer.parseInt(tokens[2]));
+	            versionInfo.setvBuild(Integer.parseInt(tokens[3]));
+	        } catch (NumberFormatException | NullPointerException e) {
+	            logger.fine("Failed to parse version, but that's OK, "
+	                    + "we still have the string variant stored in the data store.");
+	        }
+    	}
+        return versionInfo;
     }
 }
