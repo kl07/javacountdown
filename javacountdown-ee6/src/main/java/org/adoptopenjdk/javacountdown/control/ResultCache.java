@@ -30,14 +30,14 @@ import javax.inject.Inject;
 @Singleton
 public class ResultCache {
 
-	private static final Logger logger = Logger.getLogger(ResultCache.class.getName());
-	
+    private static final Logger logger = Logger.getLogger(ResultCache.class.getName());
+    
     String json = "";
 
     @Inject
     private DataProvider dataProvider;
 
-    public String getCountryData() {	
+    public String getCountryData() {    
         if (json.isEmpty()) {
             json = dataProvider.getJdkAdoptionReport();
         }
@@ -47,7 +47,7 @@ public class ResultCache {
         
     @Schedule(minute = "*/2", persistent = false)
     public void rebuildCache() {
-    	logger.log(Level.FINE, "ResultCache rebuildCache");
+        logger.log(Level.FINE, "ResultCache rebuildCache");
         json = dataProvider.getJdkAdoptionReport();
     }
 }

@@ -28,80 +28,84 @@ import com.google.code.morphia.annotations.Embedded;
  */
 @Embedded
 public class VersionInfo implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	private int vMajor;
-	private int vMinor;
-	private int vPatch;
-	private int vBuild;
 
-	public int getvMinor() {
-		return vMinor;
-	}
+    private static final long serialVersionUID = -1203925642378324622L;
+    
+    private int majorVersion;
+    private int minorVersion;
+    private int patchVersion;
+    private int buildVersion;
+    
+    
+    public int getMajorVersion() {
+        return majorVersion;
+    }
 
-	public void setvMinor(int vMinor) {
-		this.vMinor = vMinor;
-	}
+    public void setMajorVersion(int majorVersion) {
+        this.majorVersion = majorVersion;
+    }
 
-	public int getvMajor() {
-		return vMajor;
-	}
+    public int getMinorVersion() {
+        return minorVersion;
+    }
 
-	public void setvMajor(int vMajor) {
-		this.vMajor = vMajor;
-	}
+    public void setMinorVersion(int minorVersion) {
+        this.minorVersion = minorVersion;
+    }
 
-	public int getvPatch() {
-		return vPatch;
-	}
+    public int getPatchVersion() {
+        return patchVersion;
+    }
 
-	public void setvPatch(int vPatch) {
-		this.vPatch = vPatch;
-	}
+    public void setPatchVersion(int patchVersion) {
+        this.patchVersion = patchVersion;
+    }
 
-	public int getvBuild() {
-		return vBuild;
-	}
+    public int getBuildVersion() {
+        return buildVersion;
+    }
 
-	public void setvBuild(int vBuild) {
-		this.vBuild = vBuild;
-	}
+    public void setBuildVersion(int buildVersion) {
+        this.buildVersion = buildVersion;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + vBuild;
-		result = prime * result + vMajor;
-		result = prime * result + vMinor;
-		result = prime * result + vPatch;
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		VersionInfo other = (VersionInfo) obj;
-		if (vBuild != other.vBuild)
-			return false;
-		if (vMajor != other.vMajor)
-			return false;
-		if (vMinor != other.vMinor)
-			return false;
-		if (vPatch != other.vPatch)
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + buildVersion;
+        result = prime * result + majorVersion;
+        result = prime * result + minorVersion;
+        result = prime * result + patchVersion;
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return "Visit{vMajor=" + vMajor + ", vMinor=" + vMinor + ", vPatch="
-				+ vPatch + ", vBuild=" + vBuild + "}";
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        VersionInfo other = (VersionInfo) obj;
+        if (buildVersion != other.buildVersion)
+            return false;
+        if (majorVersion != other.majorVersion)
+            return false;
+        if (minorVersion != other.minorVersion)
+            return false;
+        if (patchVersion != other.patchVersion)
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Visit{majorVersion=" + majorVersion + ", minorVersion=" + minorVersion + ", patchVersion="
+                + patchVersion + ", buildVersion=" + buildVersion + "}";
+    }
 
 }

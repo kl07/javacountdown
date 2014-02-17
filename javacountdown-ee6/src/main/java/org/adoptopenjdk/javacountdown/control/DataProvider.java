@@ -48,8 +48,8 @@ public class DataProvider {
     private static final String EMPTY_STRING = "";
     private static final Logger logger = Logger.getLogger(DataProvider.class.getName());
          
-	@Inject @DataAccessObject(Type.VISIT)
-	BasicDAO<Visit, Key<Visit>> visitDAO;
+    @Inject @DataAccessObject(Type.VISIT)
+    BasicDAO<Visit, Key<Visit>> visitDAO;
      
     @Inject @DataAccessObject(Type.GEOPOSITION)
     BasicDAO<GeoPosition, Key<GeoPosition>> geoPositionDAO;
@@ -57,9 +57,9 @@ public class DataProvider {
     @Inject @DataAccessObject(Type.REPORT)
     BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> adoptionReportDAO;
 
-	@Inject 
+    @Inject 
     Event<Visit> visitEvent;
-	
+    
  
     /**
      * This retrieves the country code based on the given latitude/longitude. 
@@ -71,10 +71,10 @@ public class DataProvider {
      * @return GeoPosition
      */  
     private GeoPosition getGeoPositionFromLatLong(double latitude, double longitude) {
-    	
-    	 logger.log(Level.FINE, "Enter DataProvider getGeoPositionFromLatLong: lat: {0}, lon: {1}", new Object[]{latitude, longitude});
-    	
-    	GeoPosition geoPosition = ((GeoPositionDAO)geoPositionDAO).getGeoPosition(latitude, longitude);
+        
+         logger.log(Level.INFO, "Enter DataProvider getGeoPositionFromLatLong: lat: {0}, lon: {1}", new Object[]{latitude, longitude});
+        
+        GeoPosition geoPosition = ((GeoPositionDAO)geoPositionDAO).getGeoPosition(latitude, longitude);
 
         if (!EMPTY_STRING.equals(geoPosition.getCountry())) {
             logger.log(Level.FINE, "Country code found: {0}", geoPosition.getCountry());
@@ -96,31 +96,31 @@ public class DataProvider {
     @Asynchronous
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persistVisit(VisitTransfer visitTransfer) {
-    	
+        
         logger.log(Level.FINE, "Enter DataProvider persistVisit");
-           	
-    	GeoPosition geoPosition = getGeoPositionFromLatLong(visitTransfer.getLatitude(), visitTransfer.getLongitude());
-    	VersionInfo versionInfo = constructVersioninfo(visitTransfer);
-    	
-    	Visit visit = new Visit();
-    	visit.setVersion(versionInfo.getvMinor());
-    	visit.setVersionInfo(versionInfo);          	
+               
+        GeoPosition geoPosition = getGeoPositionFromLatLong(visitTransfer.getLatitude(), visitTransfer.getLongitude());
+        VersionInfo versionInfo = constructVersioninfo(visitTransfer);
+        
+        Visit visit = new Visit();
+        visit.setVersion(versionInfo.getMinorVersion());
+        visit.setVersionInfo(versionInfo);              
         visit.setCountry(geoPosition.getCountry());       
         visit.setGeoPosition(geoPosition); 
         visit.setBrowser(visitTransfer.getBrowser());
         visit.setOs(visitTransfer.getOs());                       
         visit.setTime(new Date(System.currentTimeMillis()));
         
-		Key<Visit> key = null;
-		try {	
-			key = visitDAO.save(visit);
-			visitEvent.fire(visit);
-	        logger.log(Level.FINE, "Visit persisted with key {0}", key);
-		} catch (Exception e){
-			logger.log(Level.FINE, "Exception thrown while persisting Visit: {0}", visit);
-			visitEvent.fire(visit);
-		}
-			         
+        Key<Visit> key = null;
+        try {    
+            key = visitDAO.save(visit);
+            logger.log(Level.FINE, "Visit persisted with key {0}", key);
+        } catch (Exception e){
+            logger.log(Level.SEVERE, "Exception thrown while persisting Visit: {0}", visit);            
+        } finally {        
+            visitEvent.fire(visit);
+        }
+                        
         logger.log(Level.FINE, "Exit DataProvider persistVisit");              
     }
 
@@ -132,21 +132,21 @@ public class DataProvider {
      *
      * @return List of countries and percentage adoption as a String
      */
-	public String getJdkAdoptionReport() {
-		
-		logger.log(Level.FINE, "Enter DataProvider getJdkAdoptionReport");
-		
-		Map<String, Integer> jdkAdoptionCountry = ((AdoptionReportDAO) adoptionReportDAO).getJdkAdoption();		  
+    public String getJdkAdoptionReport() {
+        
+        logger.log(Level.FINE, "Enter DataProvider getJdkAdoptionReport");
+        
+        Map<String, Integer> jdkAdoptionCountry = ((AdoptionReportDAO) adoptionReportDAO).getJdkAdoption();          
         Gson gson = new Gson();
         String json = gson.toJson(jdkAdoptionCountry);
-		
-		logger.log(Level.FINE, "Exit DataProvider getJdkAdoptionReport JSON: {0} ", json);
-		
-		return json;
-	}  
+        
+        logger.log(Level.FINE, "Exit DataProvider getJdkAdoptionReport JSON: {0} ", json);
+        
+        return json;
+    }  
     
-	
-	
+    
+    
     /**
      * Parsing the version string to it's numbers. 
      *
@@ -154,20 +154,20 @@ public class DataProvider {
      * @return VersionInfo
      */
     private static VersionInfo constructVersioninfo(VisitTransfer visitTransfer) {
-    	VersionInfo versionInfo = new VersionInfo();
-    	if (visitTransfer.getVersion() != null){
-	        try {
-	        	
-	            String delims = "[.]+";
-	            String[] tokens = visitTransfer.getVersion().split(delims);
-	            versionInfo.setvMajor(Integer.parseInt(tokens[0]));
-	            versionInfo.setvMinor(Integer.parseInt(tokens[1]));
-	            versionInfo.setvPatch(Integer.parseInt(tokens[2]));
-	            versionInfo.setvBuild(Integer.parseInt(tokens[3]));
-	        } catch (NumberFormatException | NullPointerException e) {
-	            logger.log(Level.FINE, "Failed to parse version, {0} ", visitTransfer);
-	        }
-    	}
+        VersionInfo versionInfo = new VersionInfo();
+        if (visitTransfer.getVersion() != null){
+            try {
+                
+                String delims = "[.]+";
+                String[] tokens = visitTransfer.getVersion().split(delims);
+                versionInfo.setMajorVersion(Integer.parseInt(tokens[0]));
+                versionInfo.setMinorVersion(Integer.parseInt(tokens[1]));
+                versionInfo.setPatchVersion(Integer.parseInt(tokens[2]));
+                versionInfo.setBuildVersion(Integer.parseInt(tokens[3]));
+            } catch (NumberFormatException | NullPointerException e) {
+                logger.log(Level.FINE, "Failed to parse version, {0} ", visitTransfer);
+            }
+        }
         return versionInfo;
     }
 

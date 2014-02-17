@@ -17,126 +17,127 @@ import com.google.code.morphia.annotations.Entity;
 @Entity(value = "jdkadoption", noClassnameStored = true)
 public class AdoptionReportCountry implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private static final int VERSION_SEVEN = 7;
+    private static final long serialVersionUID = 5988042409552325372L;
 
-	@Id
-	private ObjectId id;
-	private String country;
-	private int version;
-	private int total;
-	private int percentage;
+    private static final int VERSION_SEVEN = 7;
 
-	
-	public AdoptionReportCountry(){}	
-	
-	/**
-	 * Constructor that creates a new JdkAdoptionCountry 
-	 * from a Visit object.
-	 * @param visit
-	 */
-	public AdoptionReportCountry(Visit visit) {
-		this.setCountry(visit.getCountry());	
-	}
-	
-	
+    @Id
+    private ObjectId id;
+    private String country;
+    private int version;
+    private int total;
+    private int percentage;
 
-	/**
-	 * Updates the totals for this country and calculates the percentage.
-	 * @param visit
-	 */
-	public void updateTotals(Visit visit) {
+    
+    public AdoptionReportCountry(){}    
+    
+    /**
+     * Constructor that creates a new JdkAdoptionCountry 
+     * from a Visit object.
+     * @param visit
+     */
+    public AdoptionReportCountry(Visit visit) {
+        this.setCountry(visit.getCountry());    
+    }
+    
+    
 
-		int visitTotal = getTotal();
-		this.setTotal(++visitTotal);
+    /**
+     * Updates the totals for this country and calculates the percentage.
+     * @param visit
+     */
+    public void updateTotals(Visit visit) {
 
-		int versionTotal = this.getVersion();
+        int visitTotal = getTotal();
+        this.setTotal(++visitTotal);
 
-		if (visit.isVersion(VERSION_SEVEN)) {
-			this.setVersion(++versionTotal);
-		}		
+        int versionTotal = this.getVersion();
 
-		this.setPercentage(Math.round(((float)versionTotal/visitTotal) * 100));
-	}
+        if (visit.isVersion(VERSION_SEVEN)) {
+            this.setVersion(++versionTotal);
+        }        
 
-	public ObjectId getId() {
-		return id;
-	}
+        this.setPercentage(Math.round(((float)versionTotal/visitTotal) * 100));
+    }
 
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
+    public ObjectId getId() {
+        return id;
+    }
 
-	public String getCountry() {
-		return country;
-	}
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
+    public String getCountry() {
+        return country;
+    }
 
-	public int getVersion() {
-		return version;
-	}
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-	public void setVersion(int version) {
-		this.version = version;
-	}
+    public int getVersion() {
+        return version;
+    }
 
-	public int getTotal() {
-		return total;
-	}
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
-	public void setTotal(int total) {
-		this.total = total;
-	}
+    public int getTotal() {
+        return total;
+    }
 
-	public int getPercentage() {
-		return percentage;
-	}
+    public void setTotal(int total) {
+        this.total = total;
+    }
 
-	public void setPercentage(int percentage) {
-		this.percentage = percentage;
-	}
+    public int getPercentage() {
+        return percentage;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((country == null) ? 0 : country.hashCode());
-		result = prime * result + percentage;
-		result = prime * result + total;
-		result = prime * result + version;
-		return result;
-	}
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AdoptionReportCountry other = (AdoptionReportCountry) obj;
-		if (country == null) {
-			if (other.country != null)
-				return false;
-		} else if (!country.equals(other.country))
-			return false;
-		if (percentage != other.percentage)
-			return false;
-		if (total != other.total)
-			return false;
-		if (version != other.version)
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((country == null) ? 0 : country.hashCode());
+        result = prime * result + percentage;
+        result = prime * result + total;
+        result = prime * result + version;
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return "JdkAdoption [country=" + country + ", version=" + version
-				+ ", total=" + total + ", percentage=" + percentage + "]";
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        AdoptionReportCountry other = (AdoptionReportCountry) obj;
+        if (country == null) {
+            if (other.country != null)
+                return false;
+        } else if (!country.equals(other.country))
+            return false;
+        if (percentage != other.percentage)
+            return false;
+        if (total != other.total)
+            return false;
+        if (version != other.version)
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "JdkAdoption [country=" + country + ", version=" + version
+                + ", total=" + total + ", percentage=" + percentage + "]";
+    }
 
 }

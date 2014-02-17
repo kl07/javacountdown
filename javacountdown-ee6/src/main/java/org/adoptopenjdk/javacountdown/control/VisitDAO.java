@@ -37,42 +37,42 @@ import org.adoptopenjdk.javacountdown.entity.Visit;
  * @author Alex Theedom
  *
  */ 
-public class VisitDAO extends BasicDAO<Visit, Key<Visit>> {	
+public class VisitDAO extends BasicDAO<Visit, Key<Visit>> {    
 
-	private static final Logger logger = Logger.getLogger(VisitDAO.class.getName());
-	
-	public VisitDAO(Class<Visit> entityClass, DatastoreImpl datastore) {
-		super(entityClass, datastore);
-	}
-	
-	
-	public String getCountries(){
-		
-		logger.log(Level.FINE, "Enter VisitDAO getCountries");		
-		
-		DBObject fields = new BasicDBObject("country", 1);		
-		fields.put("version", 1);
-		DBObject project = new BasicDBObject("$project", fields );
-		DBObject groupFields = new BasicDBObject( "_id", "$country");	
-		groupFields.put("total", new BasicDBObject( "$sum", 1));			
-		DBObject group = new BasicDBObject("$group", groupFields);				
-		AggregationOutput output = getCollection().aggregate( project, group );
-			
-		String results = output.toString();
-				
-		logger.log(Level.FINE, "Exit VisitDAO getCountries. Countries {0}", results);
-		
-		return results;
-	}
-	
+    private static final Logger logger = Logger.getLogger(VisitDAO.class.getName());
+    
+    public VisitDAO(Class<Visit> entityClass, DatastoreImpl datastore) {
+        super(entityClass, datastore);
+    }
+    
+    
+    public String getCountries(){
+        
+        logger.log(Level.FINE, "Enter VisitDAO getCountries");        
+        
+        DBObject fields = new BasicDBObject("country", 1);        
+        fields.put("version", 1);
+        DBObject project = new BasicDBObject("$project", fields );
+        DBObject groupFields = new BasicDBObject( "_id", "$country");    
+        groupFields.put("total", new BasicDBObject( "$sum", 1));            
+        DBObject group = new BasicDBObject("$group", groupFields);                
+        AggregationOutput output = getCollection().aggregate( project, group );
+            
+        String results = output.toString();
+                
+        logger.log(Level.FINE, "Exit VisitDAO getCountries. Countries {0}", results);
+        
+        return results;
+    }
+    
 
 
-	/**
-	 * Gets the GeoPosition of the visitor 
-	 */
-	public GeoPosition getGeoPosition(double latitude, double longitude) {
-		return null;
-	}
+    /**
+     * Gets the GeoPosition of the visitor 
+     */
+    public GeoPosition getGeoPosition(double latitude, double longitude) {
+        return null;
+    }
 
-	
+    
 }

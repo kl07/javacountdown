@@ -39,28 +39,28 @@ import com.google.code.morphia.dao.BasicDAO;
  */
 @Asynchronous
 public class VisitDataEventObserver {
-	
-	private static final Logger logger = Logger.getLogger(VisitDataEventObserver.class.getName());
-	
+    
+    private static final Logger logger = Logger.getLogger(VisitDataEventObserver.class.getName());
+    
     @Inject @DataAccessObject(Type.REPORT)
     BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> adoptionReportDAO;
-	
+    
     
     /**
      * If the Visit object has been persisted successfully we can update the adoption report data.
      * 
      * @param visit
      */
-    public void onSuccess(@Observes(during = TransactionPhase.AFTER_SUCCESS) Visit visit) { 	
-    	    	
+    public void onSuccess(@Observes(during = TransactionPhase.AFTER_SUCCESS) Visit visit) {     
+                
         logger.log(Level.FINE, "Enter VisitDataEventObserver onSuccess");  
         
-    	AdoptionReportCountry adoptionReportCountry = ((AdoptionReportDAO) adoptionReportDAO).getCountryTotals(visit.getCountry());
+        AdoptionReportCountry adoptionReportCountry = ((AdoptionReportDAO) adoptionReportDAO).getCountryTotals(visit.getCountry());
         if(adoptionReportCountry == null){
-        	adoptionReportCountry = new AdoptionReportCountry(visit);
+            adoptionReportCountry = new AdoptionReportCountry(visit);
         }
         adoptionReportCountry.updateTotals(visit);
-    	Key<AdoptionReportCountry> key = adoptionReportDAO.save(adoptionReportCountry);  
+        Key<AdoptionReportCountry> key = adoptionReportDAO.save(adoptionReportCountry);  
  
         logger.log(Level.FINE, "Exit VisitDataEventObserver onSuccess. Persisted key {0}", key);
     }
@@ -72,7 +72,7 @@ public class VisitDataEventObserver {
      * @param visit
      */
     public void onFailure( @Observes(during = TransactionPhase.AFTER_FAILURE) Visit visit) {
-    	logger.log(Level.FINE, "VisitDataEventObserver onFailure");
+        logger.log(Level.FINE, "VisitDataEventObserver onFailure");
     }
 
 }

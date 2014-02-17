@@ -38,23 +38,23 @@ import org.adoptopenjdk.javacountdown.entity.GeoPosition;
  *
  */
 @ApplicationScoped
-public class MorphiaDAOFactory {	
-	
-	@Inject
-	private DatastoreImpl datastore;
-		
-	@Produces @DataAccessObject(Type.VISIT)
-	public BasicDAO<Visit, Key<Visit>> createVisitDAO(){	
-		return new VisitDAO(Visit.class, datastore);			
-	}
-	
-	@Produces @DataAccessObject(Type.GEOPOSITION)
-	public BasicDAO<GeoPosition, Key<GeoPosition>> createGeoPositionDOA(){		
-		return new GeoPositionDAO(GeoPosition.class, this.datastore);	
-	}
-	
-	@Produces  @DataAccessObject(Type.REPORT)
-	public BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> createReportDOA(){		
-		return new AdoptionReportDAO(AdoptionReportCountry.class, this.datastore);	
-	}
+public class MorphiaDAOFactory {    
+    
+    @Inject
+    private DatastoreImpl datastore;
+        
+    @Produces @DataAccessObject(Type.VISIT)
+    public BasicDAO<Visit, Key<Visit>> createVisitDAO(){    
+        return new VisitDAO(Visit.class, datastore);            
+    }
+    
+    @Produces @DataAccessObject(Type.GEOPOSITION)
+    public BasicDAO<GeoPosition, Key<GeoPosition>> createGeoPositionDOA(){        
+        return new GeoPositionDAO(GeoPosition.class, this.datastore);    
+    }
+    
+    @Produces  @DataAccessObject(Type.REPORT)
+    public BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> createReportDOA(){        
+        return new AdoptionReportDAO(AdoptionReportCountry.class, this.datastore);    
+    }
 }

@@ -36,45 +36,45 @@ import com.google.code.morphia.query.Query;
  *
  */
 public class AdoptionReportDAO extends BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> {
-	
-	private static final Logger logger = Logger.getLogger(AdoptionReportDAO.class.getName());
-		
-	
-	public AdoptionReportDAO(Class<AdoptionReportCountry> entityClass, DatastoreImpl datastore) {
-		super(entityClass, datastore);
-	}
+    
+    private static final Logger logger = Logger.getLogger(AdoptionReportDAO.class.getName());
+        
+    
+    public AdoptionReportDAO(Class<AdoptionReportCountry> entityClass, DatastoreImpl datastore) {
+        super(entityClass, datastore);
+    }
 
-	
-	
-	/**
-	 * Finds the document for the given country in the JDK adoption collecting
-	 * 
-	 * @param country
-	 * @return
-	 */
-	public AdoptionReportCountry getCountryTotals(String country){		
-		Query<AdoptionReportCountry> query = ds.createQuery(AdoptionReportCountry.class).field("country").equal(country);	
-		return query.get();
-	}
-	
-	
-	
-	/**
-	 * Returns the data used to generate the world map of JDK 7 adoption.
-	 * @return
-	 */
-	public Map<String, Integer> getJdkAdoption(){		
-   	 	logger.log(Level.FINE, "Enter AdoptionReportDAO getJdkAdoption");
-		List<AdoptionReportCountry> adoptionByCountry = ds.createQuery(AdoptionReportCountry.class).retrievedFields(true, "country", "percentage").asList();	
-		
-		Map<String, Integer> countryPercentageAdoption = new HashMap<>();
-		for(AdoptionReportCountry country : adoptionByCountry){
-			countryPercentageAdoption.put(country.getCountry(), country.getPercentage());
-		}
+    
+    
+    /**
+     * Finds the document for the given country in the JDK adoption collecting
+     * 
+     * @param country
+     * @return
+     */
+    public AdoptionReportCountry getCountryTotals(String country){        
+        Query<AdoptionReportCountry> query = ds.createQuery(AdoptionReportCountry.class).field("country").equal(country);    
+        return query.get();
+    }
+    
+    
+    
+    /**
+     * Returns the data used to generate the world map of JDK 7 adoption.
+     * @return
+     */
+    public Map<String, Integer> getJdkAdoption(){        
+            logger.log(Level.FINE, "Enter AdoptionReportDAO getJdkAdoption");
+        List<AdoptionReportCountry> adoptionByCountry = ds.createQuery(AdoptionReportCountry.class).retrievedFields(true, "country", "percentage").asList();    
+        
+        Map<String, Integer> countryPercentageAdoption = new HashMap<>();
+        for(AdoptionReportCountry country : adoptionByCountry){
+            countryPercentageAdoption.put(country.getCountry(), country.getPercentage());
+        }
 
-   	 	logger.log(Level.FINE, "Exit AdoptionReportDAO getJdkAdoption: {0}", countryPercentageAdoption);
-		return countryPercentageAdoption;
-	}
-	
+            logger.log(Level.FINE, "Exit AdoptionReportDAO getJdkAdoption: {0}", countryPercentageAdoption);
+        return countryPercentageAdoption;
+    }
+    
 
 }

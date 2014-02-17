@@ -34,8 +34,8 @@ function initialize() {
 
     // Callback for geolocation - logs java version incl lat long  
     function logPosition(position){
-    	log = new log(version, position.coords.latitude, position.coords.longitude);
-    	addLog(JSON.stringify(log));
+        log = new log(version, position.coords.latitude, position.coords.longitude);
+        addLog(JSON.stringify(log));
     };
 
     // Error callback - displays errors.
@@ -61,7 +61,7 @@ function initialize() {
     // http://jvectormap.com/maps/world/world/
     // fill the gdata object with series-values for the map.
     jdkAdoptionData = getData();
-console.log("jdkAdoptionData: " + jdkAdoptionData);
+
     // Get data from the rest backend
     function getData() {
         var result="";
@@ -90,8 +90,8 @@ console.log("jdkAdoptionData: " + jdkAdoptionData);
         scaleColors: ['#C8EEFF', '#0071A4'],
         normalizeFunction: 'polynomial',     
         onLabelShow: function(e, el, code) {
-        	total = jdkAdoptionData[code.toLowerCase()] ? jdkAdoptionData[code.toLowerCase()] : "0";
-        	el.html(el.html() + ' Java 7 Adoption - (' + total + '%)');
+            total = jdkAdoptionData[code.toLowerCase()] ? jdkAdoptionData[code.toLowerCase()] : "0";
+            el.html(el.html() + ' Java 7 Adoption - (' + total + '%)');
         }
     });
 

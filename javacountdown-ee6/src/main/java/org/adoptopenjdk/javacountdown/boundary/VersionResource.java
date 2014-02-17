@@ -64,7 +64,7 @@ public class VersionResource {
         VisitTransfer visitTransfer = null;
         Gson gson = new Gson();
         try {
-        	visitTransfer = gson.fromJson(content, VisitTransfer.class);
+            visitTransfer = gson.fromJson(content, VisitTransfer.class);
         } catch (JsonSyntaxException e) {
             // Deserialization went wrong
             throw new WebApplicationException(e, Response.status(Response.Status.BAD_REQUEST).build());
