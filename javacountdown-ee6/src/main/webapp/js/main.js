@@ -1,5 +1,5 @@
 var rootURL = url + "/rest/version";
-var gdpData;
+var jdkAdoptionData;
 PluginDetect.getVersion(".");
 var version = PluginDetect.getVersion('Java');
 
@@ -14,6 +14,7 @@ $(function() {
  * 2.a Else inform the user we couldn't help 
  */
 function initialize() {
+
     var javaCCookie = $.cookie('javacountdown');
     if (typeof javaCCookie === 'undefined')
     {
@@ -33,8 +34,8 @@ function initialize() {
 
     // Callback for geolocation - logs java version incl lat long  
     function logPosition(position){
-    	log = new log(version, position.coords.latitude, position.coords.longitude);
-    	addLog(JSON.stringify(log));
+        log = new log(version, position.coords.latitude, position.coords.longitude);
+        addLog(JSON.stringify(log));
     };
 
     // Error callback - displays errors.
@@ -59,7 +60,7 @@ function initialize() {
 
     // http://jvectormap.com/maps/world/world/
     // fill the gdata object with series-values for the map.
-    gdpData = getData();
+    jdkAdoptionData = getData();
 
     // Get data from the rest backend
     function getData() {
@@ -85,12 +86,12 @@ function initialize() {
         backgroundColor: "#FFFFFF",
         color: '#004066',
         hoverColor: '#C8EEFF', 
-        values: gdpData,
+        values: jdkAdoptionData,
         scaleColors: ['#C8EEFF', '#0071A4'],
         normalizeFunction: 'polynomial',     
         onLabelShow: function(e, el, code) {
-        	total = gdpData[code.toUpperCase()] ? gdpData[code.toUpperCase()] : "0";
-        	el.html(el.html() + ' Java 7 Adoption - (' + total + '%)');
+            total = jdkAdoptionData[code.toLowerCase()] ? jdkAdoptionData[code.toLowerCase()] : "0";
+            el.html(el.html() + ' Java 7 Adoption - (' + total + '%)');
         }
     });
 
