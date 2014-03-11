@@ -16,63 +16,53 @@
 package org.adoptopenjdk.javacountdown.control;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.dao.BasicDAO;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 import org.adoptopenjdk.javacountdown.entity.Visit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
- * 
  * Data Access Object for the Visitor collection.
- * 
- * @author Alex Theedom
  *
- */ 
-public class VisitDAO extends BasicDAO<Visit, Key<Visit>> {    
+ * @author Alex Theedom
+ */
+public class VisitDAO extends BasicDAO<Visit, Key<Visit>> {
 
-    private static final Logger logger = Logger.getLogger(VisitDAO.class.getName());
-    
+    private static final Logger logger = LoggerFactory.getLogger(VisitDAO.class);
+
     public VisitDAO(Class<Visit> entityClass, DatastoreImpl datastore) {
         super(entityClass, datastore);
     }
-    
-    
-    public String getCountries(){
-        
-        logger.log(Level.FINE, "Enter VisitDAO getCountries");        
-        
-        DBObject fields = new BasicDBObject("country", 1);        
+
+    public String getCountries() {
+
+        DBObject fields = new BasicDBObject("country", 1);
         fields.put("version", 1);
-        DBObject project = new BasicDBObject("$project", fields );
-        DBObject groupFields = new BasicDBObject( "_id", "$country");    
-        groupFields.put("total", new BasicDBObject( "$sum", 1));            
-        DBObject group = new BasicDBObject("$group", groupFields);                
-        AggregationOutput output = getCollection().aggregate( project, group );
-            
+        DBObject project = new BasicDBObject("$project", fields);
+        DBObject groupFields = new BasicDBObject("_id", "$country");
+        groupFields.put("total", new BasicDBObject("$sum", 1));
+        DBObject group = new BasicDBObject("$group", groupFields);
+        AggregationOutput output = getCollection().aggregate(project, group);
+
         String results = output.toString();
-                
-        logger.log(Level.FINE, "Exit VisitDAO getCountries. Countries {0}", results);
-        
+
+        logger.debug("Retrieved countries {}", results);
+
         return results;
     }
-    
-
 
     /**
-     * Gets the GeoPosition of the visitor 
+     * Gets the GeoPosition of the visitor
      */
     public GeoPosition getGeoPosition(double latitude, double longitude) {
         return null;
     }
 
-    
 }
