@@ -16,7 +16,6 @@
 package org.adoptopenjdk.javacountdown.control;
 
 import com.google.code.morphia.Key;
-import com.google.code.morphia.dao.BasicDAO;
 import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
 import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
 import org.adoptopenjdk.javacountdown.entity.Visit;
@@ -41,7 +40,7 @@ public class VisitDataEventObserver {
 
     @Inject
     @DataAccessObject(Type.REPORT)
-    BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> adoptionReportDAO;
+    AdoptionReportDAO adoptionReportDAO;
 
     /**
      * If the Visit object has been persisted successfully we can update the adoption report data.
@@ -52,7 +51,7 @@ public class VisitDataEventObserver {
 
         logger.debug("Observed Visit event for {}", visit);
 
-        AdoptionReportCountry adoptionReportCountry = ((AdoptionReportDAO) adoptionReportDAO).getCountryTotals(visit.getCountry());
+        AdoptionReportCountry adoptionReportCountry = adoptionReportDAO.getCountryTotals(visit.getCountry());
         if (adoptionReportCountry == null) {
             adoptionReportCountry = new AdoptionReportCountry(visit);
         }

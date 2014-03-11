@@ -16,10 +16,8 @@
 package org.adoptopenjdk.javacountdown.control;
 
 import com.google.code.morphia.Key;
-import com.google.code.morphia.dao.BasicDAO;
 import com.google.gson.Gson;
 import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
-import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 import org.adoptopenjdk.javacountdown.entity.VersionInfo;
 import org.adoptopenjdk.javacountdown.entity.Visit;
@@ -46,15 +44,15 @@ public class DataProvider {
 
     @Inject
     @DataAccessObject(Type.VISIT)
-    BasicDAO<Visit, Key<Visit>> visitDAO;
+    VisitDAO visitDAO;
 
     @Inject
     @DataAccessObject(Type.GEOPOSITION)
-    BasicDAO<GeoPosition, Key<GeoPosition>> geoPositionDAO;
+    GeoPositionDAO geoPositionDAO;
 
     @Inject
     @DataAccessObject(Type.REPORT)
-    BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> adoptionReportDAO;
+    AdoptionReportDAO adoptionReportDAO;
 
     @Inject
     Event<Visit> visitEvent;
@@ -70,7 +68,7 @@ public class DataProvider {
      */
     private GeoPosition getGeoPositionFromLatLong(double latitude, double longitude) {
 
-        GeoPosition geoPosition = ((GeoPositionDAO) geoPositionDAO).getGeoPosition(latitude, longitude);
+        GeoPosition geoPosition = geoPositionDAO.getGeoPosition(latitude, longitude);
 
         if (!EMPTY_STRING.equals(geoPosition.getCountry())) {
             logger.debug("Country code {} found for lat/lng: {},{}", geoPosition.getCountry(), latitude, longitude);
@@ -85,7 +83,7 @@ public class DataProvider {
      * Persists a Visit entity. This only gets called when the visit could be
      * parsed by GSON. No further checks necessary here.
      *
-     * @param visit The visit to persist
+     * @param visitTransfer The visit to persist
      */
     @Asynchronous
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -123,7 +121,7 @@ public class DataProvider {
      */
     public String getJdkAdoptionReport() {
 
-        Map<String, Integer> jdkAdoptionCountry = ((AdoptionReportDAO) adoptionReportDAO).getJdkAdoption();
+        Map<String, Integer> jdkAdoptionCountry = adoptionReportDAO.getJdkAdoption();
         Gson gson = new Gson();
         String json = gson.toJson(jdkAdoptionCountry);
 
