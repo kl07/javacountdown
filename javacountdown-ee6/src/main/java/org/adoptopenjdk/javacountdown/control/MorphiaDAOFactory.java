@@ -17,44 +17,42 @@ package org.adoptopenjdk.javacountdown.control;
 
 
 import com.google.code.morphia.DatastoreImpl;
-import com.google.code.morphia.Key;
-import com.google.code.morphia.dao.BasicDAO;
+import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
+import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
+import org.adoptopenjdk.javacountdown.entity.GeoPosition;
+import org.adoptopenjdk.javacountdown.entity.Visit;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
-import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
-import org.adoptopenjdk.javacountdown.entity.Visit;
-import org.adoptopenjdk.javacountdown.entity.GeoPosition;
-
 
 /**
- * 
  * Factory that produces the Data Access Objects.
- * 
- * @author Alex Theedom
  *
+ * @author Alex Theedom
  */
 @ApplicationScoped
-public class MorphiaDAOFactory {    
-    
+public class MorphiaDAOFactory {
+
     @Inject
     private DatastoreImpl datastore;
-        
-    @Produces @DataAccessObject(Type.VISIT)
-    public BasicDAO<Visit, Key<Visit>> createVisitDAO(){    
-        return new VisitDAO(Visit.class, datastore);            
+
+    @Produces
+    @DataAccessObject(Type.VISIT)
+    public VisitDAO createVisitDAO() {
+        return new VisitDAO(Visit.class, datastore);
     }
-    
-    @Produces @DataAccessObject(Type.GEOPOSITION)
-    public BasicDAO<GeoPosition, Key<GeoPosition>> createGeoPositionDOA(){        
-        return new GeoPositionDAO(GeoPosition.class, this.datastore);    
+
+    @Produces
+    @DataAccessObject(Type.GEOPOSITION)
+    public GeoPositionDAO createGeoPositionDOA() {
+        return new GeoPositionDAO(GeoPosition.class, this.datastore);
     }
-    
-    @Produces  @DataAccessObject(Type.REPORT)
-    public BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> createReportDOA(){        
-        return new AdoptionReportDAO(AdoptionReportCountry.class, this.datastore);    
+
+    @Produces
+    @DataAccessObject(Type.REPORT)
+    public AdoptionReportDAO createReportDOA() {
+        return new AdoptionReportDAO(AdoptionReportCountry.class, this.datastore);
     }
 }

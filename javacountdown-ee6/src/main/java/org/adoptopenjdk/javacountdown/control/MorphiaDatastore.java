@@ -15,56 +15,52 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.google.code.morphia.DatastoreImpl;
+import com.google.code.morphia.Morphia;
+import com.mongodb.MongoClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import com.mongodb.MongoClient;
-import com.google.code.morphia.DatastoreImpl;
-import com.google.code.morphia.Morphia;
+import java.net.UnknownHostException;
 
 /**
- * 
- * Produces Morphia datastore objects used by the DAO 
+ * Produces Morphia datastore objects used by the DAO
  * to persist data in MongoDB.
- * 
+ *
  * @author Alex Theedom
- * 
  */
 @Startup
 @Singleton
 @ApplicationScoped
 public class MorphiaDatastore {
 
-    private static final Logger logger = Logger.getLogger(MorphiaDatastore.class.getName());
-    
-    private static final String DATABASE_NAME     = "jcountdown";    
-    private static final String HOST             = "localhost";
-    private static final int PORT                 = 27017;
+    private static final Logger logger = LoggerFactory.getLogger(MorphiaDatastore.class);
 
-    
+    private static final String DATABASE_NAME = "jcountdown";
+    private static final String HOST = "localhost";
+    private static final int PORT = 27017;
+
+
     @Produces
     public DatastoreImpl getDatastore() {
 
-        logger.log(Level.FINE, "Enter MorphiaDatastore");
-        
         MongoClient mongoClient = null;
-        
+
         try {
             mongoClient = new MongoClient(HOST, PORT);
         } catch (UnknownHostException e) {
-            logger.log(Level.FINE, "Exception thrown while creating Mongo client: {0}", e.getMessage());
+            logger.error("Can not resolve DB host, message: {}", e.getMessage());
         }
 
         Morphia morphia = new Morphia();
 
         DatastoreImpl datastore = (DatastoreImpl) morphia.createDatastore(mongoClient, DATABASE_NAME);
-        logger.log(Level.FINE, "Exit MorphiaDatastore: Mongo Datastore Created");
-    
+        logger.debug("Created Mongo Datastore");
+
         return datastore;
     }
 

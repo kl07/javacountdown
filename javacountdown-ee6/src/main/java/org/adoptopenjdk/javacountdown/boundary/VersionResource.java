@@ -18,22 +18,18 @@ package org.adoptopenjdk.javacountdown.boundary;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.POST;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.WebApplicationException;
 import org.adoptopenjdk.javacountdown.control.DataProvider;
 import org.adoptopenjdk.javacountdown.control.ResultCache;
 import org.adoptopenjdk.javacountdown.control.VisitTransfer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import java.util.logging.Level;
 
 /**
  * REST Web Service for the javacountdown website
@@ -42,7 +38,7 @@ import org.adoptopenjdk.javacountdown.control.VisitTransfer;
 @Stateless
 public class VersionResource {
 
-    private static final Logger logger = Logger.getLogger(VersionResource.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(VersionResource.class);
     
     @Inject
     private DataProvider dataProvider;
@@ -59,18 +55,17 @@ public class VersionResource {
     @POST
     @Consumes("application/json")
     public Response log(String content) {
-        logger.log(Level.FINE, "Client input: {0}", content);
+        logger.debug("Client sent input: {}", content);
 
         VisitTransfer visitTransfer = null;
         Gson gson = new Gson();
         try {
             visitTransfer = gson.fromJson(content, VisitTransfer.class);
         } catch (JsonSyntaxException e) {
-            // Deserialization went wrong
+            logger.warn("Could not deserialize client input, message: {}", e.getMessage());
             throw new WebApplicationException(e, Response.status(Response.Status.BAD_REQUEST).build());
         }
         dataProvider.persistVisit(visitTransfer);
-        logger.log(Level.FINE, content);
         return Response.noContent().build();
     }
 

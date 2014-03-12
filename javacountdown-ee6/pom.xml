@@ -89,6 +89,8 @@
 		<junit.version>4.11</junit.version>
 		<derby.version>10.10.1.1</derby.version>
 		<gson.version>2.2.4</gson.version>
+        <slf4j.version>1.7.6</slf4j.version>
+        <logback.version>1.1.1</logback.version>
 	</properties>
 
 	<dependencyManagement>
@@ -235,7 +237,23 @@
 			<version>0.102</version>
 		</dependency>
 		<!-- Optional Jars (for certain features) but required by maven for building. -->
-		<dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
 			<version>[2.1_3,)</version>
@@ -567,7 +585,6 @@
 			<!-- </plugin> -->
 		</plugins>
 	</build>
-
 	<!-- TODO Once Java EE 6 version is canocial, move source code to root so 
 		this is correct -->
 	<!-- <scm> <developerConnection>scm:git:git@github.com:AdoptOpenJDK/javacountdown.git</developerConnection> 

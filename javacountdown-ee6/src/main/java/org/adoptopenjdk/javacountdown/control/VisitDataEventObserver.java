@@ -15,64 +15,61 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.google.code.morphia.Key;
+import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
+import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
+import org.adoptopenjdk.javacountdown.entity.Visit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Asynchronous;
 import javax.enterprise.event.Observes;
 import javax.enterprise.event.TransactionPhase;
 import javax.inject.Inject;
 
-import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
-import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
-import org.adoptopenjdk.javacountdown.entity.Visit;
-
-import com.google.code.morphia.Key;
-import com.google.code.morphia.dao.BasicDAO;
-
 
 /**
  * Observes events fired by the VisitDAO
- * 
- * @author Alex Theedom
  *
+ * @author Alex Theedom
  */
 @Asynchronous
 public class VisitDataEventObserver {
-    
-    private static final Logger logger = Logger.getLogger(VisitDataEventObserver.class.getName());
-    
-    @Inject @DataAccessObject(Type.REPORT)
-    BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> adoptionReportDAO;
-    
-    
+
+    private static final Logger logger = LoggerFactory.getLogger(VisitDataEventObserver.class);
+
+    @Inject
+    @DataAccessObject(Type.REPORT)
+    AdoptionReportDAO adoptionReportDAO;
+
     /**
      * If the Visit object has been persisted successfully we can update the adoption report data.
-     * 
+     *
      * @param visit
      */
-    public void onSuccess(@Observes(during = TransactionPhase.AFTER_SUCCESS) Visit visit) {     
-                
-        logger.log(Level.FINE, "Enter VisitDataEventObserver onSuccess");  
-        
-        AdoptionReportCountry adoptionReportCountry = ((AdoptionReportDAO) adoptionReportDAO).getCountryTotals(visit.getCountry());
-        if(adoptionReportCountry == null){
+    public void onSuccess(@Observes(during = TransactionPhase.AFTER_SUCCESS) Visit visit) {
+
+        logger.debug("Observed Visit event for {}", visit);
+
+        AdoptionReportCountry adoptionReportCountry = adoptionReportDAO.getCountryTotals(visit.getCountry());
+        if (adoptionReportCountry == null) {
             adoptionReportCountry = new AdoptionReportCountry(visit);
         }
         adoptionReportCountry.updateTotals(visit);
-        Key<AdoptionReportCountry> key = adoptionReportDAO.save(adoptionReportCountry);  
- 
-        logger.log(Level.FINE, "Exit VisitDataEventObserver onSuccess. Persisted key {0}", key);
+        Key<AdoptionReportCountry> key = adoptionReportDAO.save(adoptionReportCountry);
+
+        logger.debug("Updated adoption, persisted key {}", key);
     }
 
-    
+
     /**
-     * If there is a failure in persisting the Visit object we log it and don't update the 
+     * If there is a failure in persisting the Visit object we log it and don't update the
      * adoption report data.
+     *
      * @param visit
      */
-    public void onFailure( @Observes(during = TransactionPhase.AFTER_FAILURE) Visit visit) {
-        logger.log(Level.FINE, "VisitDataEventObserver onFailure");
+    public void onFailure(@Observes(during = TransactionPhase.AFTER_FAILURE) Visit visit) {
+        logger.error("Observed failed visit event for {}", visit);
     }
 
 }
