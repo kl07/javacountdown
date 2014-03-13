@@ -15,21 +15,21 @@
  */
 package org.adoptopenjdk.javacountdown.entity;
 
-import org.bson.types.ObjectId;
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import java.io.Serializable;
+import org.bson.types.ObjectId;
+
 import javax.enterprise.context.RequestScoped;
-import com.google.code.morphia.annotations.Embedded;
+import java.io.Serializable;
 
 /**
  * This entity represents the geoposition of the visitor.
- * 
+ *
  * @author Alex Theedom
- * 
  */
 @RequestScoped
-@Entity(value = "geoposition", noClassnameStored = true)
+@Entity(value = "geopositions", noClassnameStored = true)
 public class GeoPosition implements Serializable {
 
     private static final long serialVersionUID = 6087451582708213924L;

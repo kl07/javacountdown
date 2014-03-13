@@ -15,27 +15,26 @@
  */
 package org.adoptopenjdk.javacountdown.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.enterprise.context.RequestScoped;
-import org.bson.types.ObjectId;
-
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Reference;
+import org.bson.types.ObjectId;
+
+import javax.enterprise.context.RequestScoped;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Visit class, represents an end user hitting a website with their Java applet
  * enabled event.
- * 
+ *
  * @author Alex Theedom
  */
 @RequestScoped
-@Entity(value = "visit", noClassnameStored = true)
+@Entity(value = "visitors", noClassnameStored = true)
 public class Visit implements Serializable {
 
-    
+
     private static final long serialVersionUID = -5580843065068184730L;
     @Id
     private ObjectId id;
@@ -50,8 +49,8 @@ public class Visit implements Serializable {
 
     public Visit() {
     }
-    
-    public boolean isVersion(int version){
+
+    public boolean isVersion(int version) {
         return this.version == version;
     }
 
@@ -73,7 +72,7 @@ public class Visit implements Serializable {
 
     /**
      * Return a clone of the time to follow thread-safe programming practices
-     * 
+     *
      * @return a clone of the time
      */
     public Date getTime() {
@@ -82,8 +81,8 @@ public class Visit implements Serializable {
 
     /**
      * Set a clone of the time to follow thread-safe programming practices
-     * 
-     * @param time
+     *
+     * @param time The time
      */
     public void setTime(Date time) {
         this.time = (Date) time.clone();
@@ -149,5 +148,4 @@ public class Visit implements Serializable {
                 + ", time=" + time + "]";
     }
 
-    
 }
