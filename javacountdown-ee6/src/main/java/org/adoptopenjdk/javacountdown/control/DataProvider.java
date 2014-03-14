@@ -16,7 +16,6 @@
 package org.adoptopenjdk.javacountdown.control;
 
 import com.google.code.morphia.Key;
-import com.google.gson.Gson;
 import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 import org.adoptopenjdk.javacountdown.entity.VersionInfo;
@@ -34,7 +33,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * The main Data provider for the JAX-RS services
+ * The main Data provider for the JAX-RS services.
  */
 @Stateless
 public class DataProvider {
@@ -81,7 +80,7 @@ public class DataProvider {
 
     /**
      * Persists a Visit entity. This only gets called when the visit could be
-     * parsed by GSON. No further checks necessary here.
+     * marshalled by JAX-RS. No further checks necessary here.
      *
      * @param visitTransfer The visit to persist
      */
@@ -114,20 +113,12 @@ public class DataProvider {
     }
 
     /**
-     * Gets a list of all countries with data to display on the map, this is
-     * returned directly as a String as that's the expected format
+     * Gets a list of all countries with data to display on the map.
      *
-     * @return List of countries and percentage adoption as a String
+     * @return List of countries and percentage adoption
      */
-    public String getJdkAdoptionReport() {
-
-        Map<String, Integer> jdkAdoptionCountry = adoptionReportDAO.getJdkAdoption();
-        Gson gson = new Gson();
-        String json = gson.toJson(jdkAdoptionCountry);
-
-        logger.debug("Retrieved JDK adoption as JSON: {} ", json);
-
-        return json;
+    public Map<String, Integer> getJdkAdoptionReport() {
+        return adoptionReportDAO.getJdkAdoption();
     }
 
     /**

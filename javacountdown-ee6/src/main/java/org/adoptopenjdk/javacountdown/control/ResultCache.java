@@ -21,9 +21,11 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Caches the data use to generate the world map of JDK adoption
+ * Caches the data use to generate the world map of JDK adoption.
  *
  * @author Markus Eisele <markus at eisele.net>
  */
@@ -32,21 +34,21 @@ public class ResultCache {
 
     private static final Logger logger = LoggerFactory.getLogger(ResultCache.class);
 
-    String json = "";
+    private Map<String, Integer> jdkAdoption = new HashMap<>();
 
     @Inject
     private DataProvider dataProvider;
 
-    public String getCountryData() {
-        if (json.isEmpty()) {
-            json = dataProvider.getJdkAdoptionReport();
+    public Map<String, Integer> getCountryData() {
+        if (jdkAdoption.isEmpty()) {
+            jdkAdoption = dataProvider.getJdkAdoptionReport();
         }
-        return json;
+        return jdkAdoption;
     }
 
     @Schedule(minute = "*/2", persistent = false)
     public void rebuildCache() {
-        json = dataProvider.getJdkAdoptionReport();
+        jdkAdoption = dataProvider.getJdkAdoptionReport();
         logger.debug("Rebuilt JDK adoption cache");
     }
 }

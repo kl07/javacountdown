@@ -57,11 +57,14 @@ public class AdoptionReportDAO extends BasicDAO<AdoptionReportCountry, Key<Adopt
      * @return
      */
     public Map<String, Integer> getJdkAdoption() {
+        // TODO ensure that this query does not return null for country
         List<AdoptionReportCountry> adoptionByCountry = ds.createQuery(AdoptionReportCountry.class).retrievedFields(true, "country", "percentage").asList();
 
         Map<String, Integer> countryPercentageAdoption = new HashMap<>();
         for (AdoptionReportCountry country : adoptionByCountry) {
-            countryPercentageAdoption.put(country.getCountry(), country.getPercentage());
+            if (country.getCountry() != null) {
+                countryPercentageAdoption.put(country.getCountry(), country.getPercentage());
+            }
         }
 
         logger.debug("Retrieved JDK adoption: {}", countryPercentageAdoption);
