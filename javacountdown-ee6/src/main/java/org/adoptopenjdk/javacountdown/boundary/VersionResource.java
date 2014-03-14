@@ -16,67 +16,67 @@
 package org.adoptopenjdk.javacountdown.boundary;
 
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import org.adoptopenjdk.javacountdown.control.DataProvider;
 import org.adoptopenjdk.javacountdown.control.ResultCache;
 import org.adoptopenjdk.javacountdown.control.VisitTransfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.logging.Level;
+import java.util.Map;
 
 /**
- * REST Web Service for the javacountdown website
+ * REST Web Service for the javacountdown website.
  */
 @Path("version")
 @Stateless
 public class VersionResource {
 
     private static final Logger logger = LoggerFactory.getLogger(VersionResource.class);
-    
+
     @Inject
     private DataProvider dataProvider;
 
-    @EJB
+    @Inject
     ResultCache cache;
 
     /**
-     * Retrieves visitor information from web client in JSON format
+     * Retrieves visitor information from web client in JSON format.
      *
-     * @param content
-     * @return
+     * @param visit The client visit information
+     * @return A HTTP 202 Accepted response
      */
     @POST
-    @Consumes("application/json")
-    public Response log(String content) {
-        logger.debug("Client sent input: {}", content);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response sendVisit(VisitTransfer visit) {
+        logger.debug("Client sent input: {}", visit);
 
-        VisitTransfer visitTransfer = null;
-        Gson gson = new Gson();
-        try {
-            visitTransfer = gson.fromJson(content, VisitTransfer.class);
-        } catch (JsonSyntaxException e) {
-            logger.warn("Could not deserialize client input, message: {}", e.getMessage());
-            throw new WebApplicationException(e, Response.status(Response.Status.BAD_REQUEST).build());
-        }
-        dataProvider.persistVisit(visitTransfer);
-        return Response.noContent().build();
+        dataProvider.persistVisit(visit);
+
+        return Response.status(Response.Status.ACCEPTED).build();
     }
 
     /**
-     * Gets Data for the map
+     * Returns the JDK adoption data.
      *
-     * @return JSON object with data for the map.
+     * @return A map containing the JDK adoption for the countries
      */
     @GET
-    @Produces("application/json")
-    public Response getData() {
-        return Response.ok(cache.getCountryData()).build();
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getJdkAdoption() {
+        Map<String, Integer> countryAdoption = cache.getCountryData();
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+
+        for (Map.Entry<String, Integer> entry : countryAdoption.entrySet()) {
+            objectBuilder.add(entry.getKey(), entry.getValue());
+        }
+
+        return Response.ok(objectBuilder.build()).build();
     }
 }
