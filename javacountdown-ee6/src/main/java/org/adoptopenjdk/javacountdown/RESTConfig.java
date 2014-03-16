@@ -20,5 +20,5 @@ import javax.ws.rs.core.Application;
 
 @ApplicationPath("rest")
 public class RESTConfig extends Application {
-    // TODO implementation or comment explaining why there is none
+    // no configuration needed
 }
