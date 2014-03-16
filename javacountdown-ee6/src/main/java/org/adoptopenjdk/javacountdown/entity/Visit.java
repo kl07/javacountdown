@@ -15,55 +15,52 @@
  */
 package org.adoptopenjdk.javacountdown.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-
-import org.bson.types.ObjectId;
-
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Reference;
+import org.bson.types.ObjectId;
+
+import javax.enterprise.context.RequestScoped;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
- * Visitor class, represents an end user hitting a website with their Java
- * applet enabled event.
+ * Visit class, represents an end user hitting a website with their Java applet
+ * enabled event.
+ *
+ * @author Alex Theedom
  */
 @RequestScoped
-@Entity(value="visitor_test", noClassnameStored=true)
+@Entity(value = "visitors", noClassnameStored = true)
 public class Visit implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-      
+
+    private static final long serialVersionUID = -5580843065068184730L;
     @Id
-    private ObjectId id;       
+    private ObjectId id;
     private int version;
     private VersionInfo versionInfo;
-    private String country;  
+    private String country;
     @Reference
     private GeoPosition geoPosition;
     private String browser;
-    private String os;   
+    private String os;
     private Date time;
-    
-    
 
-
-    /**
-     * Default public constructor for JPA
-     */
     public Visit() {
     }
-    
-   public GeoPosition getGeoPosition(){
-	   return geoPosition;
-   }
-    
-   public void setGeoPosition(GeoPosition geoPosition){
-	   this.geoPosition = geoPosition;
-   }  
+
+    public boolean isVersion(int version) {
+        return this.version == version;
+    }
+
+    public GeoPosition getGeoPosition() {
+        return geoPosition;
+    }
+
+    public void setGeoPosition(GeoPosition geoPosition) {
+        this.geoPosition = geoPosition;
+    }
 
     public int getVersion() {
         return this.version;
@@ -72,6 +69,7 @@ public class Visit implements Serializable {
     public void setVersion(int version) {
         this.version = version;
     }
+
     /**
      * Return a clone of the time to follow thread-safe programming practices
      *
@@ -84,12 +82,11 @@ public class Visit implements Serializable {
     /**
      * Set a clone of the time to follow thread-safe programming practices
      *
-     * @param time
+     * @param time The time
      */
     public void setTime(Date time) {
         this.time = (Date) time.clone();
     }
-
 
     public String getCountry() {
         return country;
@@ -99,30 +96,29 @@ public class Visit implements Serializable {
         this.country = country;
     }
 
+    public VersionInfo getVersionInfo() {
+        return versionInfo;
+    }
 
-	public VersionInfo getVersionInfo() {
-		return versionInfo;
-	}
+    public void setVersionInfo(VersionInfo versionInfo) {
+        this.versionInfo = versionInfo;
+    }
 
-	public void setVersionInfo(VersionInfo versionInfo) {
-		this.versionInfo = versionInfo;
-	}
+    public String getBrowser() {
+        return browser;
+    }
 
-	public String getBrowser() {
-		return browser;
-	}
+    public void setBrowser(String browser) {
+        this.browser = browser;
+    }
 
-	public void setBrowser(String browser) {
-		this.browser = browser;
-	}
+    public String getOs() {
+        return os;
+    }
 
-	public String getOs() {
-		return os;
-	}
-
-	public void setOs(String os) {
-		this.os = os;
-	}
+    public void setOs(String os) {
+        this.os = os;
+    }
 
     @Override
     public int hashCode() {
@@ -140,11 +136,16 @@ public class Visit implements Serializable {
             return false;
         }
         final Visit other = (Visit) obj;
-        return this.id == other.id || (this.id != null && this.id.equals(other.id));
+        return this.id == other.id
+                || (this.id != null && this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
-        return "Visit{" + "version=" + version + ", vMajor=" + versionInfo.getvMajor() + ", vMinor=" + versionInfo.getvMinor() + ", vPatch=" + versionInfo.getvPatch() + ", vBuild=" + versionInfo.getvBuild() + ", locationRef=" + geoPosition + ", Browser=" + browser + ", os =" + os +", country=" + country + ", time=" + time + ", id=" + id + '}';
+        return "Visit [id=" + id + ", version=" + version + ", versionInfo="
+                + versionInfo + ", country=" + country + ", geoPosition="
+                + geoPosition + ", browser=" + browser + ", os=" + os
+                + ", time=" + time + "]";
     }
+
 }
