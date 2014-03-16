@@ -15,53 +15,59 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-import com.google.code.morphia.DatastoreImpl;
-import com.google.code.morphia.Morphia;
-import com.mongodb.MongoClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import java.net.UnknownHostException;
+import javax.inject.Inject;
+import javax.ejb.DependsOn;
+
+import org.adoptopenjdk.javacountdown.entity.Visit;
+
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.DatastoreImpl;
+import com.google.code.morphia.Morphia;
 
 /**
- * Produces Morphia datastore objects used by the DAO
- * to persist data in MongoDB.
- *
+ * 
  * @author Alex Theedom
  */
+
 @Startup
 @Singleton
 @ApplicationScoped
 public class MorphiaDatastore {
 
-    private static final Logger logger = LoggerFactory.getLogger(MorphiaDatastore.class);
+	private static final Logger logger = Logger.getLogger(MorphiaDatastore.class.getName());
+	
+	private static final String DATABASE_NAME 	= "jcountdown";	
+	private static final String HOST 			= "localhost";
+	private static final int PORT 				= 27017;
 
-    private static final String DATABASE_NAME = "jcountdown";
-    private static final String HOST = "localhost";
-    private static final int PORT = 27017;
+	
+	@Produces
+	public DatastoreImpl getDatastore() {
 
+		MongoClient mongoClient = null;
+		
+		try {
+			mongoClient = new MongoClient(HOST, PORT);
+		} catch (UnknownHostException e) {
+			logger.log(Level.FINE, e.getMessage());
+		}
 
-    @Produces
-    public DatastoreImpl getDatastore() {
+		Morphia morphia = new Morphia();
 
-        MongoClient mongoClient = null;
-
-        try {
-            mongoClient = new MongoClient(HOST, PORT);
-        } catch (UnknownHostException e) {
-            logger.error("Can not resolve DB host, message: {}", e.getMessage());
-        }
-
-        Morphia morphia = new Morphia();
-
-        DatastoreImpl datastore = (DatastoreImpl) morphia.createDatastore(mongoClient, DATABASE_NAME);
-        logger.debug("Created Mongo Datastore");
-
-        return datastore;
-    }
+		DatastoreImpl datastore = (DatastoreImpl) morphia.createDatastore(mongoClient, DATABASE_NAME);
+		logger.log(Level.FINE, "Mongo Datastore Created");
+	
+		return datastore;
+	}
 
 }

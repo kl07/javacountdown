@@ -15,40 +15,32 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * Caches the data use to generate the world map of JDK adoption.
  *
  * @author Markus Eisele <markus at eisele.net>
  */
 @Singleton
 public class ResultCache {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResultCache.class);
+    String json = "";
 
-    private Map<String, Integer> jdkAdoption = new HashMap<>();
+//    @Inject
+//    private DataProvider dataProvider;
 
-    @Inject
-    private DataProvider dataProvider;
+    public String getCountryData() {
+        //if (json.isEmpty()) {
+//            json = dataProvider.getCountries();
+       // }
+        return json;
 
-    public Map<String, Integer> getCountryData() {
-        if (jdkAdoption.isEmpty()) {
-            jdkAdoption = dataProvider.getJdkAdoptionReport();
-        }
-        return jdkAdoption;
     }
 
-    @Schedule(minute = "*/2", persistent = false)
+    @Schedule(second = "1", minute = "1", hour = "1", persistent = false)
     public void rebuildCache() {
-        jdkAdoption = dataProvider.getJdkAdoptionReport();
-        logger.debug("Rebuilt JDK adoption cache");
+//        json = dataProvider.getCountries();
     }
 }

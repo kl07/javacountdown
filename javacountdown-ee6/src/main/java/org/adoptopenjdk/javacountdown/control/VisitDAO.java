@@ -1,68 +1,105 @@
-/*
- * Copyright [2013] Adopt OpenJDK Programme
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package org.adoptopenjdk.javacountdown.control;
 
 
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
+import java.util.Map;
+
+import javax.enterprise.inject.Alternative;
+
+import com.google.code.morphia.Datastore;
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.dao.BasicDAO;
+import com.google.code.morphia.query.Query;
+import com.google.code.morphia.query.QueryResults;
+import com.google.code.morphia.query.UpdateOperations;
+import com.google.code.morphia.query.UpdateResults;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.WriteConcern;
+import com.mongodb.WriteResult;
+
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 import org.adoptopenjdk.javacountdown.entity.Visit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.bson.types.ObjectId;
+
+ 
+public class VisitDAO extends BasicDAO<Visit, Key<Visit>> {
+//MorphiaDAOAbstract<Visit, Key<Visit>>{
+
+	private DatastoreImpl datastore;
+	
+	//public VisitDAO(){}
+	
+
+	public VisitDAO(Class<Visit> entityClass, DatastoreImpl datastore) {
+		super(entityClass, datastore);
+//		this.datastore = (DatastoreImpl)datastore;
+//		this.datastore.getMapper().addMappedClass(entityClass);
+	}
+	
+	
+	public String getCountries(){
+		/*
+			db.visitor_test.aggregate(
+				{$project: 	{country: 1, version: 1}},
+				{$group:	{_id: "$country", total : { $sum: 1 }}}	
+			)
+		 */
+		
+		DBObject fields = new BasicDBObject("country", 1);		
+		fields.put("version", 1);
+		DBObject project = new BasicDBObject("$project", fields );
+		
+		DBObject groupFields = new BasicDBObject( "_id", "$country");	
+		groupFields.put("total", new BasicDBObject( "$sum", 1));
+				
+		DBObject group = new BasicDBObject("$group", groupFields);
+				
+		AggregationOutput output = getCollection().aggregate( project, group );
+		
+		
+		CommandResult cr = output.getCommandResult();
+		Map map = cr.toMap();
+		
+		Iterable<DBObject> i = output.results();
+		
+		String results = output.toString();
+		
+		
+		
+		datastore.createQuery(entityClazz).countAll();
+		
+		
+		return results;
+	}
+	
+	
+	
 
 
 /**
- * Data Access Object for the Visitor collection.
- *
- * @author Alex Theedom
+ * Gets the GeoPosition of the visitor 
  */
-public class VisitDAO extends BasicDAO<Visit, Key<Visit>> {
 
-    private static final Logger logger = LoggerFactory.getLogger(VisitDAO.class);
+	public GeoPosition getGeoPosition(double latitude, double longitude) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public VisitDAO(Class<Visit> entityClass, DatastoreImpl datastore) {
-        super(entityClass, datastore);
-    }
 
-    public String getCountries() {
 
-        DBObject fields = new BasicDBObject("country", 1);
-        fields.put("version", 1);
-        DBObject project = new BasicDBObject("$project", fields);
-        DBObject groupFields = new BasicDBObject("_id", "$country");
-        groupFields.put("total", new BasicDBObject("$sum", 1));
-        DBObject group = new BasicDBObject("$group", groupFields);
-        AggregationOutput output = getCollection().aggregate(project, group);
 
-        String results = output.toString();
 
-        logger.debug("Retrieved countries {}", results);
 
-        return results;
-    }
+	
 
-    /**
-     * Gets the GeoPosition of the visitor
-     */
-    public GeoPosition getGeoPosition(double latitude, double longitude) {
-        return null;
-    }
 
+
+	
+	
 }
