@@ -21,7 +21,7 @@ Java along with it! For Java versions 4, 5 and 6, it’s time to say goodbye.*
 than 1% worldwide, so hundreds of millions of users are safer and 9-10 million developers 
 are more productive.*
 
-*Move to the latest version of Java 7 today!"*
+*Move to the latest version of Java 7 or 8 today!"
 
 An addendum for some enterprises will also be displayed:
 
