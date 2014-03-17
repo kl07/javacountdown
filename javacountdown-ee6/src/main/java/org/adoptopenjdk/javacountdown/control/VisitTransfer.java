@@ -44,9 +44,12 @@ public class VisitTransfer implements Serializable{
 
  
 
-    public VisitTransfer() {
-    }
+    public VisitTransfer() {}
 
+    public void setVersion(String version) {
+        this.version = version;
+    }
+    
     public String getVersion() {
         return this.version;
     }
