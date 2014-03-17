@@ -16,28 +16,32 @@ $(function() {
 function initialize() {
 
     var javaCCookie = $.cookie('javacountdown');
-    if (typeof javaCCookie === 'undefined')
-    {
-        if (navigator.geolocation)
-        {
-            navigator.geolocation.getCurrentPosition(logPosition, showError);
-            $.cookie('javacountdown', version, {expires: 25});
-            $("#geoMessage").text("Thanks for contributing!");
-        } else {
-            $("#geoMessage").text("We weren't able to detect where you are from.");
+//    if (typeof javaCCookie === 'undefined') {
+    	if(version != null && version != 0) {
+    		if (navigator.geolocation) {
+    			navigator.geolocation.getCurrentPosition(logPosition, showError);
+    			$.cookie('javacountdown', version, {expires: 25});
+    			$("#geoMessage").text("Thanks for contributing!");
+    		} else {
+    			$("#geoMessage").text("We weren't able to detect where you are from.");
+    		}   		
+    	} else {
+			$("#geoMessage").text("We weren't able to detect the version of Java you are using. Ensure that you accept the plugin.");
         }
-    } else if (version === javaCCookie) {
-
-        $("#geoMessage").html("You already contributed!<br />You use version " + javaCCookie);
-    }
+        
+//    } else if (version === javaCCookie) {
+//        $("#geoMessage").html("You already contributed!<br />You use version " + javaCCookie);
+//    }
 
 
     // Callback for geolocation - logs java version incl lat long  
-    function logPosition(position){
-        log = new log(version, position.coords.latitude, position.coords.longitude);
-        addLog(JSON.stringify(log));
+    function logPosition(position){  	
+    	log = new log(version, position.coords.latitude, position.coords.longitude, window.ui.browser, window.ui.version, window.ui.os);
+    	console.log("log: " + log);
+    	addLog(JSON.stringify(log));		   		   	
     };
 
+    
     // Error callback - displays errors.
     function showError(error){
         switch (error.code)
@@ -113,10 +117,13 @@ function initialize() {
     }
 
     // The log object
-    function log(version, latitude, longitude)
+    function log(version, latitude, longitude, browserName, browserVersion, os)
     {
         this.version = version;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.browserName = browserName;
+        this.browserVersion = browserVersion;
+        this.os = os;
     }
 }

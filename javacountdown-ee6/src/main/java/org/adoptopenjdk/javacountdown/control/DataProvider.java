@@ -16,7 +16,9 @@
 package org.adoptopenjdk.javacountdown.control;
 
 import com.google.code.morphia.Key;
+
 import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
+import org.adoptopenjdk.javacountdown.entity.BrowserInfo;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 import org.adoptopenjdk.javacountdown.entity.VersionInfo;
 import org.adoptopenjdk.javacountdown.entity.Visit;
@@ -29,6 +31,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -96,7 +99,7 @@ public class DataProvider {
         visit.setVersionInfo(versionInfo);
         visit.setCountry(geoPosition.getCountry());
         visit.setGeoPosition(geoPosition);
-        visit.setBrowser(visitTransfer.getBrowser());
+        visit.setBrowserInfo(new BrowserInfo(visitTransfer.getBrowserName(), visitTransfer.getBrowserVersion()));
         visit.setOs(visitTransfer.getOs());
         visit.setTime(new Date(System.currentTimeMillis()));
 

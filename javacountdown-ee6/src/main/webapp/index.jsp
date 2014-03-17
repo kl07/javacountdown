@@ -24,6 +24,7 @@
             <script src="js/vendor/jquery.vmap.world.js"></script>
             <script src="js/vendor/plugindetect_java.js"></script>
             <script src="js/vendor/jquery.cookie.js"></script>
+            <script src="js/detect_os_browser/detect.js"></script>
             <script src="js/main.js"></script>
         </head>
         <body>

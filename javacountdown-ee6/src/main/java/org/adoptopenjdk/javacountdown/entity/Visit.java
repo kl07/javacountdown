@@ -36,6 +36,7 @@ public class Visit implements Serializable {
 
 
     private static final long serialVersionUID = -5580843065068184730L;
+    
     @Id
     private ObjectId id;
     private int version;
@@ -43,12 +44,11 @@ public class Visit implements Serializable {
     private String country;
     @Reference
     private GeoPosition geoPosition;
-    private String browser;
+    private BrowserInfo browserInfo;
     private String os;
     private Date time;
 
-    public Visit() {
-    }
+    public Visit() {}
 
     public boolean isVersion(int version) {
         return this.version == version;
@@ -104,12 +104,12 @@ public class Visit implements Serializable {
         this.versionInfo = versionInfo;
     }
 
-    public String getBrowser() {
-        return browser;
+    public BrowserInfo getBrowserInfo() {
+        return browserInfo;
     }
 
-    public void setBrowser(String browser) {
-        this.browser = browser;
+    public void setBrowserInfo(BrowserInfo browserInfo) {
+        this.browserInfo = browserInfo;
     }
 
     public String getOs() {
@@ -144,7 +144,7 @@ public class Visit implements Serializable {
     public String toString() {
         return "Visit [id=" + id + ", version=" + version + ", versionInfo="
                 + versionInfo + ", country=" + country + ", geoPosition="
-                + geoPosition + ", browser=" + browser + ", os=" + os
+                + geoPosition + ", browser=" + browserInfo + ", os=" + os
                 + ", time=" + time + "]";
     }
 
