@@ -25,7 +25,7 @@ import java.io.Serializable;
 
 /**
  * This entity represents the geoposition of the visitor.
- *
+ * 
  * @author Alex Theedom
  */
 @RequestScoped
@@ -102,8 +102,7 @@ public class GeoPosition implements Serializable {
 
     @Override
     public String toString() {
-        return "GeoPosition [id=" + id + ", country=" + country + ", city="
-                + city + ", location=" + location + "]";
+        return "GeoPosition [id=" + id + ", country=" + country + ", city=" + city + ", location=" + location + "]";
     }
 
 }

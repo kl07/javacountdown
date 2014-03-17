@@ -15,27 +15,24 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-
 import com.google.code.morphia.DatastoreImpl;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.dao.BasicDAO;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import org.adoptopenjdk.javacountdown.entity.GeoPosition;
 import org.adoptopenjdk.javacountdown.entity.Visit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Data Access Object for the Visitor collection.
- *
+ * 
  * @author Alex Theedom
  */
 public class VisitDAO extends BasicDAO<Visit, Key<Visit>> {
 
-    private static final Logger logger = LoggerFactory.getLogger(VisitDAO.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VisitDAO.class);
 
     public VisitDAO(Class<Visit> entityClass, DatastoreImpl datastore) {
         super(entityClass, datastore);
@@ -53,16 +50,9 @@ public class VisitDAO extends BasicDAO<Visit, Key<Visit>> {
 
         String results = output.toString();
 
-        logger.debug("Retrieved countries {}", results);
+        LOGGER.debug("Retrieved countries {}", results);
 
         return results;
-    }
-
-    /**
-     * Gets the GeoPosition of the visitor
-     */
-    public GeoPosition getGeoPosition(double latitude, double longitude) {
-        return null;
     }
 
 }

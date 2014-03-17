@@ -28,11 +28,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * Data Access Object for the GeoPosition collection.
- *
+ * 
  * @author Alex Theedom
  */
 public class GeoPositionDAO extends BasicDAO<GeoPosition, Key<GeoPosition>> {
@@ -44,38 +43,42 @@ public class GeoPositionDAO extends BasicDAO<GeoPosition, Key<GeoPosition>> {
     }
 
     /**
-     * This method retrieves the country code based on the given latitude/longitude.
-     * It will return a GeoPosition object containing the ISO 3166 alpha-2 code.
-     * Refer to http://www.maxmind.com/en/worldcities for the data behind it.
-     *
-     * @param latitude  The latitude
-     * @param longitude The longitude
+     * This method retrieves the country code based on the given
+     * latitude/longitude. It will return a GeoPosition object containing the
+     * ISO 3166 alpha-2 code. Refer to http://www.maxmind.com/en/worldcities for
+     * the data behind it.
+     * 
+     * @param latitude
+     *            The latitude
+     * @param longitude
+     *            The longitude
      * @return A GeoPosition entity
      */
     public GeoPosition getGeoPosition(double latitude, double longitude) {
 
         GeoPosition geoPosition = new GeoPosition();
 
-        // Construct the query necessary to find the country code based on the given coords
+        // Construct the query necessary to find the country code based on the
+        // given coords
         List<Double> coordinates = new ArrayList<>();
         coordinates.add(longitude);
         coordinates.add(latitude);
 
-        BasicDBObject query = new BasicDBObject("location.coordinates",
-                new BasicDBObject("$near",
-                        new BasicDBObject("$geometry",
-                                new BasicDBObject("type", "Point").append("coordinates", coordinates))));
+        BasicDBObject query = new BasicDBObject("location.coordinates", new BasicDBObject("$near", new BasicDBObject(
+                "$geometry", new BasicDBObject("type", "Point").append("coordinates", coordinates))));
 
-        DBCursor cursor = getCollection().find(query).limit(1);
+        try (DBCursor cursor = getCollection().find(query).limit(1)) {
 
-        // Check that there is at least one result and populate the GeoPosition object
-        if (cursor.hasNext()) {
-            DBObject dbObject = cursor.next();
-            geoPosition.setId((ObjectId) dbObject.get("_id"));
-            geoPosition.setCountry((String) dbObject.get("country"));
-            geoPosition.setCity((String) dbObject.get("city"));
-        } else {
-            logger.warn("No data was return by the query.");
+            // Check that there is at least one result and populate the
+            // GeoPosition object
+            if (cursor.hasNext()) {
+                DBObject dbObject = cursor.next();
+                geoPosition.setId((ObjectId) dbObject.get("_id"));
+                geoPosition.setCountry((String) dbObject.get("country"));
+                geoPosition.setCity((String) dbObject.get("city"));
+            } else {
+                logger.warn("No data was return by the query [" + query + "]");
+            }
         }
 
         return geoPosition;

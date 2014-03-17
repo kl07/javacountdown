@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * Caches the data use to generate the world map of JDK adoption.
- *
+ * 
  * @author Markus Eisele <markus at eisele.net>
  */
 @Singleton

@@ -23,38 +23,32 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Registered as stored procedure for Apache Derby database.
- * It's a workaround for missing "DROP IF EXISTS" feature.
- *
- * The main rationale is to have repeatable tests where you can create 
+ * Registered as stored procedure for Apache Derby database. It's a workaround
+ * for missing "DROP IF EXISTS" feature.
+ * 
+ * The main rationale is to have repeatable tests where you can create
  * drop/create tables safely.
  */
-public class DerbyDropIfExists
-{
+public class DerbyDropIfExists {
 
-   public static void dropTable(String schema, String table)
-   {
-      executeStatementIgnoreOnException("drop table " + schema + "." + table);
-   }
+    public static void dropTable(String schema, String table) {
+        executeStatementIgnoreOnException("drop table " + schema + "." + table);
+    }
 
-   public static void dropSequence(String schema, String sequence)
-   {
-      executeStatementIgnoreOnException("drop sequence " + schema + "." + sequence + " restrict");
-   }
+    public static void dropSequence(String schema, String sequence) {
+        executeStatementIgnoreOnException("drop sequence " + schema + "." + sequence + " restrict");
+    }
 
-   private static void executeStatementIgnoreOnException(String statement)
-   {
-      try(Connection connection = DriverManager.getConnection("jdbc:derby:target/derbydb");
-          PreparedStatement preparedStatement = connection.prepareStatement(statement))
-      {
-         preparedStatement.executeUpdate();
-         connection.commit();
-      }
-      catch (SQLException e)
-      {
-         // IGNORE - it fails when you try to drop non-existing table, but we want to continue
-      }
+    private static void executeStatementIgnoreOnException(String statement) {
+        try (Connection connection = DriverManager.getConnection("jdbc:derby:target/derbydb");
+                PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+            preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            // IGNORE - it fails when you try to drop non-existing table, but we
+            // want to continue
+        }
 
-   }
+    }
 
 }

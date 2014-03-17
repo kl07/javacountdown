@@ -50,7 +50,7 @@ import derby.DerbyDropIfExists;
  * Testing the REST interface methods
  */
 @RunWith(Arquillian.class)
-@CreateSchema({"derby/drop.sql", "derby/create-ddl.sql", "derby/insert-geonames.sql"})
+@CreateSchema({ "derby/drop.sql", "derby/create-ddl.sql", "derby/insert-geonames.sql" })
 @Cleanup(phase = TestExecutionPhase.NONE)
 public class VersionResourceIT {
 
@@ -61,17 +61,14 @@ public class VersionResourceIT {
     /**
      * Creating the ShrinkWrap deployment for Arquillian. This only contains the
      * backend!
-     *
+     * 
      * @return The Web Archive (WAR) to test against
      */
     @Deployment(name = "rest")
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
-                .addPackage(VersionResource.class.getPackage())
-                .addPackage(DataProvider.class.getPackage())
-                .addPackage(Visit.class.getPackage())
-                .addClass(DerbyDropIfExists.class)
-                .addClass(RESTConfig.class)
+        return ShrinkWrap.create(WebArchive.class).addPackage(VersionResource.class.getPackage())
+                .addPackage(DataProvider.class.getPackage()).addPackage(Visit.class.getPackage())
+                .addClass(DerbyDropIfExists.class).addClass(RESTConfig.class)
                 .addAsWebInfResource("test-persistence.xml", "classes/META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
@@ -80,7 +77,7 @@ public class VersionResourceIT {
      * Simple Test used as a workaround because Arquillian doesn't support
      * Before/AfterClass in core yet. It simply triggers the CreateSchema class
      * annotation.
-     *
+     * 
      * @throws Exception
      */
     @SuppressWarnings("static-method")
@@ -92,7 +89,7 @@ public class VersionResourceIT {
 
     /**
      * Testing a well formed log submission POST /version
-     *
+     * 
      * @param deploymentUrl
      * @throws Exception
      */
@@ -103,16 +100,16 @@ public class VersionResourceIT {
     public void testLog(@ArquillianResource @OperateOnDeployment("rest") URL deploymentUrl) throws Exception {
         logger.info("testLog");
         String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
-        String input =
-                "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,\"lng\":11.6854924}";
+        String input = "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,\"lng\":11.6854924}";
         // Should return Response.noContent() which is a 204
-        given().body(input).contentType(ContentType.JSON).expect().statusCode(Status.NO_CONTENT.getStatusCode()).log().ifError().when().post(url);
+        given().body(input).contentType(ContentType.JSON).expect().statusCode(Status.NO_CONTENT.getStatusCode()).log()
+                .ifError().when().post(url);
 
     }
 
     /**
      * Testing a malformed log submission POST /version
-     *
+     * 
      * @param deploymentUrl
      * @throws Exception
      */
@@ -123,16 +120,16 @@ public class VersionResourceIT {
     public void testWrongJson(@ArquillianResource @OperateOnDeployment("rest") URL deploymentUrl) throws Exception {
         logger.info("testWrongJson");
         String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
-        String maleFormedJson =
-                "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,";
+        String maleFormedJson = "{\"version\":\"1.7.0.15\",\"lat\":48.2287258,";
         // Should return a 400 bad request
-        given().body(maleFormedJson).contentType(ContentType.JSON).expect().statusCode(Status.BAD_REQUEST.getStatusCode()).log().ifError().when().post(url);
+        given().body(maleFormedJson).contentType(ContentType.JSON).expect()
+                .statusCode(Status.BAD_REQUEST.getStatusCode()).log().ifError().when().post(url);
 
     }
 
     /**
      * Testing the returned map data GET /version
-     *
+     * 
      * @param deploymentUrl
      * @throws Exception
      */
@@ -143,6 +140,7 @@ public class VersionResourceIT {
     public void testGetData(@ArquillianResource @OperateOnDeployment("rest") URL deploymentUrl) throws Exception {
         logger.info("testGetData");
         String url = deploymentUrl.toString() + RESOURCE_PREFIX + "/" + REST_ENDPOINT;
-        given().contentType(ContentType.JSON).expect().body("BB", equalTo(Integer.valueOf(100))).statusCode(Status.OK.getStatusCode()).log().ifError().when().get(url);
+        given().contentType(ContentType.JSON).expect().body("BB", equalTo(Integer.valueOf(100)))
+                .statusCode(Status.OK.getStatusCode()).log().ifError().when().get(url);
     }
 }

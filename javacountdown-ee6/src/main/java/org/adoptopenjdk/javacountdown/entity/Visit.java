@@ -27,20 +27,21 @@ import java.util.Date;
 /**
  * Visit class, represents an end user hitting a website with their Java applet
  * enabled event.
- *
+ * 
  * @author Alex Theedom
  */
 @RequestScoped
 @Entity(value = "visitors", noClassnameStored = true)
 public class Visit implements Serializable {
 
-
     private static final long serialVersionUID = -5580843065068184730L;
+
     @Id
     private ObjectId id;
     private int version;
     private VersionInfo versionInfo;
     private String country;
+
     @Reference
     private GeoPosition geoPosition;
     private String browser;
@@ -50,8 +51,8 @@ public class Visit implements Serializable {
     public Visit() {
     }
 
-    public boolean isVersion(int version) {
-        return this.version == version;
+    public boolean isVersion(int versionToCheckAgainst) {
+        return this.version == versionToCheckAgainst;
     }
 
     public GeoPosition getGeoPosition() {
@@ -72,7 +73,7 @@ public class Visit implements Serializable {
 
     /**
      * Return a clone of the time to follow thread-safe programming practices
-     *
+     * 
      * @return a clone of the time
      */
     public Date getTime() {
@@ -81,8 +82,9 @@ public class Visit implements Serializable {
 
     /**
      * Set a clone of the time to follow thread-safe programming practices
-     *
-     * @param time The time
+     * 
+     * @param time
+     *            The time
      */
     public void setTime(Date time) {
         this.time = (Date) time.clone();
@@ -136,16 +138,13 @@ public class Visit implements Serializable {
             return false;
         }
         final Visit other = (Visit) obj;
-        return this.id == other.id
-                || (this.id != null && this.id.equals(other.id));
+        return this.id == other.id || (this.id != null && this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
-        return "Visit [id=" + id + ", version=" + version + ", versionInfo="
-                + versionInfo + ", country=" + country + ", geoPosition="
-                + geoPosition + ", browser=" + browser + ", os=" + os
-                + ", time=" + time + "]";
+        return "Visit [id=" + id + ", version=" + version + ", versionInfo=" + versionInfo + ", country=" + country
+                + ", geoPosition=" + geoPosition + ", browser=" + browser + ", os=" + os + ", time=" + time + "]";
     }
 
 }

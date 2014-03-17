@@ -18,17 +18,16 @@ package org.adoptopenjdk.javacountdown.control;
 import java.io.Serializable;
 import java.util.Date;
 
-
 /**
- * This class is a used to transfer data received via REST from the
- * visitor to the DAO. We use this DTO to avoid
- * the need to format data in the correct JSON format on the client side.
+ * This class is a used to transfer data received via REST from the visitor to
+ * the DAO. We use this DTO to avoid the need to format data in the correct JSON
+ * format on the client side.
  * 
  * @author Alex Theedom
  * 
  */
-public class VisitTransfer implements Serializable{
-    
+public class VisitTransfer implements Serializable {
+
     private static final long serialVersionUID = 5128072717995441603L;
     private String version;
     private int vMajor;
@@ -41,8 +40,6 @@ public class VisitTransfer implements Serializable{
     private String browser;
     private String os;
     private Date time;
-
- 
 
     public VisitTransfer() {
     }
@@ -69,7 +66,7 @@ public class VisitTransfer implements Serializable{
 
     /**
      * Return a clone of the time to follow thread-safe programming practices
-     *
+     * 
      * @return a clone of the time
      */
     public Date getTime() {
@@ -78,13 +75,12 @@ public class VisitTransfer implements Serializable{
 
     /**
      * Set a clone of the time to follow thread-safe programming practices
-     *
+     * 
      * @param time
      */
     public void setTime(Date time) {
         this.time = (Date) time.clone();
     }
-
 
     public String getCountry() {
         return country;
@@ -144,11 +140,9 @@ public class VisitTransfer implements Serializable{
 
     @Override
     public String toString() {
-        return "VisitTransfer [version=" + version + ", vMajor=" + vMajor
-                + ", vMinor=" + vMinor + ", vPatch=" + vPatch + ", vBuild="
-                + vBuild + ", latitude=" + latitude + ", longitude="
-                + longitude + ", country=" + country + ", browser=" + browser
-                + ", os=" + os + ", time=" + time + "]";
+        return "VisitTransfer [version=" + version + ", vMajor=" + vMajor + ", vMinor=" + vMinor + ", vPatch=" + vPatch
+                + ", vBuild=" + vBuild + ", latitude=" + latitude + ", longitude=" + longitude + ", country=" + country
+                + ", browser=" + browser + ", os=" + os + ", time=" + time + "]";
     }
 
     @Override
@@ -191,11 +185,9 @@ public class VisitTransfer implements Serializable{
                 return false;
         } else if (!country.equals(other.country))
             return false;
-        if (Double.doubleToLongBits(latitude) != Double
-                .doubleToLongBits(other.latitude))
+        if (Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude))
             return false;
-        if (Double.doubleToLongBits(longitude) != Double
-                .doubleToLongBits(other.longitude))
+        if (Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude))
             return false;
         if (os == null) {
             if (other.os != null)

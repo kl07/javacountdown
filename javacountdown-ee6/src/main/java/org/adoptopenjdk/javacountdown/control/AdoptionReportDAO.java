@@ -29,7 +29,7 @@ import java.util.Map;
 
 /**
  * Data Access Object for the JdkAdoption collection.
- *
+ * 
  * @author Alex Theedom
  */
 public class AdoptionReportDAO extends BasicDAO<AdoptionReportCountry, Key<AdoptionReportCountry>> {
@@ -42,23 +42,25 @@ public class AdoptionReportDAO extends BasicDAO<AdoptionReportCountry, Key<Adopt
 
     /**
      * Finds the document for the given country in the JDK adoption collecting
-     *
+     * 
      * @param country
      * @return
      */
     public AdoptionReportCountry getCountryTotals(String country) {
-        Query<AdoptionReportCountry> query = ds.createQuery(AdoptionReportCountry.class).field("country").equal(country);
+        Query<AdoptionReportCountry> query = ds.createQuery(AdoptionReportCountry.class).field("country")
+                .equal(country);
         return query.get();
     }
 
     /**
      * Returns the data used to generate the world map of JDK 7 adoption.
-     *
+     * 
      * @return
      */
     public Map<String, Integer> getJdkAdoption() {
         // TODO ensure that this query does not return null for country
-        List<AdoptionReportCountry> adoptionByCountry = ds.createQuery(AdoptionReportCountry.class).retrievedFields(true, "country", "percentage").asList();
+        List<AdoptionReportCountry> adoptionByCountry = ds.createQuery(AdoptionReportCountry.class)
+                .retrievedFields(true, "country", "percentage").asList();
 
         Map<String, Integer> countryPercentageAdoption = new HashMap<>();
         for (AdoptionReportCountry country : adoptionByCountry) {

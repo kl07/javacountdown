@@ -28,9 +28,9 @@ import javax.enterprise.inject.Produces;
 import java.net.UnknownHostException;
 
 /**
- * Produces Morphia datastore objects used by the DAO
- * to persist data in MongoDB.
- *
+ * Produces Morphia datastore objects used by the DAO to persist data in
+ * MongoDB.
+ * 
  * @author Alex Theedom
  */
 @Startup
@@ -43,7 +43,6 @@ public class MorphiaDatastore {
     private static final String DATABASE_NAME = "jcountdown";
     private static final String HOST = "localhost";
     private static final int PORT = 27017;
-
 
     @Produces
     public DatastoreImpl getDatastore() {

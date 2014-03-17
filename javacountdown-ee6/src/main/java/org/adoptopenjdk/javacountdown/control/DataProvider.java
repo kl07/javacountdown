@@ -57,12 +57,14 @@ public class DataProvider {
     Event<Visit> visitEvent;
 
     /**
-     * This retrieves the country code based on the given latitude/longitude.
-     * It should return a ISO 3166 alpha-2 code.
-     * Refer to http://www.maxmind.com/en/worldcities for the data behind it.
-     *
-     * @param latitude  The latitude
-     * @param longitude The longitude
+     * This retrieves the country code based on the given latitude/longitude. It
+     * should return a ISO 3166 alpha-2 code. Refer to
+     * http://www.maxmind.com/en/worldcities for the data behind it.
+     * 
+     * @param latitude
+     *            The latitude
+     * @param longitude
+     *            The longitude
      * @return GeoPosition
      */
     private GeoPosition getGeoPositionFromLatLong(double latitude, double longitude) {
@@ -81,8 +83,9 @@ public class DataProvider {
     /**
      * Persists a Visit entity. This only gets called when the visit could be
      * marshalled by JAX-RS. No further checks necessary here.
-     *
-     * @param visitTransfer The visit to persist
+     * 
+     * @param visitTransfer
+     *            The visit to persist
      */
     @Asynchronous
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -114,7 +117,7 @@ public class DataProvider {
 
     /**
      * Gets a list of all countries with data to display on the map.
-     *
+     * 
      * @return List of countries and percentage adoption
      */
     public Map<String, Integer> getJdkAdoptionReport() {
@@ -123,8 +126,9 @@ public class DataProvider {
 
     /**
      * Parsing the version string to it's numbers.
-     *
-     * @param visitTransfer The visit
+     * 
+     * @param visitTransfer
+     *            The visit
      * @return VersionInfo
      */
     private static VersionInfo constructVersionInfo(VisitTransfer visitTransfer) {

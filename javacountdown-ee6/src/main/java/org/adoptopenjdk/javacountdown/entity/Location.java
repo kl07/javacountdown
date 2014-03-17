@@ -24,20 +24,19 @@ import java.util.List;
 
 /**
  * 
- * This entity represents the location embedded entity with the
- * geoPosistion entity.
+ * This entity represents the location embedded entity with the geoPosistion
+ * entity.
  * 
  * @author Alex Theedom
- *
+ * 
  */
 @Embedded
-public class Location implements Serializable{
-    
+public class Location implements Serializable {
+
     private static final long serialVersionUID = -6886204318924106851L;
     private String type;
     private List<Float> coordinates = new ArrayList<>();
-    
-    
+
     public Location() {
     }
 
@@ -49,30 +48,28 @@ public class Location implements Serializable{
         this.type = type;
         this.coordinates = coordinates;
     }
-        
+
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
-        this.type=type;
+        this.type = type;
     }
-    
-    
+
     public List<Float> getCoordinates() {
         return coordinates;
     }
 
     public void setCoordinates(List<Float> coordinates) {
-        this.coordinates=coordinates;
+        this.coordinates = coordinates;
     }
-    
-    
-    public void addCoordinates(String lon, String lat){        
+
+    public void addCoordinates(String lon, String lat) {
         coordinates.add(Float.valueOf(lon));
         coordinates.add(Float.valueOf(lat));
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -92,10 +89,10 @@ public class Location implements Serializable{
         }
         return true;
     }
-    
+
     @Override
     public String toString() {
         return "Location(type: " + type + ", coordinates: " + coordinates + ")";
     }
-    
+
 }

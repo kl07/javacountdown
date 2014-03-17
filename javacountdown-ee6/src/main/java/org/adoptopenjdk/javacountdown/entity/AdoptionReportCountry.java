@@ -28,22 +28,21 @@ public class AdoptionReportCountry implements Serializable {
     private int total;
     private int percentage;
 
-    
-    public AdoptionReportCountry(){}    
-    
+    public AdoptionReportCountry() {
+    }
+
     /**
-     * Constructor that creates a new JdkAdoptionCountry 
-     * from a Visit object.
+     * Constructor that creates a new JdkAdoptionCountry from a Visit object.
+     * 
      * @param visit
      */
     public AdoptionReportCountry(Visit visit) {
-        this.setCountry(visit.getCountry());    
+        this.setCountry(visit.getCountry());
     }
-    
-    
 
     /**
      * Updates the totals for this country and calculates the percentage.
+     * 
      * @param visit
      */
     public void updateTotals(Visit visit) {
@@ -55,9 +54,9 @@ public class AdoptionReportCountry implements Serializable {
 
         if (visit.isVersion(VERSION_SEVEN)) {
             this.setVersion(++versionTotal);
-        }        
+        }
 
-        this.setPercentage(Math.round(((float)versionTotal/visitTotal) * 100));
+        this.setPercentage(Math.round(((float) versionTotal / visitTotal) * 100));
     }
 
     public ObjectId getId() {
@@ -136,8 +135,8 @@ public class AdoptionReportCountry implements Serializable {
 
     @Override
     public String toString() {
-        return "JdkAdoption [country=" + country + ", version=" + version
-                + ", total=" + total + ", percentage=" + percentage + "]";
+        return "JdkAdoption [country=" + country + ", version=" + version + ", total=" + total + ", percentage="
+                + percentage + "]";
     }
 
 }
