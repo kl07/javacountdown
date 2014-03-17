@@ -69,10 +69,10 @@ public class DataProvider {
 
         GeoPosition geoPosition = geoPositionDAO.getGeoPosition(latitude, longitude);
 
-        if (!EMPTY_STRING.equals(geoPosition.getCountry())) {
-            logger.debug("Country code {} found for lat/lng: {},{}", geoPosition.getCountry(), latitude, longitude);
-        } else {
+        if (geoPosition.getCountry() == null || EMPTY_STRING.equals(geoPosition.getCountry())) {
             logger.error("No country code found for lat/lng: {},{}.", latitude, longitude);
+        } else {
+            logger.debug("Country code {} found for lat/lng: {},{}", geoPosition.getCountry(), latitude, longitude);
         }
 
         return geoPosition;
