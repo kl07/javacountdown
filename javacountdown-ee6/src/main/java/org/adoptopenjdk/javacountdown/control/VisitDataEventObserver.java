@@ -67,7 +67,7 @@ public class VisitDataEventObserver {
      * 
      * @param visit
      */
-    public void onFailure(@Observes(during = TransactionPhase.AFTER_FAILURE) Visit visit) {
+    public static void onFailure(@Observes(during = TransactionPhase.AFTER_FAILURE) Visit visit) {
         logger.error("Observed failed visit event for {}", visit);
     }
 

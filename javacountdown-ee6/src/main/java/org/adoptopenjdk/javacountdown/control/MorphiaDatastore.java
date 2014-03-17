@@ -45,20 +45,22 @@ public class MorphiaDatastore {
     private static final int PORT = 27017;
 
     @Produces
-    public DatastoreImpl getDatastore() {
+    public static DatastoreImpl getDatastore() {
 
         MongoClient mongoClient = null;
-
+        DatastoreImpl datastore = null;
+        
         try {
             mongoClient = new MongoClient(HOST, PORT);
+
+            Morphia morphia = new Morphia();
+
+            datastore = (DatastoreImpl) morphia.createDatastore(mongoClient, DATABASE_NAME);
+            logger.debug("Created Mongo Datastore");
+
         } catch (UnknownHostException e) {
             logger.error("Can not resolve DB host, message: {}", e.getMessage());
         }
-
-        Morphia morphia = new Morphia();
-
-        DatastoreImpl datastore = (DatastoreImpl) morphia.createDatastore(mongoClient, DATABASE_NAME);
-        logger.debug("Created Mongo Datastore");
 
         return datastore;
     }

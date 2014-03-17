@@ -20,6 +20,7 @@ public class AdoptionReportCountry implements Serializable {
     private static final long serialVersionUID = 5988042409552325372L;
 
     private static final int VERSION_SEVEN = 7;
+    private static final int VERSION_EIGHT = 8;
 
     @Id
     private ObjectId id;
@@ -43,6 +44,8 @@ public class AdoptionReportCountry implements Serializable {
     /**
      * Updates the totals for this country and calculates the percentage.
      * 
+     * TODO I think we want a map of versions to totals?
+     * 
      * @param visit
      */
     public void updateTotals(Visit visit) {
@@ -52,7 +55,7 @@ public class AdoptionReportCountry implements Serializable {
 
         int versionTotal = this.getVersion();
 
-        if (visit.isVersion(VERSION_SEVEN)) {
+        if (visit.isVersion(VERSION_SEVEN) || visit.isVersion(VERSION_EIGHT)) {
             this.setVersion(++versionTotal);
         }
 
