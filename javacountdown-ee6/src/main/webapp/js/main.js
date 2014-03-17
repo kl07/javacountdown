@@ -16,7 +16,7 @@ $(function() {
 function initialize() {
 
     var javaCCookie = $.cookie('javacountdown');
-//    if (typeof javaCCookie === 'undefined') {
+    if (typeof javaCCookie === 'undefined') {
     	if(version != null && version != 0) {
     		if (navigator.geolocation) {
     			navigator.geolocation.getCurrentPosition(logPosition, showError);
@@ -29,9 +29,9 @@ function initialize() {
 			$("#geoMessage").text("We weren't able to detect the version of Java you are using. Ensure that you accept the plugin.");
         }
         
-//    } else if (version === javaCCookie) {
-//        $("#geoMessage").html("You already contributed!<br />You use version " + javaCCookie);
-//    }
+    } else if (version === javaCCookie) {
+        $("#geoMessage").html("You already contributed!<br />You use version " + javaCCookie);
+    }
 
 
     // Callback for geolocation - logs java version incl lat long  
