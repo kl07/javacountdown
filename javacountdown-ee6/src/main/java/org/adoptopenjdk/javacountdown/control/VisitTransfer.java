@@ -23,12 +23,11 @@ import java.util.Date;
  * This class is a used to transfer data received via REST from the
  * visitor to the DAO. We use this DTO to avoid
  * the need to format data in the correct JSON format on the client side.
- * 
+ *
  * @author Alex Theedom
- * 
  */
-public class VisitTransfer implements Serializable{
-    
+public class VisitTransfer implements Serializable {
+
     private static final long serialVersionUID = 5128072717995441603L;
     private String version;
     private int vMajor;
@@ -42,29 +41,7 @@ public class VisitTransfer implements Serializable{
     private String os;
     private Date time;
 
- 
-
     public VisitTransfer() {
-    }
-
-    public String getVersion() {
-        return this.version;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
     }
 
     /**
@@ -85,13 +62,12 @@ public class VisitTransfer implements Serializable{
         this.time = (Date) time.clone();
     }
 
-
-    public String getCountry() {
-        return country;
+    public String getVersion() {
+        return version;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public int getvMajor() {
@@ -124,6 +100,30 @@ public class VisitTransfer implements Serializable{
 
     public void setvBuild(int vBuild) {
         this.vBuild = vBuild;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getBrowser() {
