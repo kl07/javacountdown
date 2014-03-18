@@ -17,12 +17,20 @@ package org.adoptopenjdk.javacountdown.entity;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.PostLoad;
+import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Transient;
+
 import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import javax.enterprise.context.RequestScoped;
+
 import java.io.Serializable;
 import java.util.Date;
+
 
 /**
  * Visit class, represents an end user hitting a website with their Java applet
@@ -36,6 +44,7 @@ public class Visit implements Serializable {
 
 
     private static final long serialVersionUID = -5580843065068184730L;
+    
     @Id
     private ObjectId id;
     private int version;
@@ -43,11 +52,24 @@ public class Visit implements Serializable {
     private String country;
     @Reference
     private GeoPosition geoPosition;
-    private String browser;
+    private BrowserInfo browserInfo;
     private String os;
-    private Date time;
+    @Transient
+    private DateTime time;  // Yoda time
+    private Date date;      // Java time. We persist this.
 
-    public Visit() {
+    @PrePersist
+    public void dateTimeToDate() {
+        setDate(getTime().toDate());
+    }
+    
+    @PostLoad
+    public void dateToDateTime() {
+        setTime(new DateTime(getDate()));
+    }
+    
+    public Visit() {       
+        setTime(getTime());
     }
 
     public boolean isVersion(int version) {
@@ -70,22 +92,12 @@ public class Visit implements Serializable {
         this.version = version;
     }
 
-    /**
-     * Return a clone of the time to follow thread-safe programming practices
-     *
-     * @return a clone of the time
-     */
-    public Date getTime() {
-        return (Date) time.clone();
+    public DateTime getTime() {
+        return new DateTime();
     }
 
-    /**
-     * Set a clone of the time to follow thread-safe programming practices
-     *
-     * @param time The time
-     */
-    public void setTime(Date time) {
-        this.time = (Date) time.clone();
+    public void setTime(DateTime dateTime) {
+        this.time = dateTime;
     }
 
     public String getCountry() {
@@ -104,12 +116,12 @@ public class Visit implements Serializable {
         this.versionInfo = versionInfo;
     }
 
-    public String getBrowser() {
-        return browser;
+    public BrowserInfo getBrowserInfo() {
+        return browserInfo;
     }
 
-    public void setBrowser(String browser) {
-        this.browser = browser;
+    public void setBrowserInfo(BrowserInfo browserInfo) {
+        this.browserInfo = browserInfo;
     }
 
     public String getOs() {
@@ -144,8 +156,16 @@ public class Visit implements Serializable {
     public String toString() {
         return "Visit [id=" + id + ", version=" + version + ", versionInfo="
                 + versionInfo + ", country=" + country + ", geoPosition="
-                + geoPosition + ", browser=" + browser + ", os=" + os
+                + geoPosition + ", browser=" + browserInfo + ", os=" + os
                 + ", time=" + time + "]";
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
 }
