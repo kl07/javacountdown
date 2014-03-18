@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 /**
  * This entity represents the geoposition of the visitor.
- *
+ * 
  * @author Alex Theedom
  */
 @RequestScoped
@@ -64,7 +64,6 @@ public class GeoPosition implements Serializable {
         this.city = city;
     }
 
-
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -94,7 +93,5 @@ public class GeoPosition implements Serializable {
     public String toString() {
         return "GeoPosition [id=" + id + ", country=" + country + ", city=" + city + "]";
     }
-
-
 
 }

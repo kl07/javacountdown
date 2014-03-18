@@ -27,10 +27,9 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.event.TransactionPhase;
 import javax.inject.Inject;
 
-
 /**
  * Observes events fired by the VisitDAO
- *
+ * 
  * @author Alex Theedom
  */
 @Asynchronous
@@ -43,8 +42,9 @@ public class VisitDataEventObserver {
     AdoptionReportDAO adoptionReportDAO;
 
     /**
-     * If the Visit object has been persisted successfully we can update the adoption report data.
-     *
+     * If the Visit object has been persisted successfully we can update the
+     * adoption report data.
+     * 
      * @param visit
      */
     public void onSuccess(@Observes(during = TransactionPhase.AFTER_SUCCESS) Visit visit) {
@@ -61,14 +61,13 @@ public class VisitDataEventObserver {
         logger.debug("Updated adoption, persisted key {}", key);
     }
 
-
     /**
-     * If there is a failure in persisting the Visit object we log it and don't update the
-     * adoption report data.
-     *
+     * If there is a failure in persisting the Visit object we log it and don't
+     * update the adoption report data.
+     * 
      * @param visit
      */
-    public void onFailure(@Observes(during = TransactionPhase.AFTER_FAILURE) Visit visit) {
+    public static void onFailure(@Observes(during = TransactionPhase.AFTER_FAILURE) Visit visit) {
         logger.error("Observed failed visit event for {}", visit);
     }
 

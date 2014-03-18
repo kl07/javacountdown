@@ -15,7 +15,6 @@
  */
 package org.adoptopenjdk.javacountdown.control;
 
-
 import com.google.code.morphia.DatastoreImpl;
 import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
 import org.adoptopenjdk.javacountdown.entity.AdoptionReportCountry;
@@ -26,10 +25,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-
 /**
  * Factory that produces the Data Access Objects.
- *
+ * 
  * @author Alex Theedom
  */
 @ApplicationScoped

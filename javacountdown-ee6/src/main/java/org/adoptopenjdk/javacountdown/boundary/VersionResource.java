@@ -15,7 +15,6 @@
  */
 package org.adoptopenjdk.javacountdown.boundary;
 
-
 import org.adoptopenjdk.javacountdown.control.DataProvider;
 import org.adoptopenjdk.javacountdown.control.ResultCache;
 import org.adoptopenjdk.javacountdown.control.VisitTransfer;
@@ -48,8 +47,9 @@ public class VersionResource {
 
     /**
      * Retrieves visitor information from web client in JSON format.
-     *
-     * @param visit The client visit information
+     * 
+     * @param visit
+     *            The client visit information
      * @return A HTTP 202 Accepted response
      */
     @POST
@@ -64,7 +64,7 @@ public class VersionResource {
 
     /**
      * Returns the JDK adoption data.
-     *
+     * 
      * @return A map containing the JDK adoption for the countries
      */
     @GET

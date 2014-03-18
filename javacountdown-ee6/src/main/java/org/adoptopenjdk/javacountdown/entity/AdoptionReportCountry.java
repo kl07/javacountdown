@@ -20,6 +20,7 @@ public class AdoptionReportCountry implements Serializable {
     private static final long serialVersionUID = 5988042409552325372L;
 
     private static final int VERSION_SEVEN = 7;
+    private static final int VERSION_EIGHT = 8;
 
     @Id
     private ObjectId id;
@@ -28,22 +29,23 @@ public class AdoptionReportCountry implements Serializable {
     private int total;
     private int percentage;
 
-    
-    public AdoptionReportCountry(){}    
-    
+    public AdoptionReportCountry() {
+    }
+
     /**
-     * Constructor that creates a new JdkAdoptionCountry 
-     * from a Visit object.
+     * Constructor that creates a new JdkAdoptionCountry from a Visit object.
+     * 
      * @param visit
      */
     public AdoptionReportCountry(Visit visit) {
-        this.setCountry(visit.getCountry());    
+        this.setCountry(visit.getCountry());
     }
-    
-    
 
     /**
      * Updates the totals for this country and calculates the percentage.
+     * 
+     * TODO I think we want a map of versions to totals?
+     * 
      * @param visit
      */
     public void updateTotals(Visit visit) {
@@ -53,11 +55,11 @@ public class AdoptionReportCountry implements Serializable {
 
         int versionTotal = this.getVersion();
 
-        if (visit.isVersion(VERSION_SEVEN)) {
+        if (visit.isVersion(VERSION_SEVEN) || visit.isVersion(VERSION_EIGHT)) {
             this.setVersion(++versionTotal);
-        }        
+        }
 
-        this.setPercentage(Math.round(((float)versionTotal/visitTotal) * 100));
+        this.setPercentage(Math.round(((float) versionTotal / visitTotal) * 100));
     }
 
     public ObjectId getId() {
@@ -136,8 +138,8 @@ public class AdoptionReportCountry implements Serializable {
 
     @Override
     public String toString() {
-        return "JdkAdoption [country=" + country + ", version=" + version
-                + ", total=" + total + ", percentage=" + percentage + "]";
+        return "JdkAdoption [country=" + country + ", version=" + version + ", total=" + total + ", percentage="
+                + percentage + "]";
     }
 
 }

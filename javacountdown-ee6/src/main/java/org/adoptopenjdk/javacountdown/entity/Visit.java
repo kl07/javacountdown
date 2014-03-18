@@ -24,56 +24,55 @@ import com.google.code.morphia.annotations.Transient;
 
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import javax.enterprise.context.RequestScoped;
 
 import java.io.Serializable;
 import java.util.Date;
 
-
 /**
  * Visit class, represents an end user hitting a website with their Java applet
  * enabled event.
- *
+ * 
  * @author Alex Theedom
  */
 @RequestScoped
 @Entity(value = "visitors", noClassnameStored = true)
 public class Visit implements Serializable {
 
-
     private static final long serialVersionUID = -5580843065068184730L;
-    
+
     @Id
     private ObjectId id;
     private int version;
     private VersionInfo versionInfo;
     private String country;
+
     @Reference
     private GeoPosition geoPosition;
     private BrowserInfo browserInfo;
     private String os;
+
     @Transient
-    private DateTime time;  // Yoda time
-    private Date date;      // Java time. We persist this.
+    private DateTime time; // Yoda time
+    private Date date; // Java time. We persist this.
 
     @PrePersist
     public void dateTimeToDate() {
         setDate(getTime().toDate());
     }
-    
+
     @PostLoad
     public void dateToDateTime() {
         setTime(new DateTime(getDate()));
     }
-    
-    public Visit() {       
-        setTime(getTime());
+
+    public Visit() {
+        setTime(new DateTime());
     }
 
-    public boolean isVersion(int version) {
-        return this.version == version;
+    public boolean isVersion(int versionToCheckAgainst) {
+        return this.version == versionToCheckAgainst;
     }
 
     public GeoPosition getGeoPosition() {
@@ -93,7 +92,7 @@ public class Visit implements Serializable {
     }
 
     public DateTime getTime() {
-        return new DateTime();
+        return time;
     }
 
     public void setTime(DateTime dateTime) {
@@ -148,16 +147,13 @@ public class Visit implements Serializable {
             return false;
         }
         final Visit other = (Visit) obj;
-        return this.id == other.id
-                || (this.id != null && this.id.equals(other.id));
+        return this.id == other.id || (this.id != null && this.id.equals(other.id));
     }
 
     @Override
     public String toString() {
-        return "Visit [id=" + id + ", version=" + version + ", versionInfo="
-                + versionInfo + ", country=" + country + ", geoPosition="
-                + geoPosition + ", browser=" + browserInfo + ", os=" + os
-                + ", time=" + time + "]";
+        return "Visit [id=" + id + ", version=" + version + ", versionInfo=" + versionInfo + ", country=" + country
+                + ", geoPosition=" + geoPosition + ", browser=" + browserInfo + ", os=" + os + ", time=" + time + "]";
     }
 
     public Date getDate() {

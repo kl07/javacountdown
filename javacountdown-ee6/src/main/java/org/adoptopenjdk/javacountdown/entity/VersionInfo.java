@@ -29,15 +29,13 @@ import com.google.code.morphia.annotations.Embedded;
 @Embedded
 public class VersionInfo implements Serializable {
 
-
     private static final long serialVersionUID = -1203925642378324622L;
-    
+
     private int majorVersion;
     private int minorVersion;
     private int patchVersion;
     private int buildVersion;
-    
-    
+
     public int getMajorVersion() {
         return majorVersion;
     }
@@ -69,7 +67,6 @@ public class VersionInfo implements Serializable {
     public void setBuildVersion(int buildVersion) {
         this.buildVersion = buildVersion;
     }
-
 
     @Override
     public int hashCode() {

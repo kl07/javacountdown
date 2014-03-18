@@ -28,34 +28,35 @@ import com.google.code.morphia.annotations.Embedded;
  */
 @Embedded
 public class BrowserInfo implements Serializable {
-   
+
     private static final long serialVersionUID = 6008518106648845721L;
 
-    
     private String version;
     private String name;
-    
-    public BrowserInfo(){}
-    
-    public BrowserInfo(String name, String version){
+
+    public BrowserInfo() {
+    }
+
+    public BrowserInfo(String name, String version) {
         this.name = name;
         this.version = version;
-    }   
-    
-    
+    }
+
     public String getVersion() {
         return version;
     }
+
     public void setVersion(String version) {
         this.version = version;
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
-
 
     @Override
     public int hashCode() {
@@ -92,7 +93,5 @@ public class BrowserInfo implements Serializable {
     public String toString() {
         return "BrowserInfo [version=" + version + ", name=" + name + "]";
     }
-    
-    
-  
+
 }
