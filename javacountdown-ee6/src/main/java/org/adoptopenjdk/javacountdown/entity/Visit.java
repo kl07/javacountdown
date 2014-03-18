@@ -24,13 +24,11 @@ import com.google.code.morphia.annotations.Transient;
 
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import javax.enterprise.context.RequestScoped;
 
 import java.io.Serializable;
 import java.util.Date;
-
 
 /**
  * Visit class, represents an end user hitting a website with their Java applet
@@ -43,7 +41,7 @@ import java.util.Date;
 public class Visit implements Serializable {
 
     private static final long serialVersionUID = -5580843065068184730L;
-    
+
     @Id
     private ObjectId id;
     private int version;
@@ -56,21 +54,21 @@ public class Visit implements Serializable {
     private String os;
 
     @Transient
-    private DateTime time;  // Yoda time
-    private Date date;      // Java time. We persist this.
+    private DateTime time; // Yoda time
+    private Date date; // Java time. We persist this.
 
     @PrePersist
     public void dateTimeToDate() {
         setDate(getTime().toDate());
     }
-    
+
     @PostLoad
     public void dateToDateTime() {
         setTime(new DateTime(getDate()));
     }
-    
-    public Visit() {       
-        setTime(getTime());
+
+    public Visit() {
+        setTime(new DateTime());
     }
 
     public boolean isVersion(int versionToCheckAgainst) {
@@ -93,12 +91,8 @@ public class Visit implements Serializable {
         this.version = version;
     }
 
-    public Date getTime() {
-        return new DateTime();
-    }
-
-    public void setTime(Date time) {
-        return new DateTime();
+    public DateTime getTime() {
+        return time;
     }
 
     public void setTime(DateTime dateTime) {
@@ -158,10 +152,8 @@ public class Visit implements Serializable {
 
     @Override
     public String toString() {
-        return "Visit [id=" + id + ", version=" + version + ", versionInfo="
-                + versionInfo + ", country=" + country + ", geoPosition="
-                + geoPosition + ", browser=" + browserInfo + ", os=" + os
-                + ", time=" + time + "]";
+        return "Visit [id=" + id + ", version=" + version + ", versionInfo=" + versionInfo + ", country=" + country
+                + ", geoPosition=" + geoPosition + ", browser=" + browserInfo + ", os=" + os + ", time=" + time + "]";
     }
 
     public Date getDate() {

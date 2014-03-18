@@ -16,13 +16,12 @@
 package org.adoptopenjdk.javacountdown.control;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * This class is a used to transfer data received via REST from the
- * visitor to the DAO. We use this DTO to avoid
- * the need to format data in the correct JSON format on the client side.
- *
+ * This class is a used to transfer data received via REST from the visitor to
+ * the DAO. We use this DTO to avoid the need to format data in the correct JSON
+ * format on the client side.
+ * 
  * @author Alex Theedom
  */
 public class VisitTransfer implements Serializable {
@@ -35,12 +34,13 @@ public class VisitTransfer implements Serializable {
     private String browserVersion;
     private String os;
 
-    public VisitTransfer() {}
+    public VisitTransfer() {
+    }
 
     public void setVersion(String version) {
         this.version = version;
     }
-    
+
     public String getVersion() {
         return this.version;
     }
@@ -62,22 +62,20 @@ public class VisitTransfer implements Serializable {
     }
 
     public String getBrowserName() {
-         return browserName;
+        return browserName;
     }
 
     public void setBrowserName(String browserName) {
         this.browserName = browserName;
     }
-    
+
     public String getBrowserVersion() {
         return browserVersion;
     }
 
-
     public void setBrowserVersion(String browserVersion) {
         this.browserVersion = browserVersion;
     }
-  
 
     public String getOs() {
         return os;
@@ -141,8 +139,8 @@ public class VisitTransfer implements Serializable {
 
     @Override
     public String toString() {
-        return "VisitTransfer [version=" + version + ", latitude=" + latitude + ", longitude=" + longitude + ", browserName=" + browserName
-                + ", browserVersion=" + browserVersion + ", os=" + os + "]";
+        return "VisitTransfer [version=" + version + ", latitude=" + latitude + ", longitude=" + longitude
+                + ", browserName=" + browserName + ", browserVersion=" + browserVersion + ", os=" + os + "]";
     }
 
 }

@@ -49,7 +49,7 @@ public class MorphiaDatastore {
 
         MongoClient mongoClient = null;
         DatastoreImpl datastore = null;
-        
+
         try {
             mongoClient = new MongoClient(HOST, PORT);
 

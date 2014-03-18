@@ -64,7 +64,6 @@ public class GeoPosition implements Serializable {
         this.city = city;
     }
 
-
     @Override
     public int hashCode() {
         final int prime = 31;
