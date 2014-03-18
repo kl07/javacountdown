@@ -18,17 +18,26 @@ package org.adoptopenjdk.javacountdown.control;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+import javax.ejb.Startup;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.ejb.ScheduleExpression;
+import javax.ejb.Timeout;
+import javax.ejb.Timer;
+import javax.ejb.TimerService;
+
 
 /**
  * Caches the data use to generate the world map of JDK adoption.
  * 
  * @author Markus Eisele <markus at eisele.net>
+ * @author Alex Theedom
  */
+@Startup
 @Singleton
 public class ResultCache {
 
@@ -36,9 +45,24 @@ public class ResultCache {
 
     private Map<String, Integer> jdkAdoption = new HashMap<>();
 
+    @Resource
+    TimerService timerService;
+    Timer timer;
+    
     @Inject
     private DataProvider dataProvider;
 
+    @PostConstruct
+    public void setTimer() {    
+        timer = timerService.createCalendarTimer(new ScheduleExpression().hour("00"));
+    }
+    
+    @Timeout
+    public void timeout(Timer timer) {
+        jdkAdoption = dataProvider.getJdkAdoptionReport();
+        logger.debug("Rebuilt JDK adoption cache");
+    }
+    
     public Map<String, Integer> getCountryData() {
         if (jdkAdoption.isEmpty()) {
             jdkAdoption = dataProvider.getJdkAdoptionReport();
@@ -46,9 +70,4 @@ public class ResultCache {
         return jdkAdoption;
     }
 
-    @Schedule(minute = "*/2", persistent = false)
-    public void rebuildCache() {
-        jdkAdoption = dataProvider.getJdkAdoptionReport();
-        logger.debug("Rebuilt JDK adoption cache");
-    }
 }
