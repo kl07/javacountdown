@@ -1,4 +1,5 @@
 bin/
+/.apt_src
 
 # Netbeans
 nb-configuration.xml

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.adoptopenjdk</groupId>
-    <artifactId>javacountdown-ee6</artifactId>
+    <artifactId>javacountdown</artifactId>
     <packaging>war</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
@@ -85,7 +85,7 @@
         <arquillian-glassfish-embedded-3.1.version>1.0.0.CR4</arquillian-glassfish-embedded-3.1.version>
         <arquillian-persistence-api.version>1.0.0.Alpha6</arquillian-persistence-api.version>
         <shrinkwrap-resolver-maven.version>2.0.0-alpha-7</shrinkwrap-resolver-maven.version>
-        <rest-assured.version>2.2.0</rest-assured.version>
+        <rest-assured.version>2.3.0</rest-assured.version>
         <junit.version>4.11</junit.version>
         <derby.version>10.10.1.1</derby.version>
         <gson.version>2.2.4</gson.version>
