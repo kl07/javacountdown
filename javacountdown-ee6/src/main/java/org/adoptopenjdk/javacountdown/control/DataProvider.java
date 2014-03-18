@@ -32,7 +32,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -101,7 +100,6 @@ public class DataProvider {
         visit.setGeoPosition(geoPosition);
         visit.setBrowserInfo(new BrowserInfo(visitTransfer.getBrowserName(), visitTransfer.getBrowserVersion()));
         visit.setOs(visitTransfer.getOs());
-        visit.setTime(new Date(System.currentTimeMillis()));
 
         Key<Visit> key = null;
         try {
