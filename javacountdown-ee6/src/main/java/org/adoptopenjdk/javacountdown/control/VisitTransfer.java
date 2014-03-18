@@ -23,12 +23,11 @@ import java.util.Date;
  * This class is a used to transfer data received via REST from the
  * visitor to the DAO. We use this DTO to avoid
  * the need to format data in the correct JSON format on the client side.
- * 
+ *
  * @author Alex Theedom
- * 
  */
-public class VisitTransfer implements Serializable{
-    
+public class VisitTransfer implements Serializable {
+
     private static final long serialVersionUID = 5128072717995441603L;
     private String version;
     private double latitude;
@@ -76,10 +75,12 @@ public class VisitTransfer implements Serializable{
         return browserVersion;
     }
 
+
     public void setBrowserVersion(String browserVersion) {
         this.browserVersion = browserVersion;
     }
-    
+  
+
     public String getOs() {
         return os;
     }
