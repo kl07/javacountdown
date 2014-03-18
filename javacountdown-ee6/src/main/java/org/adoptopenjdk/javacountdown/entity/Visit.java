@@ -157,11 +157,11 @@ public class Visit implements Serializable {
     }
 
     public Date getDate() {
-        return date;
+        return (Date)date.clone();
     }
 
     public void setDate(Date date) {
-        this.date = date;
+        this.date = (Date)date.clone();
     }
 
 }
