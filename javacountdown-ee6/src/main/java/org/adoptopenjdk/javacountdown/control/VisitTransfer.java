@@ -19,31 +19,28 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * This class is a used to transfer data received via REST from the visitor to
- * the DAO. We use this DTO to avoid the need to format data in the correct JSON
- * format on the client side.
- * 
+ * This class is a used to transfer data received via REST from the
+ * visitor to the DAO. We use this DTO to avoid
+ * the need to format data in the correct JSON format on the client side.
+ *
  * @author Alex Theedom
- * 
  */
 public class VisitTransfer implements Serializable {
 
     private static final long serialVersionUID = 5128072717995441603L;
     private String version;
-    private int vMajor;
-    private int vMinor;
-    private int vPatch;
-    private int vBuild;
     private double latitude;
     private double longitude;
-    private String country;
-    private String browser;
+    private String browserName;
+    private String browserVersion;
     private String os;
-    private Date time;
 
-    public VisitTransfer() {
+    public VisitTransfer() {}
+
+    public void setVersion(String version) {
+        this.version = version;
     }
-
+    
     public String getVersion() {
         return this.version;
     }
@@ -64,71 +61,23 @@ public class VisitTransfer implements Serializable {
         this.longitude = longitude;
     }
 
-    /**
-     * Return a clone of the time to follow thread-safe programming practices
-     * 
-     * @return a clone of the time
-     */
-    public Date getTime() {
-        return (Date) time.clone();
+    public String getBrowserName() {
+         return browserName;
     }
 
-    /**
-     * Set a clone of the time to follow thread-safe programming practices
-     * 
-     * @param time
-     */
-    public void setTime(Date time) {
-        this.time = (Date) time.clone();
+    public void setBrowserName(String browserName) {
+        this.browserName = browserName;
+    }
+    
+    public String getBrowserVersion() {
+        return browserVersion;
     }
 
-    public String getCountry() {
-        return country;
-    }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setBrowserVersion(String browserVersion) {
+        this.browserVersion = browserVersion;
     }
-
-    public int getvMajor() {
-        return vMajor;
-    }
-
-    public void setvMajor(int vMajor) {
-        this.vMajor = vMajor;
-    }
-
-    public int getvMinor() {
-        return vMinor;
-    }
-
-    public void setvMinor(int vMinor) {
-        this.vMinor = vMinor;
-    }
-
-    public int getvPatch() {
-        return vPatch;
-    }
-
-    public void setvPatch(int vPatch) {
-        this.vPatch = vPatch;
-    }
-
-    public int getvBuild() {
-        return vBuild;
-    }
-
-    public void setvBuild(int vBuild) {
-        this.vBuild = vBuild;
-    }
-
-    public String getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(String browser) {
-        this.browser = browser;
-    }
+  
 
     public String getOs() {
         return os;
@@ -139,29 +88,17 @@ public class VisitTransfer implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "VisitTransfer [version=" + version + ", vMajor=" + vMajor + ", vMinor=" + vMinor + ", vPatch=" + vPatch
-                + ", vBuild=" + vBuild + ", latitude=" + latitude + ", longitude=" + longitude + ", country=" + country
-                + ", browser=" + browser + ", os=" + os + ", time=" + time + "]";
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((browser == null) ? 0 : browser.hashCode());
-        result = prime * result + ((country == null) ? 0 : country.hashCode());
+        result = prime * result + ((browserName == null) ? 0 : browserName.hashCode());
+        result = prime * result + ((browserVersion == null) ? 0 : browserVersion.hashCode());
         long temp;
         temp = Double.doubleToLongBits(latitude);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(longitude);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + ((os == null) ? 0 : os.hashCode());
-        result = prime * result + ((time == null) ? 0 : time.hashCode());
-        result = prime * result + vBuild;
-        result = prime * result + vMajor;
-        result = prime * result + vMinor;
-        result = prime * result + vPatch;
         result = prime * result + ((version == null) ? 0 : version.hashCode());
         return result;
     }
@@ -175,15 +112,15 @@ public class VisitTransfer implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         VisitTransfer other = (VisitTransfer) obj;
-        if (browser == null) {
-            if (other.browser != null)
+        if (browserName == null) {
+            if (other.browserName != null)
                 return false;
-        } else if (!browser.equals(other.browser))
+        } else if (!browserName.equals(other.browserName))
             return false;
-        if (country == null) {
-            if (other.country != null)
+        if (browserVersion == null) {
+            if (other.browserVersion != null)
                 return false;
-        } else if (!country.equals(other.country))
+        } else if (!browserVersion.equals(other.browserVersion))
             return false;
         if (Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude))
             return false;
@@ -194,25 +131,18 @@ public class VisitTransfer implements Serializable {
                 return false;
         } else if (!os.equals(other.os))
             return false;
-        if (time == null) {
-            if (other.time != null)
-                return false;
-        } else if (!time.equals(other.time))
-            return false;
-        if (vBuild != other.vBuild)
-            return false;
-        if (vMajor != other.vMajor)
-            return false;
-        if (vMinor != other.vMinor)
-            return false;
-        if (vPatch != other.vPatch)
-            return false;
         if (version == null) {
             if (other.version != null)
                 return false;
         } else if (!version.equals(other.version))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "VisitTransfer [version=" + version + ", latitude=" + latitude + ", longitude=" + longitude + ", browserName=" + browserName
+                + ", browserVersion=" + browserVersion + ", os=" + os + "]";
     }
 
 }

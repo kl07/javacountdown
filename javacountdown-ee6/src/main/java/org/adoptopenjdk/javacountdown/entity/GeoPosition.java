@@ -15,7 +15,6 @@
  */
 package org.adoptopenjdk.javacountdown.entity;
 
-import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import org.bson.types.ObjectId;
@@ -37,8 +36,6 @@ public class GeoPosition implements Serializable {
     private ObjectId id;
     private String country;
     private String city;
-    @Embedded
-    private Location location;
 
     public GeoPosition() {
     }
@@ -67,13 +64,6 @@ public class GeoPosition implements Serializable {
         this.city = city;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
 
     @Override
     public int hashCode() {
@@ -102,7 +92,7 @@ public class GeoPosition implements Serializable {
 
     @Override
     public String toString() {
-        return "GeoPosition [id=" + id + ", country=" + country + ", city=" + city + ", location=" + location + "]";
+        return "GeoPosition [id=" + id + ", country=" + country + ", city=" + city + "]";
     }
 
 }
