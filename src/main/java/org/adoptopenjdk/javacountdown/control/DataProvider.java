@@ -31,6 +31,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.annotation.Resource;
+import javax.ejb.SessionContext;
 
 import java.util.Map;
 
@@ -57,6 +59,9 @@ public class DataProvider {
 
     @Inject
     Event<Visit> visitEvent;
+    
+    @Resource
+    SessionContext sc;
 
     /**
      * This retrieves the country code based on the given latitude/longitude. It
@@ -107,12 +112,13 @@ public class DataProvider {
         Key<Visit> key = null;
         try {
             key = visitDAO.save(visit);
+            visitEvent.fire(visit);
             logger.debug("Visit persisted with key {}", key);
         } catch (Exception e) {
-            logger.error("Could not persist Visit {}, message: {}", visit, e.getMessage());
-        } finally {
             visitEvent.fire(visit);
-        }
+            logger.error("Could not persist Visit {}, message: {}", visit, e.getMessage());
+            sc.setRollbackOnly();
+        } 
 
     }
 
