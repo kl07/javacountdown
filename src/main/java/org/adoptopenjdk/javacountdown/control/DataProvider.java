@@ -59,9 +59,9 @@ public class DataProvider {
 
     @Inject
     Event<Visit> visitEvent;
-    
+
     @Resource
-    SessionContext sc;
+    SessionContext sessionContext;
 
     /**
      * This retrieves the country code based on the given latitude/longitude. It
@@ -89,7 +89,7 @@ public class DataProvider {
 
     /**
      * Persists a Visit entity. This only gets called when the visit could be
-     * marshalled by JAX-RS. No further checks necessary here.
+     * marshaled by JAX-RS. No further checks necessary here.
      * 
      * @param visitTransfer
      *            The visit to persist
@@ -110,6 +110,8 @@ public class DataProvider {
         visit.setOs(visitTransfer.getOs());
 
         Key<Visit> key = null;
+        // See https://github.com/AdoptOpenJDK/javacountdown/issues/83 as to why
+        // we don't use finally
         try {
             key = visitDAO.save(visit);
             visitEvent.fire(visit);
@@ -117,8 +119,8 @@ public class DataProvider {
         } catch (Exception e) {
             visitEvent.fire(visit);
             logger.error("Could not persist Visit {}, message: {}", visit, e.getMessage());
-            sc.setRollbackOnly();
-        } 
+            sessionContext.setRollbackOnly();
+        }
 
     }
 
