@@ -16,7 +16,6 @@
 package org.adoptopenjdk.javacountdown.control;
 
 import com.google.code.morphia.Key;
-
 import org.adoptopenjdk.javacountdown.control.DataAccessObject.Type;
 import org.adoptopenjdk.javacountdown.entity.BrowserInfo;
 import org.adoptopenjdk.javacountdown.entity.GeoPosition;
@@ -27,13 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
-
 import java.util.Map;
 
 /**
@@ -60,18 +54,13 @@ public class DataProvider {
     @Inject
     Event<Visit> visitEvent;
 
-    @Resource
-    SessionContext sessionContext;
-
     /**
      * This retrieves the country code based on the given latitude/longitude. It
      * should return a ISO 3166 alpha-2 code. Refer to
      * http://www.maxmind.com/en/worldcities for the data behind it.
-     * 
-     * @param latitude
-     *            The latitude
-     * @param longitude
-     *            The longitude
+     *
+     * @param latitude  The latitude
+     * @param longitude The longitude
      * @return GeoPosition
      */
     private GeoPosition getGeoPositionFromLatLong(double latitude, double longitude) {
@@ -90,12 +79,10 @@ public class DataProvider {
     /**
      * Persists a Visit entity. This only gets called when the visit could be
      * marshaled by JAX-RS. No further checks necessary here.
-     * 
-     * @param visitTransfer
-     *            The visit to persist
+     *
+     * @param visitTransfer The visit to persist
      */
     @Asynchronous
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persistVisit(VisitTransfer visitTransfer) {
 
         GeoPosition geoPosition = getGeoPositionFromLatLong(visitTransfer.getLatitude(), visitTransfer.getLongitude());
@@ -110,23 +97,21 @@ public class DataProvider {
         visit.setOs(visitTransfer.getOs());
 
         Key<Visit> key = null;
-        // See https://github.com/AdoptOpenJDK/javacountdown/issues/83 as to why
-        // we don't use finally
         try {
             key = visitDAO.save(visit);
-            visitEvent.fire(visit);
             logger.debug("Visit persisted with key {}", key);
         } catch (Exception e) {
-            visitEvent.fire(visit);
             logger.error("Could not persist Visit {}, message: {}", visit, e.getMessage());
-            sessionContext.setRollbackOnly();
+            throw e;
+        } finally {
+            visitEvent.fire(visit);
         }
 
     }
 
     /**
      * Gets a list of all countries with data to display on the map.
-     * 
+     *
      * @return List of countries and percentage adoption
      */
     public Map<String, Integer> getJdkAdoptionReport() {
@@ -135,9 +120,8 @@ public class DataProvider {
 
     /**
      * Parsing the version string to it's numbers.
-     * 
-     * @param visitTransfer
-     *            The visit
+     *
+     * @param visitTransfer The visit
      * @return VersionInfo
      */
     private static VersionInfo constructVersionInfo(VisitTransfer visitTransfer) {
