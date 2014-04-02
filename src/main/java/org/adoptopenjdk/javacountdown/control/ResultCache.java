@@ -20,8 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.Singleton;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 import javax.ejb.Startup;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -43,7 +41,7 @@ public class ResultCache {
 
     private static final Logger logger = LoggerFactory.getLogger(ResultCache.class);
 
-    private Map<String, Integer> jdkAdoption = new HashMap<>();
+    String json = "";
 
     @Resource
     TimerService timerService;
@@ -53,21 +51,21 @@ public class ResultCache {
     private DataProvider dataProvider;
 
     @PostConstruct
-    public void setTimer() {    
+    public void setTimer() {
         timer = timerService.createCalendarTimer(new ScheduleExpression().hour("00"));
     }
     
+    // TODO Investigate use of timer here.
     @Timeout
     public void timeout(Timer timer) {
-        jdkAdoption = dataProvider.getJdkAdoptionReport();
+        json = dataProvider.getJdkAdoptionReport();
         logger.debug("Rebuilt JDK adoption cache");
     }
     
-    public Map<String, Integer> getCountryData() {
-        if (jdkAdoption.isEmpty()) {
-            jdkAdoption = dataProvider.getJdkAdoptionReport();
+    public String getCountryData() {
+        if (json.isEmpty()) {
+            json = dataProvider.getJdkAdoptionReport();
         }
-        return jdkAdoption;
+        return json;
     }
-
 }
