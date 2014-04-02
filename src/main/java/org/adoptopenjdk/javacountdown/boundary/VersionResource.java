@@ -21,14 +21,13 @@ import org.adoptopenjdk.javacountdown.control.VisitTransfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Map;
 
 /**
  * REST Web Service for the javacountdown website.
@@ -42,7 +41,7 @@ public class VersionResource {
     @Inject
     private DataProvider dataProvider;
 
-    @Inject
+    @EJB
     ResultCache cache;
 
     /**
@@ -53,13 +52,19 @@ public class VersionResource {
      * @return A HTTP 202 Accepted response
      */
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response sendVisit(VisitTransfer visit) {
-        logger.debug("Client sent input: {}", visit);
+    @Consumes("application/json")
+    public Response sendVisit(String visit) {
 
-        dataProvider.persistVisit(visit);
-
-        return Response.status(Response.Status.ACCEPTED).build();
+        VisitTransfer visitTransfer = null;
+        Gson gson = new Gson();
+        try {
+            visitTransfer = gson.fromJson(visit, VisitTransfer.class);
+        } catch (JsonSyntaxException e) {
+            logger.warn("Could not deserialize client input, message: {}", e.getMessage());
+            throw new WebApplicationException(e, Response.status(Response.Status.BAD_REQUEST).build());
+        }
+        dataProvider.persistVisit(visitTransfer);
+        return Response.noContent().build();
     }
 
     /**
@@ -68,15 +73,8 @@ public class VersionResource {
      * @return A map containing the JDK adoption for the countries
      */
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
     public Response getJdkAdoption() {
-        Map<String, Integer> countryAdoption = cache.getCountryData();
-        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-
-        for (Map.Entry<String, Integer> entry : countryAdoption.entrySet()) {
-            objectBuilder.add(entry.getKey(), entry.getValue());
-        }
-
-        return Response.ok(objectBuilder.build()).build();
+        return Response.ok(cache.getCountryData()).build();
     }
 }
