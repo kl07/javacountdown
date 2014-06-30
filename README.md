@@ -17,7 +17,7 @@ As well as the map with global percentages, a simple message will be shown to us
 *"15 years ago an amazing language was born. Its name was Java. Now that we’re in 2013, the world has changed and 
 Java along with it! For Java versions 4, 5 and 6, it’s time to say goodbye.*
 
-*This website and it's community is dedicated to helping Java 4, 5 & 6 usage drop to less
+*This website and its community are dedicated to helping Java 4, 5 & 6 usage drop to less
 than 1% worldwide, so hundreds of millions of users are safer and 9-10 million developers 
 are more productive.*
 
